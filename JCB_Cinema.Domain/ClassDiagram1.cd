@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="JCB_Cinema.Domain.ValueObjects.Address" BaseTypeListCollapsed="true">
+    <Position X="26.25" Y="0.5" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIoAAAAAAAAAIAAIAAAAIAAAAAAAA=</HashCode>
+      <FileName>ValueObjects\Address.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="JCB_Cinema.Domain.ValueObjects.DateRange" BaseTypeListCollapsed="true">
+    <Position X="31.5" Y="0.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAgAAAAAIAAAAAAAEAQAAA=</HashCode>
+      <FileName>ValueObjects\DateRange.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="JCB_Cinema.Domain.ValueObjects.Money" BaseTypeListCollapsed="true">
+    <Position X="29.25" Y="5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAgAAAAACACAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>ValueObjects\Money.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="JCB_Cinema.Domain.Entities.BookingTicket">
+    <Position X="10" Y="4.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAABAAQAAQgAAAQAAAAAQAkAAAAAQAAAAIAgAAAAAAg=</HashCode>
+      <FileName>Entities\BookingTicket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="JCB_Cinema.Domain.Entities.CinemaHall">
+    <Position X="16.5" Y="3.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>FAAAAAAAAAAAAAQAAgAACAQAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Entities\CinemaHall.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="JCB_Cinema.Domain.Entities.EntityBase">
+    <Position X="15.5" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAQAABAAAAAAAAAAAAQAEAAAAQAAAAA=</HashCode>
+      <FileName>Entities\EntityBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="JCB_Cinema.Domain.Entities.Movie">
+    <Position X="6" Y="4.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAqAEQAAAIAAAAAAQAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Movie.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="JCB_Cinema.Domain.Entities.MovieProjection">
+    <Position X="14.25" Y="6.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>BAgAAAQAIAAAAAQAAgAAAAAAAQAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\MovieProjection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="JCB_Cinema.Domain.Entities.Schedule">
+    <Position X="21" Y="1.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAERAAAAAAAAAAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Schedule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="JCB_Cinema.Domain.Entities.Seat">
+    <Position X="24" Y="5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>hAAAAAAAIAAAAAQAAEAAAAAAAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>Entities\Seat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="JCB_Cinema.Domain.Entities.User">
+    <Position X="18" Y="7.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAQAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="JCB_Cinema.Domain.ValueObjects.Genre">
+    <Position X="21.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>xAAAAAABAAAAAAAIgBAAAIAAAAAAAAAAIACAFAAAAAQ=</HashCode>
+      <FileName>ValueObjects\Genre.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="JCB_Cinema.Domain.ValueObjects.ScreenType">
+    <Position X="19.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAEAAAAAAAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>ValueObjects\ScreenType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
