@@ -11,7 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JCB_Cinema.Domain", "JCB_Ci
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JCB_Cinema.Infrastructure", "JCB_Cinema.Infrastructure\JCB_Cinema.Infrastructure.csproj", "{1F472186-22E9-4C50-83AC-A3733EED08CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JCB_Cinema.Tools", "JCB_Cinema.Tools\JCB_Cinema.Tools.csproj", "{B1B07391-7516-43D5-A9B8-983B6420A644}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JCB_Cinema.Tools", "JCB_Cinema.Tools\JCB_Cinema.Tools.csproj", "{B1B07391-7516-43D5-A9B8-983B6420A644}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0FA2CABF-221F-4E47-BD27-0F26F6B336CB}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

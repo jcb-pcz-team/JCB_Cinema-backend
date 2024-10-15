@@ -1,5 +1,6 @@
 ﻿using JCB_Cinema.Application.Interfaces.Repositories;
 using JCB_Cinema.Application.Interfaces.UnitOfWork;
+using JCB_Cinema.Infrastructure.Data.Repositories;
 
 namespace JCB_Cinema.Infrastructure.Data
 {
@@ -21,7 +22,7 @@ namespace JCB_Cinema.Infrastructure.Data
             if (!_repositories.ContainsKey(typeof(T)))
             {
                 var repositoryType = typeof(TRepository<>);
-                _repositories.Add(typeof(T), Activator.CreateInstance(repositoryType.MakeGenericType(typeof(T)), _context));
+                _repositories.Add(typeof(T), Activator.CreateInstance(repositoryType.MakeGenericType(typeof(T))!, _dbContext)!);
             }
             return (ITRepository<T>)_repositories[typeof(T)];
         }

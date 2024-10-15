@@ -21,13 +21,13 @@ namespace JCB_Cinema.Infrastructure.Data.Repositories
         }
 
         // Pobieranie encji po id
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T?> GetByIdAsync(int id)
         {
             return await _dbSet.FindAsync(id);
         }
 
         // Dodawanie nowej encji
-        public async Task AddAsync(T entity)
+        public async void Add(T entity)
         {
             await _dbSet.AddAsync(entity);
         }

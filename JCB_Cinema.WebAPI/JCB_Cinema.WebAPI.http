@@ -1,6 +1,6 @@
 @JCB_Cinema.WebAPI_HostAddress = http://localhost:5102
 
-GET {{JCB_Cinema.WebAPI_HostAddress}}/weatherforecast/
+GET {{JCB_Cinema.WebAPI_HostAddress}}/movies/
 Accept: application/json
 
 ###
