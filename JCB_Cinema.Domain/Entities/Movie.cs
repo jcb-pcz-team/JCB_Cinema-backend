@@ -12,7 +12,7 @@ namespace JCB_Cinema.Domain.Entities
         public DateTime ReleaseDate { get; set; }  // Data premiery
         public Genre Genre { get; set; }  // Gatunek filmu
         public string GenreDescription => Genre.GetDescription();  // Opis gatunku
-
+        public IList<Photo>? Posters { get; set; }
         public override int Key => MovieId;
     }
 }

@@ -1,10 +1,13 @@
-﻿namespace JCB_Cinema.Domain.Entities
+﻿using JCB_Cinema.Domain.ValueObjects;
+
+namespace JCB_Cinema.Domain.Entities
 {
     public class MovieProjection : EntityBase
     {
         public int MovieProjectionId { get; set; }  // Klucz główny
         public int MovieId { get; set; }  // Klucz obcy - film
         public DateTime ScreeningTime { get; set; }  // Czas projekcji
+        public ScreenType ScreenType { get; set; } // Typ ekranu
 
         // Klucz obcy do sali kinowej
         public int HallId { get; set; }

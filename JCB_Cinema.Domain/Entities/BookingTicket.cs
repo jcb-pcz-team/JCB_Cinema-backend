@@ -4,7 +4,7 @@
     {
         public int BookingTicketId { get; set; }  // Klucz główny
         public int UserId { get; set; }  // Klucz obcy - użytkownik
-        public User User { get; set; }  // Nawigacja do użytkownika
+        public AppUser AppUser { get; set; } = null!;  // Nawigacja do użytkownika
         public int MovieProjectionId { get; set; }  // Klucz obcy - MovieProjection
         public MovieProjection MovieProjection { get; set; } = null!;  // Nawigacja do projekcji filmu
 

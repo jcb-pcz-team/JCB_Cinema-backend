@@ -2,7 +2,7 @@
 
 namespace JCB_Cinema.Domain.Entities
 {
-    public class User : IdentityUser
+    public class AppUser : IdentityUser
     {
         public string? RefreshToken { get; set; }
         public DateTime RefreshTokenExpiry { get; set; }
