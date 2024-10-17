@@ -17,7 +17,6 @@ namespace JCB_Cinema.Infrastructure.Data.Repositories
             _dbSet = context.Set<T>();
         }
 
-        // Zwraca IQueryable<T>, co pozwala na budowanie zapytań w wyższych warstwach
         public IQueryable<T> Queryable(EntityStatusFilter entityStatus = EntityStatusFilter.Exists)
         {
             var entities = _dbSet.AsQueryable();
@@ -30,7 +29,6 @@ namespace JCB_Cinema.Infrastructure.Data.Repositories
                     : entities.Where(a => a.IsDeleted == true);
         }
 
-        // Pobieranie encji po id
         public async Task<T?> GetByIdAsync(int id, EntityStatusFilter entityStatus = EntityStatusFilter.Exists)
         {
             var entity = await _dbSet.FindAsync(id);
@@ -43,7 +41,6 @@ namespace JCB_Cinema.Infrastructure.Data.Repositories
             return !entity.IsDeleted ? entity : null;
         }
 
-        // Dodawanie nowej encji
         public async void Add(T entity)
         {
             entity.Created = DateTime.UtcNow;
@@ -59,7 +56,6 @@ namespace JCB_Cinema.Infrastructure.Data.Repositories
             _dbSet.Update(entity);
         }
 
-        // Usuwanie encji
         public void Delete(T entity)
         {
             entity.IsDeleted = true;

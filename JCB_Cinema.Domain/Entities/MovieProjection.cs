@@ -4,17 +4,24 @@ namespace JCB_Cinema.Domain.Entities
 {
     public class MovieProjection : EntityBase
     {
-        public int MovieProjectionId { get; set; }  // Klucz główny
-        public int MovieId { get; set; }  // Klucz obcy - film
-        public Movie Movie { get; set; } = null!;
-        public DateTime ScreeningTime { get; set; }  // Czas projekcji
-        public ScreenType ScreenType { get; set; } // Typ ekranu
+        private readonly int _basePrice = 2250; // price in cents
 
-        // Klucz obcy do sali kinowej
+        public int MovieProjectionId { get; set; }
+        public int MovieId { get; set; }
+        public Movie Movie { get; set; } = null!;
+        public DateTime ScreeningTime { get; set; }
+        public ScreenType ScreenType { get; set; }
+
         public int CinemHallId { get; set; }
-        public CinemaHall CinemaHall { get; set; } = null!;  // Nawigacja do sali kinowej
-        public IList<Photo>? Photos { get; set; }
-        // Automatycznie zliczana liczba zajętych miejsc
+        public CinemaHall CinemaHall { get; set; } = null!;
+        public Photo? Poster { get; set; }
+
+        public Price Price { get; private set; }// in cents!!!
+
+        public MovieProjection()
+        {
+            Price = new Price(_basePrice + CalculateSubchargeForTicketPrice(ScreenType), "pln");
+        }
         public int OccupiedSeats
         {
             get
@@ -23,7 +30,6 @@ namespace JCB_Cinema.Domain.Entities
             }
         }
 
-        // Liczba wolnych miejsc
         public int AvailableSeats
         {
             get
@@ -32,5 +38,27 @@ namespace JCB_Cinema.Domain.Entities
             }
         }
         public override int Key => MovieProjectionId;
+
+        public static int CalculateSubchargeForTicketPrice(ScreenType screenType = ScreenType.TwoD)
+        {
+            int surcharge = 0;
+
+            switch (screenType)
+            {
+                case ScreenType.TwoD:
+                    surcharge = 0;
+                    break;
+                case ScreenType.ThreeD:
+                    surcharge = 690;
+                    break;
+                case ScreenType.IMAX:
+                    surcharge = 1230;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(screenType), screenType, null);
+            }
+
+            return surcharge; // returns subcharge for ticket
+        }
     }
 }

@@ -31,9 +31,13 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RefreshTokenExpiry = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -74,16 +78,15 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Movies",
+                name: "Photos",
                 columns: table => new
                 {
-                    MovieId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Bytes = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Duration = table.Column<int>(type: "int", nullable: false),
-                    ReleaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Genre = table.Column<int>(type: "int", nullable: false),
+                    FileExtension = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Size = table.Column<double>(type: "float", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Creator = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -92,7 +95,7 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Movies", x => x.MovieId);
+                    table.PrimaryKey("PK_Photos", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -245,6 +248,34 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Movies",
+                columns: table => new
+                {
+                    MovieId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Duration = table.Column<int>(type: "int", nullable: false),
+                    ReleaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Genre = table.Column<int>(type: "int", nullable: false),
+                    PosterId = table.Column<int>(type: "int", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Creator = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modifier = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Movies", x => x.MovieId);
+                    table.ForeignKey(
+                        name: "FK_Movies_Photos_PosterId",
+                        column: x => x.PosterId,
+                        principalTable: "Photos",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MoviesProjection",
                 columns: table => new
                 {
@@ -255,6 +286,7 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     ScreenType = table.Column<int>(type: "int", nullable: false),
                     CinemHallId = table.Column<int>(type: "int", nullable: false),
                     CinemaHallId = table.Column<int>(type: "int", nullable: false),
+                    PosterId = table.Column<int>(type: "int", nullable: true),
                     ScheduleId = table.Column<int>(type: "int", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Creator = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -277,6 +309,11 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                         principalTable: "Movies",
                         principalColumn: "MovieId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MoviesProjection_Photos_PosterId",
+                        column: x => x.PosterId,
+                        principalTable: "Photos",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_MoviesProjection_Schedules_ScheduleId",
                         column: x => x.ScheduleId,
@@ -323,39 +360,6 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                         column: x => x.SeatId,
                         principalTable: "Seats",
                         principalColumn: "SeatId");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Photos",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Bytes = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FileExtension = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Size = table.Column<double>(type: "float", nullable: true),
-                    MovieId = table.Column<int>(type: "int", nullable: true),
-                    MovieProjectionId = table.Column<int>(type: "int", nullable: true),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Creator = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Modifier = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Photos", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Photos_MoviesProjection_MovieProjectionId",
-                        column: x => x.MovieProjectionId,
-                        principalTable: "MoviesProjection",
-                        principalColumn: "MovieProjectionId");
-                    table.ForeignKey(
-                        name: "FK_Photos_Movies_MovieId",
-                        column: x => x.MovieId,
-                        principalTable: "Movies",
-                        principalColumn: "MovieId");
                 });
 
             migrationBuilder.CreateIndex(
@@ -413,6 +417,11 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                 column: "SeatId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Movies_PosterId",
+                table: "Movies",
+                column: "PosterId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MoviesProjection_CinemaHallId",
                 table: "MoviesProjection",
                 column: "CinemaHallId");
@@ -423,19 +432,14 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                 column: "MovieId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MoviesProjection_PosterId",
+                table: "MoviesProjection",
+                column: "PosterId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MoviesProjection_ScheduleId",
                 table: "MoviesProjection",
                 column: "ScheduleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Photos_MovieId",
-                table: "Photos",
-                column: "MovieId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Photos_MovieProjectionId",
-                table: "Photos",
-                column: "MovieProjectionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Seats_HallId",
@@ -465,28 +469,28 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                 name: "BookingTickets");
 
             migrationBuilder.DropTable(
-                name: "Photos");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Seats");
-
-            migrationBuilder.DropTable(
                 name: "MoviesProjection");
 
             migrationBuilder.DropTable(
-                name: "CinemaHalls");
+                name: "Seats");
 
             migrationBuilder.DropTable(
                 name: "Movies");
 
             migrationBuilder.DropTable(
                 name: "Schedules");
+
+            migrationBuilder.DropTable(
+                name: "CinemaHalls");
+
+            migrationBuilder.DropTable(
+                name: "Photos");
         }
     }
 }

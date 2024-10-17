@@ -147,6 +147,9 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<string>("Modifier")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("PosterId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("datetime2");
 
@@ -155,6 +158,8 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("MovieId");
+
+                    b.HasIndex("PosterId");
 
                     b.ToTable("Movies");
                 });
@@ -191,6 +196,9 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<int>("MovieId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("PosterId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("ScheduleId")
                         .HasColumnType("int");
 
@@ -205,6 +213,8 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.HasIndex("CinemaHallId");
 
                     b.HasIndex("MovieId");
+
+                    b.HasIndex("PosterId");
 
                     b.HasIndex("ScheduleId");
 
@@ -244,20 +254,10 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<string>("Modifier")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("MovieId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("MovieProjectionId")
-                        .HasColumnType("int");
-
                     b.Property<double?>("Size")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MovieId");
-
-                    b.HasIndex("MovieProjectionId");
 
                     b.ToTable("Photos");
                 });
@@ -591,6 +591,15 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Navigation("Seat");
                 });
 
+            modelBuilder.Entity("JCB_Cinema.Domain.Entities.Movie", b =>
+                {
+                    b.HasOne("JCB_Cinema.Domain.Entities.Photo", "Poster")
+                        .WithMany()
+                        .HasForeignKey("PosterId");
+
+                    b.Navigation("Poster");
+                });
+
             modelBuilder.Entity("JCB_Cinema.Domain.Entities.MovieProjection", b =>
                 {
                     b.HasOne("JCB_Cinema.Domain.Entities.CinemaHall", "CinemaHall")
@@ -605,24 +614,35 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("JCB_Cinema.Domain.Entities.Photo", "Poster")
+                        .WithMany()
+                        .HasForeignKey("PosterId");
+
                     b.HasOne("JCB_Cinema.Domain.Entities.Schedule", null)
                         .WithMany("Screenings")
                         .HasForeignKey("ScheduleId");
 
+                    b.OwnsOne("JCB_Cinema.Domain.ValueObjects.Price", "Price", b1 =>
+                        {
+                            b1.Property<int>("MovieProjectionId")
+                                .HasColumnType("int");
+
+                            b1.HasKey("MovieProjectionId");
+
+                            b1.ToTable("MoviesProjection");
+
+                            b1.WithOwner()
+                                .HasForeignKey("MovieProjectionId");
+                        });
+
                     b.Navigation("CinemaHall");
 
                     b.Navigation("Movie");
-                });
 
-            modelBuilder.Entity("JCB_Cinema.Domain.Entities.Photo", b =>
-                {
-                    b.HasOne("JCB_Cinema.Domain.Entities.Movie", null)
-                        .WithMany("Posters")
-                        .HasForeignKey("MovieId");
+                    b.Navigation("Poster");
 
-                    b.HasOne("JCB_Cinema.Domain.Entities.MovieProjection", null)
-                        .WithMany("Photos")
-                        .HasForeignKey("MovieProjectionId");
+                    b.Navigation("Price")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("JCB_Cinema.Domain.Entities.Seat", b =>
@@ -690,16 +710,6 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
             modelBuilder.Entity("JCB_Cinema.Domain.Entities.CinemaHall", b =>
                 {
                     b.Navigation("Seats");
-                });
-
-            modelBuilder.Entity("JCB_Cinema.Domain.Entities.Movie", b =>
-                {
-                    b.Navigation("Posters");
-                });
-
-            modelBuilder.Entity("JCB_Cinema.Domain.Entities.MovieProjection", b =>
-                {
-                    b.Navigation("Photos");
                 });
 
             modelBuilder.Entity("JCB_Cinema.Domain.Entities.Schedule", b =>

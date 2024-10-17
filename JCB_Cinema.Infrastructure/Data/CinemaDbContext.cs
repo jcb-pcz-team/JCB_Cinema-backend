@@ -25,6 +25,9 @@ namespace JCB_Cinema.Infrastructure.Data
                 .HasMany(a => a.BookingTickets)
                 .WithOne(a => a.Seat)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<MovieProjection>()
+                .OwnsOne(a => a.Price);
         }
     }
 }

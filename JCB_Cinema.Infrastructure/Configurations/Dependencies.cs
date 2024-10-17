@@ -8,7 +8,6 @@ namespace JCB_Cinema.Infrastructure.Configurations
         {
             //services.AddScoped<ITServicies<Person>, PersonServicies>();
 
-            //DataAccess.Dependencies.Register(services);
         }
     }
 }
