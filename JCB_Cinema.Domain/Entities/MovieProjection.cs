@@ -7,8 +7,7 @@ namespace JCB_Cinema.Domain.Entities
         public int MovieProjectionId { get; set; }  // Klucz główny
         public Movie Movie { get; set; } = null!;
         public int MovieId { get; set; }  // Klucz obcy - film
-        public Photo Photo { get; set; } = null!;
-        public int PhotoId { get; set; }
+        public IEnumerable<Photo>? Photos { get; set; }
         public DateTime ScreeningTime { get; set; }  // Czas projekcji
         public ScreenType ScreenType { get; set; } // Typ ekranu
 
