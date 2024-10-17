@@ -1,5 +1,5 @@
-﻿using JCB_Cinema.Application.Interfaces.Repositories;
-using JCB_Cinema.Application.Interfaces.UnitOfWork;
+﻿using JCB_Cinema.Domain.Entities;
+using JCB_Cinema.Infrastructure.Data.Interfaces;
 using JCB_Cinema.Infrastructure.Data.Repositories;
 
 namespace JCB_Cinema.Infrastructure.Data
@@ -17,7 +17,7 @@ namespace JCB_Cinema.Infrastructure.Data
 
 
         public ITRepository<T> Repository<T>()
-            where T : class
+            where T : EntityBase
         {
             if (!_repositories.ContainsKey(typeof(T)))
             {

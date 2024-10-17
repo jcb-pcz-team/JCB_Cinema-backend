@@ -31,7 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JCB_Cinema.Application\JCB_Cinema.Application.csproj" />
     <ProjectReference Include="..\JCB_Cinema.Domain\JCB_Cinema.Domain.csproj" />
   </ItemGroup>
 

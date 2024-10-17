@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace JCB_Cinema.Infrastructure.Configurations
 {
-    internal class Dependencies
+    public class Dependencies
     {
+        public static void Register(IServiceCollection services)
+        {
+            //services.AddScoped<ITServicies<Person>, PersonServicies>();
+
+            //DataAccess.Dependencies.Register(services);
+        }
     }
 }

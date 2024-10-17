@@ -13,4 +13,12 @@
     <Folder Include="Servicies\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JCB_Cinema.Infrastructure\JCB_Cinema.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
