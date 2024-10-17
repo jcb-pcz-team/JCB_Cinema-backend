@@ -11,6 +11,5 @@ namespace JCB_Cinema.Domain.Entities
         public string? Role { get; set; }
         public DateTime? Created { get; set; }
         public bool IsDeleted { get; set; } = false;
-
     }
 }

@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using JCB_Cinema.Infrastructure.Data;
+using JCB_Cinema.Infrastructure.Data.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace JCB_Cinema.Infrastructure.Configurations
 {
@@ -6,8 +8,7 @@ namespace JCB_Cinema.Infrastructure.Configurations
     {
         public static void Register(IServiceCollection services)
         {
-            //services.AddScoped<ITServicies<Person>, PersonServicies>();
-
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
     }
 }

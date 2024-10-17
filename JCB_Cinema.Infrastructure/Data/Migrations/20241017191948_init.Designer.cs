@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JCB_Cinema.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(CinemaDbContext))]
-    [Migration("20241017180251_init")]
+    [Migration("20241017191948_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -110,9 +110,6 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TotalSeats")
-                        .HasColumnType("int");
-
                     b.HasKey("CinemaHallId");
 
                     b.ToTable("CinemaHalls");
@@ -135,10 +132,10 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Duration")
+                    b.Property<int?>("Duration")
                         .HasColumnType("int");
 
-                    b.Property<int>("Genre")
+                    b.Property<int?>("Genre")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
@@ -153,7 +150,7 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<int?>("PosterId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ReleaseDate")
+                    b.Property<DateTime?>("ReleaseDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Title")

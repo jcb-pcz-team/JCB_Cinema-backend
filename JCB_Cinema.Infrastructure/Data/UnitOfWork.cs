@@ -31,6 +31,7 @@ namespace JCB_Cinema.Infrastructure.Data
         {
             return await _dbContext.SaveChangesAsync();
         }
+
         public void Dispose()
         {
             _dbContext.Dispose();
