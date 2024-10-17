@@ -8,5 +8,4 @@
 
         public override int Key => ScheduleId;
     }
-
 }
