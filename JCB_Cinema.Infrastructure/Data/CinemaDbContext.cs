@@ -20,6 +20,11 @@ namespace JCB_Cinema.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<Seat>()
+                .HasMany(a => a.BookingTickets)
+                .WithOne(a => a.Seat)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

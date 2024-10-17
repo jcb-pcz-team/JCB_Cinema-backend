@@ -14,7 +14,7 @@ namespace JCB_Cinema.WebAPI
             builder.Services.AddControllers();
 
             builder.Services.AddDbContextPool<CinemaDbContext>(options =>
-                            options.UseSqlServer(builder.Configuration.GetConnectionString("MsSQLLocalDB")));
+                            options.UseSqlServer(builder.Configuration.GetConnectionString("JCB_CinemaDb")));
 
 
             builder.Services.AddEndpointsApiExplorer();

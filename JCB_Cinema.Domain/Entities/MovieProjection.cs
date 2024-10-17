@@ -5,16 +5,15 @@ namespace JCB_Cinema.Domain.Entities
     public class MovieProjection : EntityBase
     {
         public int MovieProjectionId { get; set; }  // Klucz główny
-        public Movie Movie { get; set; } = null!;
         public int MovieId { get; set; }  // Klucz obcy - film
-        public IEnumerable<Photo>? Photos { get; set; }
+        public Movie Movie { get; set; } = null!;
         public DateTime ScreeningTime { get; set; }  // Czas projekcji
         public ScreenType ScreenType { get; set; } // Typ ekranu
 
         // Klucz obcy do sali kinowej
-        public int HallId { get; set; }
+        public int CinemHallId { get; set; }
         public CinemaHall CinemaHall { get; set; } = null!;  // Nawigacja do sali kinowej
-
+        public IList<Photo>? Photos { get; set; }
         // Automatycznie zliczana liczba zajętych miejsc
         public int OccupiedSeats
         {
