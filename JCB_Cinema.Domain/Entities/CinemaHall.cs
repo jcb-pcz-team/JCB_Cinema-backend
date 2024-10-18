@@ -9,7 +9,7 @@ namespace JCB_Cinema.Domain.Entities
         public List<Seat> Seats { get; set; } = new List<Seat>();
 
         [NotMapped]
-        public int TotalSeats => Seats == null ? 0 : Seats.Count;
+        public int? TotalSeats => Seats.Count;
         public override int Key => CinemaHallId;
     }
 }
