@@ -2,18 +2,18 @@
 {
     public abstract class EntityBase
     {
-        // Wypełniane w momencie tworzenia obiektu
-        public DateTime? Created { get; set; } // Domyślnie ustawiane na bieżącą datę
-        public string? Creator { get; set; } // Użytkownik, który stworzył rekord
+        // Filled in at the time of object creation
+        public DateTime? Created { get; set; } // Defaulted to the current date
+        public string? Creator { get; set; } // User who created the record
 
-        // Wypełniane w momencie modyfikacji obiektu
-        public DateTime? Modified { get; set; } // Data ostatniej modyfikacji
-        public string? Modifier { get; set; } // Użytkownik, który zmodyfikował rekord
+        // Filled in at the time of object modification
+        public DateTime? Modified { get; set; } // Last modification date
+        public string? Modifier { get; set; } // User who modified the record
 
-        // Soft delete - nie fizycznie usuwany z bazy, ale oznaczony jako usunięty
+        // Soft delete - not physically removed from the database, but marked as deleted
         public bool IsDeleted { get; set; } = false;
 
-        // Abstrakcyjna właściwość Key, wymuszająca implementację w klasach dziedziczących
+        // Abstract Key property, enforcing implementation in derived classes
         public abstract int Key { get; }
     }
 }

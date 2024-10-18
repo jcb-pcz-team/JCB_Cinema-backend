@@ -15,18 +15,18 @@
             Country = country ?? throw new ArgumentNullException(nameof(country));
         }
 
-        // Niemutowalność - brak setterów, nowe adresy muszą być tworzone za każdym razem, gdy coś się zmienia
-        public override bool Equals(object? obj) // nadal dopuszczamy null, aby była zgodność z metodą Object
+        // Immutability - no setters, new addresses must be created whenever a change occurs
+        public override bool Equals(object? obj) // still allowing null to maintain compatibility with Object method
         {
-            if (obj is null) return false; // jeśli obj jest null, zwracamy false
-            if (ReferenceEquals(this, obj)) return true; // porównanie referencji
-            if (obj.GetType() != this.GetType()) return false; // porównanie typów
+            if (obj is null) return false; // if obj is null, return false
+            if (ReferenceEquals(this, obj)) return true; // reference comparison
+            if (obj.GetType() != this.GetType()) return false; // type comparison
 
             var other = (Address)obj;
             return Street == other.Street &&
                    City == other.City &&
                    PostalCode == other.PostalCode &&
-                   Country == other.Country; // porównanie właściwości
+                   Country == other.Country; // property comparison
         }
 
         public override int GetHashCode()

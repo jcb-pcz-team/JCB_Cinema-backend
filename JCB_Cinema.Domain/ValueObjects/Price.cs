@@ -26,14 +26,14 @@
             return new Price(AmountInCents + other.AmountInCents, Currency);
         }
 
-        public override bool Equals(object? obj) // nadal dopuszczamy null, aby była zgodność z metodą Object
+        public override bool Equals(object? obj) // still allowing null to maintain compatibility with Object method
         {
-            if (obj is null) return false; // jeśli obj jest null, zwracamy false
-            if (ReferenceEquals(this, obj)) return true; // porównanie referencji
-            if (obj.GetType() != this.GetType()) return false; // porównanie typów
+            if (obj is null) return false; // if obj is null, return false
+            if (ReferenceEquals(this, obj)) return true; // reference comparison
+            if (obj.GetType() != this.GetType()) return false; // type comparison
 
-            var other = (Price)obj; // rzutowanie na typ Money
-            return AmountInCents == other.AmountInCents && Currency == other.Currency; // porównanie właściwości
+            var other = (Price)obj; // casting to Price type
+            return AmountInCents == other.AmountInCents && Currency == other.Currency; // property comparison
         }
 
         public override int GetHashCode()
