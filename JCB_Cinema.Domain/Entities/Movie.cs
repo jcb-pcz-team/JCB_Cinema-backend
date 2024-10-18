@@ -5,13 +5,13 @@ namespace JCB_Cinema.Domain.Entities
 {
     public class Movie : EntityBase
     {
-        public int MovieId { get; set; }  // Klucz główny
-        public string Title { get; set; } = null!;  // Tytuł filmu
-        public string? Description { get; set; }  // Opis filmu
-        public int? Duration { get; set; }  // Czas trwania w minutach
-        public DateTime? ReleaseDate { get; set; }  // Data premiery
-        public Genre? Genre { get; set; }  // Gatunek filmu
-        public string? GenreDescription => Genre?.GetDescription();  // Opis gatunku
+        public int MovieId { get; set; }
+        public string Title { get; set; } = null!;
+        public string? Description { get; set; }
+        public int? Duration { get; set; }
+        public DateTime? ReleaseDate { get; set; }
+        public Genre? Genre { get; set; }
+        public string? GenreDescription => Genre?.GetDescription();
         public Photo? Poster { get; set; }
         public override int Key => MovieId;
     }

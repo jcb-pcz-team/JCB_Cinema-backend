@@ -2,12 +2,11 @@
 {
     public class Seat : EntityBase
     {
-        public int SeatId { get; set; }  // Klucz główny dla miejsca
-        public int Number { get; set; }  // Numer miejsca
-        public int HallId { get; set; }  // Klucz obcy do sali kinowej
-        public CinemaHall Hall { get; set; } = null!; // Nawigacja do sali kinowej
+        public int SeatId { get; set; }
+        public int Number { get; set; }
+        public int HallId { get; set; }
+        public CinemaHall Hall { get; set; } = null!;
 
-        // Lista przypisanych rezerwacji (odniesienia do biletów/rezerwacji)
         public List<BookingTicket> BookingTickets { get; set; } = new List<BookingTicket>(); public override int Key => SeatId;
     }
 

@@ -2,9 +2,9 @@
 {
     public class Schedule : EntityBase
     {
-        public int ScheduleId { get; set; }  // Klucz główny
-        public DateOnly Date { get; set; }  // Dzień repertuaru
-        public List<MovieProjection> Screenings { get; set; } = new List<MovieProjection>();  // Lista projekcji filmów
+        public int ScheduleId { get; set; }
+        public DateOnly Date { get; set; }
+        public List<MovieProjection> Screenings { get; set; } = new List<MovieProjection>();
 
         public override int Key => ScheduleId;
     }
