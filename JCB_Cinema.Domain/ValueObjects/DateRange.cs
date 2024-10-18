@@ -19,11 +19,11 @@
             return date >= StartDate && date <= EndDate;
         }
 
-        public override bool Equals(object? obj) // still allowing null to maintain compatibility with Object method
+        public override bool Equals(object? obj)
         {
-            if (obj is null) return false; // if obj is null, return false
-            if (ReferenceEquals(this, obj)) return true; // reference comparison
-            if (obj.GetType() != GetType()) return false; // type comparison
+            if (obj is null) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
 
             var other = (DateRange)obj;
             return StartDate == other.StartDate && EndDate == other.EndDate;
