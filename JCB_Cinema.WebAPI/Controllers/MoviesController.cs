@@ -18,7 +18,14 @@ namespace JCB_Cinema.WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] RequestMovies query)
         {
-            return Ok(await _movieService.Get(query));
+            try
+            {
+                return Ok(await _movieService.Get(query));
+            }
+            catch
+            {
+                return BadRequest("Error occurred");
+            }
         }
     }
 }

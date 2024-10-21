@@ -10,6 +10,7 @@ namespace JCB_Cinema.Application.Configurations
         public static void Register(IServiceCollection services)
         {
             services.AddScoped<IMovieService, MovieService>();
+            services.AddScoped<IGenreService, GenreService>();
 
             services.AddAutoMapper(typeof(GenreServiceProfile), typeof(MovieServiceProfile));
 
