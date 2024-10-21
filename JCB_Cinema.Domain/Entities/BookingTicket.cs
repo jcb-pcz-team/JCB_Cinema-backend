@@ -3,7 +3,7 @@
     public class BookingTicket : EntityBase
     {
         public int BookingTicketId { get; set; }
-        public int UserId { get; set; }
+        public int AppUserId { get; set; }
         public AppUser AppUser { get; set; } = null!;
         public int MovieProjectionId { get; set; }
         public MovieProjection MovieProjection { get; set; } = null!;

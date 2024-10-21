@@ -9,7 +9,7 @@ namespace JCB_Cinema.Application.Mappers
     {
         public GenreServiceProfile()
         {
-            CreateMap<Genre, GetGenereDTO>()
+            CreateMap<Genre, GetGenreDTO>()
                .ForMember(dest => dest.GenreId, opt => opt.MapFrom(src => (int?)src))
                .ForMember(dest => dest.GenreName, opt => opt.MapFrom(src => src.GetDescription()))  // Mapowanie opisu gatunku
                .ReverseMap();
