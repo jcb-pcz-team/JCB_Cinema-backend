@@ -20,10 +20,9 @@ namespace JCB_Cinema.Application.Servicies
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<GetMovieProjectionDTO>> Get(string screenType)
+        public async Task<IEnumerable<GetMovieProjectionDTO>> Get(RequestMovieProjection requestMovieProjection)
         {
-            Enum.TryParse<ScreenType>(screenType, out var parsedScreenType);
-            var allMovieProjections = _unitOfWork.Repository<MovieProjection>().Queryable().Where(x => x.ScreenType == parsedScreenType);
+            var allMovieProjections = _unitOfWork.Repository<MovieProjection>().Queryable().Where(x => x.ScreenType.Equals(requestMovieProjection.ScreenTypeName));
             var allMovieProjectionsList = await allMovieProjections.ToListAsync();
             var mapped = _mapper.Map<IList<GetMovieProjectionDTO>>(allMovieProjectionsList);
             return mapped;

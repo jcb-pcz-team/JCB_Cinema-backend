@@ -61,6 +61,7 @@ namespace JCB_Cinema.WebAPI
             Application.Configurations.Dependencies.Register(builder.Services);
 
             //JWT
+            
             builder.Services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<CinemaDbContext>()
                 .AddDefaultTokenProviders();
@@ -88,6 +89,7 @@ namespace JCB_Cinema.WebAPI
                     OnTokenValidated = ctx => LogAttempt(ctx.Request.Headers, "OnTokenValidated")
                 };
             });
+            
 
             var app = builder.Build();
 
