@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JCB_Cinema.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(CinemaDbContext))]
-    [Migration("20241020182110_m1")]
-    partial class m1
+    [Migration("20241022092815_baseChange")]
+    partial class baseChange
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,10 +33,8 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingTicketId"));
 
-                    b.Property<int>("AppUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AppUserId1")
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("Created")
@@ -57,7 +55,7 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<DateTime?>("Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ModifierId")
+                    b.Property<int?>("ModifierId")
                         .HasColumnType("int");
 
                     b.Property<int>("MovieProjectionId")
@@ -74,7 +72,7 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
 
                     b.HasKey("BookingTicketId");
 
-                    b.HasIndex("AppUserId1");
+                    b.HasIndex("AppUserId");
 
                     b.HasIndex("MovieProjectionId");
 
@@ -103,7 +101,7 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<DateTime?>("Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ModifierId")
+                    b.Property<int?>("ModifierId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -144,7 +142,7 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<DateTime?>("Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ModifierId")
+                    b.Property<int?>("ModifierId")
                         .HasColumnType("int");
 
                     b.Property<int?>("PosterId")
@@ -190,7 +188,7 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<DateTime?>("Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ModifierId")
+                    b.Property<int?>("ModifierId")
                         .HasColumnType("int");
 
                     b.Property<int>("MovieId")
@@ -251,7 +249,7 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<DateTime?>("Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ModifierId")
+                    b.Property<int?>("ModifierId")
                         .HasColumnType("int");
 
                     b.Property<double?>("Size")
@@ -285,7 +283,7 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<DateTime?>("Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ModifierId")
+                    b.Property<int?>("ModifierId")
                         .HasColumnType("int");
 
                     b.HasKey("ScheduleId");
@@ -316,7 +314,7 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<DateTime?>("Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ModifierId")
+                    b.Property<int?>("ModifierId")
                         .HasColumnType("int");
 
                     b.Property<int>("Number")
@@ -570,7 +568,9 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                 {
                     b.HasOne("JCB_Cinema.Domain.Entities.AppUser", "AppUser")
                         .WithMany()
-                        .HasForeignKey("AppUserId1");
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("JCB_Cinema.Domain.Entities.MovieProjection", "MovieProjection")
                         .WithMany()
