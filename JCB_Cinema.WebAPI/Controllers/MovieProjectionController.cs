@@ -1,6 +1,5 @@
-﻿using JCB_Cinema.Application.DTOs;
-using JCB_Cinema.Application.Interfaces.Servicies;
-using JCB_Cinema.Domain.ValueObjects;
+﻿using JCB_Cinema.Application.Interfaces.Servicies;
+using JCB_Cinema.Application.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JCB_Cinema.WebAPI.Controllers
@@ -21,8 +20,8 @@ namespace JCB_Cinema.WebAPI.Controllers
         {
             try
             {
-                var ret = await _movieProjectionService.Get(request);
-                return Ok(ret);
+                var result = await _movieProjectionService.Get(request);
+                return Ok(result);
             }
             catch
             {

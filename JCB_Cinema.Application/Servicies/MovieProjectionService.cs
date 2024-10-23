@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using JCB_Cinema.Application.DTOs;
 using JCB_Cinema.Application.Interfaces.Servicies;
+using JCB_Cinema.Application.Requests;
 using JCB_Cinema.Domain.Entities;
-using JCB_Cinema.Domain.ValueObjects;
 using JCB_Cinema.Infrastructure.Data.Interfaces;
-using JCB_Cinema.Tools;
 using Microsoft.EntityFrameworkCore;
 
 namespace JCB_Cinema.Application.Servicies
@@ -20,11 +19,21 @@ namespace JCB_Cinema.Application.Servicies
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<GetMovieProjectionDTO>> Get(RequestMovieProjection requestMovieProjection)
+        public async Task<IList<GetMovieProjectionDTO>?> Get(RequestMovieProjection query)
         {
-            var allMovieProjections = _unitOfWork.Repository<MovieProjection>().Queryable().Where(x => x.ScreenType.Equals(requestMovieProjection.ScreenTypeName));
-            var allMovieProjectionsList = await allMovieProjections.ToListAsync();
-            var mapped = _mapper.Map<IList<GetMovieProjectionDTO>>(allMovieProjectionsList);
+            var entitiesQuery = _unitOfWork.Repository<MovieProjection>().Queryable();
+            if (!string.IsNullOrWhiteSpace(query.ScreenTypeName))
+            {
+                entitiesQuery.Where(a => a.ScreeningTime.Equals(query.ScreenTypeName));
+            }
+
+            var entitiesList = await entitiesQuery.ToListAsync();
+            if (entitiesList == null)
+            {
+                return null;
+            }
+
+            var mapped = _mapper.Map<IList<GetMovieProjectionDTO>>(entitiesList);
             return mapped;
         }
     }
