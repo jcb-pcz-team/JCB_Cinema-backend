@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using JCB_Cinema.Application.DTOs;
-using JCB_Cinema.Application.Interfaces.Servicies;
+using JCB_Cinema.Application.Interfaces;
 using JCB_Cinema.Application.Requests;
 using JCB_Cinema.Domain.Entities;
 using JCB_Cinema.Infrastructure.Data.Interfaces;

@@ -1,4 +1,4 @@
-﻿using JCB_Cinema.Application.Interfaces.Servicies;
+﻿using JCB_Cinema.Application.Interfaces;
 using JCB_Cinema.Application.Mappers;
 using JCB_Cinema.Application.Servicies;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +12,8 @@ namespace JCB_Cinema.Application.Configurations
             services.AddScoped<IMovieService, MovieService>();
             services.AddScoped<IGenreService, GenreService>();
             services.AddScoped<IMovieProjectionService, MovieProjectionService>();
+            services.AddScoped<IUserRoleService, UserRoleService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddAutoMapper(typeof(GenreServiceProfile), typeof(MovieServiceProfile), typeof(MovieProjectionServiceProfile));
 

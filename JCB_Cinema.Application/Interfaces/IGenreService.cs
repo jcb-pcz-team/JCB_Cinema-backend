@@ -1,6 +1,6 @@
 ﻿using JCB_Cinema.Application.DTOs;
 
-namespace JCB_Cinema.Application.Interfaces.Servicies
+namespace JCB_Cinema.Application.Interfaces
 {
     public interface IGenreService
     {
