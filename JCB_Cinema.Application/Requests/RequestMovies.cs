@@ -1,4 +1,4 @@
-﻿namespace JCB_Cinema.Application.DTOs
+﻿namespace JCB_Cinema.Application.Requests
 {
     public class RequestMovies
     {

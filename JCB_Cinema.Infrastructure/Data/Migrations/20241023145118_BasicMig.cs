@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace JCB_Cinema.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class baseChange : Migration
+    public partial class BasicMig : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -33,8 +33,6 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     Discriminator = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RefreshTokenExpiry = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: true),
@@ -66,9 +64,9 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatorId = table.Column<int>(type: "int", nullable: false),
+                    Creator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifierId = table.Column<int>(type: "int", nullable: true),
+                    Modifier = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -87,9 +85,9 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     FileExtension = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Size = table.Column<double>(type: "float", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatorId = table.Column<int>(type: "int", nullable: false),
+                    Creator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifierId = table.Column<int>(type: "int", nullable: true),
+                    Modifier = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -105,9 +103,9 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Date = table.Column<DateOnly>(type: "date", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatorId = table.Column<int>(type: "int", nullable: false),
+                    Creator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifierId = table.Column<int>(type: "int", nullable: true),
+                    Modifier = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -230,9 +228,9 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     Number = table.Column<int>(type: "int", nullable: false),
                     CinemaHallId = table.Column<int>(type: "int", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatorId = table.Column<int>(type: "int", nullable: false),
+                    Creator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifierId = table.Column<int>(type: "int", nullable: true),
+                    Modifier = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -259,9 +257,9 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     Genre = table.Column<int>(type: "int", nullable: true),
                     PosterId = table.Column<int>(type: "int", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatorId = table.Column<int>(type: "int", nullable: false),
+                    Creator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifierId = table.Column<int>(type: "int", nullable: true),
+                    Modifier = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -288,9 +286,9 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     PosterId = table.Column<int>(type: "int", nullable: true),
                     ScheduleId = table.Column<int>(type: "int", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatorId = table.Column<int>(type: "int", nullable: false),
+                    Creator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifierId = table.Column<int>(type: "int", nullable: true),
+                    Modifier = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -334,9 +332,9 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     IsConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     Price = table.Column<int>(type: "int", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatorId = table.Column<int>(type: "int", nullable: false),
+                    Creator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifierId = table.Column<int>(type: "int", nullable: true),
+                    Modifier = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>

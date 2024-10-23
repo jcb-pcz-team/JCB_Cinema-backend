@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using JCB_Cinema.Application.DTOs;
-using JCB_Cinema.Application.Interfaces.Servicies;
+using JCB_Cinema.Application.Interfaces;
+using JCB_Cinema.Application.Requests;
 using JCB_Cinema.Domain.Entities;
 using JCB_Cinema.Infrastructure.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -36,10 +37,10 @@ namespace JCB_Cinema.Application.Servicies
             if (query.Release.HasValue)
             {
                 allMovies = allMovies
-                    .Where(m => m.ReleaseDate.HasValue 
+                    .Where(m => m.ReleaseDate.HasValue
                     && DateOnly.FromDateTime(m.ReleaseDate.Value.Date) == query.Release.Value);
             }
-            
+
 
             var moviesList = await allMovies.ToListAsync();
             var mappedList = _mapper.Map<IList<GetMovieDTO>>(moviesList);

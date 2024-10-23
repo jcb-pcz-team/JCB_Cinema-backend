@@ -6,13 +6,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace JCB_Cinema.WebAPI
 {
     public class Program
     {
-        private static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -61,7 +62,7 @@ namespace JCB_Cinema.WebAPI
             Application.Configurations.Dependencies.Register(builder.Services);
 
             //JWT
-            
+
             builder.Services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<CinemaDbContext>()
                 .AddDefaultTokenProviders();
@@ -81,7 +82,8 @@ namespace JCB_Cinema.WebAPI
                     ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
                     ValidAudience = builder.Configuration["JWT:ValidAudience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),
-                    ClockSkew = TimeSpan.FromSeconds(5)
+                    ClockSkew = TimeSpan.FromSeconds(5),
+                    RoleClaimType = ClaimTypes.Role
                 };
                 options.Events = new JwtBearerEvents
                 {
@@ -89,9 +91,14 @@ namespace JCB_Cinema.WebAPI
                     OnTokenValidated = ctx => LogAttempt(ctx.Request.Headers, "OnTokenValidated")
                 };
             });
-            
 
             var app = builder.Build();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                await EnsureRolesAsync(roleManager);
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -129,6 +136,18 @@ namespace JCB_Cinema.WebAPI
                     //logger.LogInformation($"{eventType}. Expiration: {jwt.ValidTo.ToLongTimeString()}. System time: {DateTime.UtcNow.ToLongTimeString()}");
                 }
                 return Task.CompletedTask;
+            }
+
+            static async Task EnsureRolesAsync(RoleManager<IdentityRole> roleManager)
+            {
+                string[] roleNames = { "Admin", "User", "Manager" };
+                foreach (var roleName in roleNames)
+                {
+                    if (!await roleManager.RoleExistsAsync(roleName))
+                    {
+                        await roleManager.CreateAsync(new IdentityRole(roleName));
+                    }
+                }
             }
         }
     }

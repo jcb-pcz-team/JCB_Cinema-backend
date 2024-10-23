@@ -1,4 +1,5 @@
-﻿using JCB_Cinema.Application.Interfaces.Servicies;
+﻿using JCB_Cinema.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JCB_Cinema.WebAPI.Controllers
@@ -14,6 +15,7 @@ namespace JCB_Cinema.WebAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Get()
         {
             try

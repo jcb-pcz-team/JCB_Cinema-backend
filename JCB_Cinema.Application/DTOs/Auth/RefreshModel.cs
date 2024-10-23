@@ -1,4 +1,4 @@
-﻿namespace JCB_Cinema.Application.Auth
+﻿namespace JCB_Cinema.Application.DTOs.Auth
 {
     public class RefreshModel
     {

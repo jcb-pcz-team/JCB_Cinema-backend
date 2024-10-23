@@ -37,8 +37,9 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CreatorId")
-                        .HasColumnType("int");
+                    b.Property<string>("Creator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ExpiresAt")
                         .HasColumnType("datetime2");
@@ -52,8 +53,8 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<DateTime?>("Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifierId")
-                        .HasColumnType("int");
+                    b.Property<string>("Modifier")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MovieProjectionId")
                         .HasColumnType("int");
@@ -89,8 +90,9 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CreatorId")
-                        .HasColumnType("int");
+                    b.Property<string>("Creator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -98,8 +100,8 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<DateTime?>("Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifierId")
-                        .HasColumnType("int");
+                    b.Property<string>("Modifier")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -121,8 +123,9 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CreatorId")
-                        .HasColumnType("int");
+                    b.Property<string>("Creator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -139,8 +142,8 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<DateTime?>("Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifierId")
-                        .HasColumnType("int");
+                    b.Property<string>("Modifier")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PosterId")
                         .HasColumnType("int");
@@ -176,8 +179,9 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CreatorId")
-                        .HasColumnType("int");
+                    b.Property<string>("Creator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -185,8 +189,8 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<DateTime?>("Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifierId")
-                        .HasColumnType("int");
+                    b.Property<string>("Modifier")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MovieId")
                         .HasColumnType("int");
@@ -230,8 +234,9 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CreatorId")
-                        .HasColumnType("int");
+                    b.Property<string>("Creator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -246,8 +251,8 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<DateTime?>("Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifierId")
-                        .HasColumnType("int");
+                    b.Property<string>("Modifier")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double?>("Size")
                         .HasColumnType("float");
@@ -268,8 +273,9 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CreatorId")
-                        .HasColumnType("int");
+                    b.Property<string>("Creator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
@@ -280,8 +286,8 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<DateTime?>("Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifierId")
-                        .HasColumnType("int");
+                    b.Property<string>("Modifier")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ScheduleId");
 
@@ -302,8 +308,9 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CreatorId")
-                        .HasColumnType("int");
+                    b.Property<string>("Creator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -311,8 +318,8 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<DateTime?>("Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifierId")
-                        .HasColumnType("int");
+                    b.Property<string>("Modifier")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Number")
                         .HasColumnType("int");
@@ -549,13 +556,8 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RefreshToken")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("RefreshTokenExpiry")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Role")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasDiscriminator().HasValue("AppUser");

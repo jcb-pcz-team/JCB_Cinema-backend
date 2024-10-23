@@ -1,6 +1,6 @@
-﻿using JCB_Cinema.Application.DTOs;
-using JCB_Cinema.Application.Interfaces.Servicies;
-using JCB_Cinema.Domain.ValueObjects;
+﻿using JCB_Cinema.Application.Interfaces;
+using JCB_Cinema.Application.Requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JCB_Cinema.WebAPI.Controllers
@@ -17,12 +17,13 @@ namespace JCB_Cinema.WebAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Get([FromQuery] RequestMovieProjection request)
         {
             try
             {
-                var ret = await _movieProjectionService.Get(request);
-                return Ok(ret);
+                var result = await _movieProjectionService.Get(request);
+                return Ok(result);
             }
             catch
             {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace JCB_Cinema.Application.Auth
+namespace JCB_Cinema.Application.DTOs.Auth
 {
     public class LoginModel
     {
