@@ -12,9 +12,9 @@ namespace JCB_Cinema.Application.Configurations
             services.AddScoped<IMovieService, MovieService>();
             services.AddScoped<IGenreService, GenreService>();
             services.AddScoped<IMovieProjectionService, MovieProjectionService>();
+            services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IUserRoleService, UserRoleService>();
             services.AddScoped<IUserService, UserService>();
-
             services.AddAutoMapper(typeof(GenreServiceProfile), typeof(MovieServiceProfile), typeof(MovieProjectionServiceProfile));
 
             //DI for Infrastructure

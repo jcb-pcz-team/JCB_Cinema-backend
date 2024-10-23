@@ -83,39 +83,46 @@ namespace JCB_Cinema.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            _logger.LogInformation("Start Login");
-
-            AppUser? user = null;
-            if (!string.IsNullOrEmpty(model.UserName))
+            try
             {
-                user = await _userManager.FindByNameAsync(model.UserName);
-            }
-            else if (!string.IsNullOrEmpty(model.Email))
-            {
-                user = await _userManager.FindByEmailAsync(model.Email);
-            }
+                // Call the service method to perform the login
+                var token = await _userService.Login(model);
 
-            if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password))
-            {
-                return Unauthorized();
+                // Return the JWT token if login is successful
+                _logger.LogInformation("Login succeeded for user: {UserName}", model.UserName ?? model.Email);
+                return Ok(token);
             }
-            JwtSecurityToken token = await GenerateJwt(user);
-
-            _logger.LogInformation("Login succeeded");
-            return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+            catch (UnauthorizedAccessException ex)
+            {
+                // Log unauthorized access attempt
+                _logger.LogWarning("Login failed for user: {UserName}. Reason: {Message}", model.UserName ?? model.Email, ex.Message);
+                return Unauthorized(new { message = "Invalid username, email, or password" });
+            }
+            catch (Exception ex)
+            {
+                // Log any other exceptions that might occur
+                _logger.LogError(ex, "An error occurred during login for user: {UserName}", model.UserName ?? model.Email);
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred. Please try again later." });
+            }
         }
 
         [HttpPost("assign-user-to-role")]
         public async Task<IActionResult> AssignUserToRole([FromQuery] AssignUserToRoleRequest roleRequest)
         {
-            var user = await _userManager.FindByNameAsync(roleRequest.UserName);
-            if (user == null)
-                return BadRequest("Can't find a user");
-
-            await _userRoleService.AssignRoleToUserAsync(user, roleRequest.Role);
-
-            JwtSecurityToken token = await GenerateJwt(user);
-            return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+            try
+            {
+                var token = await _userService.AssignUserToRole(roleRequest);
+                return Ok(token);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error assigning role to user.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while assigning role.");
+            }
         }
 
         private ClaimsPrincipal? GetPrincipalFromExpiredToken(string token)
