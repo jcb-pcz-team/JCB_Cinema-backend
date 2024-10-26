@@ -6,6 +6,6 @@
         public DateOnly Date { get; set; }
         public List<MovieProjection> Screenings { get; set; } = new List<MovieProjection>();
 
-        public override int Key => ScheduleId;
+        public override object Key => ScheduleId;
     }
 }

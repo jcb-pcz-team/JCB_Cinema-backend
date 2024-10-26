@@ -18,6 +18,6 @@
         public bool IsConfirmed { get; set; }
         public int Price { get; set; }
 
-        public override int Key => BookingTicketId;
+        public override object Key => BookingTicketId;
     }
 }

@@ -10,6 +10,6 @@ namespace JCB_Cinema.Domain.Entities
 
         [NotMapped]
         public int? TotalSeats => Seats.Count;
-        public override int Key => CinemaHallId;
+        public override object Key => CinemaHallId;
     }
 }

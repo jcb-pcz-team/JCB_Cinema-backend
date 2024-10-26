@@ -9,6 +9,6 @@
         public string FileExtension { get; set; } = null!;
         public double? Size { get; set; }
 
-        public override int Key => Id;
+        public override object Key => Id;
     }
 }

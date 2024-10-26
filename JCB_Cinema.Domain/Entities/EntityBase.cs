@@ -7,6 +7,6 @@
         public DateTime? Modified { get; set; }
         public string? Modifier { get; set; }
         public bool IsDeleted { get; set; } = false;
-        public abstract int Key { get; }
+        public abstract object Key { get; }
     }
 }

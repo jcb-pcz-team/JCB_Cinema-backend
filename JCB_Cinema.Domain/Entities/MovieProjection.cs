@@ -37,7 +37,7 @@ namespace JCB_Cinema.Domain.Entities
                 return CinemaHall.TotalSeats.HasValue ? CinemaHall.TotalSeats.Value - OccupiedSeats : 0;
             }
         }
-        public override int Key => MovieProjectionId;
+        public override object Key => MovieProjectionId;
 
         public static int CalculateSubchargeForTicketPrice(ScreenType screenType = ScreenType.TwoD)
         {

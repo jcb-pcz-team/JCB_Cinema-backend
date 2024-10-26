@@ -13,6 +13,6 @@ namespace JCB_Cinema.Domain.Entities
         public Genre? Genre { get; set; }
         public string? GenreDescription => Genre?.GetDescription();
         public Photo? Poster { get; set; }
-        public override int Key => MovieId;
+        public override object Key => MovieId;
     }
 }

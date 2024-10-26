@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JCB_Cinema.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(CinemaDbContext))]
-    [Migration("20241023145118_BasicMig")]
+    [Migration("20241026094828_BasicMig")]
     partial class BasicMig
     {
         /// <inheritdoc />
@@ -556,10 +556,6 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
