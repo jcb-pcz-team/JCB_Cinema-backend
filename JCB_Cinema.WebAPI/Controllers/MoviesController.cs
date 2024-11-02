@@ -1,5 +1,6 @@
 ﻿using JCB_Cinema.Application.Interfaces;
 using JCB_Cinema.Application.Requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JCB_Cinema.WebAPI.Controllers

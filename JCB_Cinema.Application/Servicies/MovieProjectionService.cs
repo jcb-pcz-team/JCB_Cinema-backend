@@ -4,6 +4,7 @@ using JCB_Cinema.Application.Interfaces;
 using JCB_Cinema.Application.Requests;
 using JCB_Cinema.Domain.Entities;
 using JCB_Cinema.Infrastructure.Data.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace JCB_Cinema.Application.Servicies
@@ -19,6 +20,7 @@ namespace JCB_Cinema.Application.Servicies
             _mapper = mapper;
         }
 
+        [HttpGet]
         public async Task<IList<GetMovieProjectionDTO>?> Get(RequestMovieProjection query)
         {
             var entitiesQuery = _unitOfWork.Repository<MovieProjection>().Queryable();
