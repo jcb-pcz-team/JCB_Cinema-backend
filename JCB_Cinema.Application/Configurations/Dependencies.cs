@@ -15,7 +15,8 @@ namespace JCB_Cinema.Application.Configurations
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IUserRoleService, UserRoleService>();
             services.AddScoped<IUserService, UserService>();
-            services.AddAutoMapper(typeof(GenreServiceProfile), typeof(MovieServiceProfile), typeof(MovieProjectionServiceProfile));
+            services.AddScoped<IScheduleService, ScheduleService>();
+            services.AddAutoMapper(typeof(GenreServiceProfile), typeof(MovieServiceProfile), typeof(MovieProjectionServiceProfile), typeof(ScheduleServiceProfile));
 
             //DI for Infrastructure
             Infrastructure.Configurations.Dependencies.Register(services);
