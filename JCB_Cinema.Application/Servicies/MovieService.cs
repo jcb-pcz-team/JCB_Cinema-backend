@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
 using JCB_Cinema.Application.DTOs;
 using JCB_Cinema.Application.Interfaces;
-using JCB_Cinema.Application.Requests;
 using JCB_Cinema.Domain.Entities;
+using JCB_Cinema.Domain.ValueObjects;
 using JCB_Cinema.Infrastructure.Data.Interfaces;
+using JCB_Cinema.Tools;
 using Microsoft.EntityFrameworkCore;
 
 namespace JCB_Cinema.Application.Servicies
@@ -19,32 +20,22 @@ namespace JCB_Cinema.Application.Servicies
             _mapper = mapper;
         }
 
-        public async Task<IList<GetMovieDTO>> Get(RequestMovies query)
+        public async Task<IList<GetMovieDTO>?> Get(int genreId)
+        {
+            var allMovies = await _unitOfWork.Repository<Movie>().Queryable().Where(m => m.Genre.HasValue && (int)m.Genre.Value == genreId).ToListAsync();
+            return allMovies == null ? null : _mapper.Map<IList<GetMovieDTO>>(allMovies);
+        }
+
+        public async Task<IList<GetMovieDTO>?> Get(string genreName)
         {
             var allMovies = _unitOfWork.Repository<Movie>().Queryable();
-
-            // Filter by Genre Id
-            if (query.GenreId.HasValue)
+            if (!string.IsNullOrWhiteSpace(genreName))
             {
-                allMovies = allMovies.Where(m => m.Genre.HasValue && (int)m.Genre.Value == query.GenreId.Value);
+                Genre? genreValue = EnumExtensions.GetValueFromDescription<Genre>(genreName);
+                allMovies = allMovies.Where(m => m.Genre == genreValue);
             }
-            // Filter by Genre name
-            if (!string.IsNullOrWhiteSpace(query.GenreName))
-            {
-                allMovies = allMovies.Where(m => m.Genre.HasValue.ToString().Equals(query.GenreName, StringComparison.OrdinalIgnoreCase));
-            }
-            //Filter by Release Date
-            if (query.Release.HasValue)
-            {
-                allMovies = allMovies
-                    .Where(m => m.ReleaseDate.HasValue
-                    && DateOnly.FromDateTime(m.ReleaseDate.Value.Date) == query.Release.Value);
-            }
-
-
             var moviesList = await allMovies.ToListAsync();
-            var mappedList = _mapper.Map<IList<GetMovieDTO>>(moviesList);
-            return mappedList;
+            return moviesList == null ? null : _mapper.Map<IList<GetMovieDTO>>(moviesList);
         }
     }
 }

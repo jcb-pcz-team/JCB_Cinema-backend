@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using JCB_Cinema.Application.DTOs;
 using JCB_Cinema.Application.Interfaces;
-using JCB_Cinema.Application.Requests;
 using JCB_Cinema.Domain.Entities;
 using JCB_Cinema.Infrastructure.Data.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -20,23 +19,13 @@ namespace JCB_Cinema.Application.Servicies
             _mapper = mapper;
         }
 
-        [HttpGet]
-        public async Task<IList<GetMovieProjectionDTO>?> Get(RequestMovieProjection query)
+        public async Task<IList<GetMovieProjectionDTO>?> Get([FromQuery] string screenType)
         {
             var entitiesQuery = _unitOfWork.Repository<MovieProjection>().Queryable();
-            if (!string.IsNullOrWhiteSpace(query.ScreenTypeName))
-            {
-                entitiesQuery.Where(a => a.ScreeningTime.Equals(query.ScreenTypeName));
-            }
-
+            if (!string.IsNullOrWhiteSpace(screenType))
+                entitiesQuery.Where(a => a.ScreeningTime.Equals(screenType));
             var entitiesList = await entitiesQuery.ToListAsync();
-            if (entitiesList == null)
-            {
-                return null;
-            }
-
-            var mapped = _mapper.Map<IList<GetMovieProjectionDTO>>(entitiesList);
-            return mapped;
+            return entitiesList == null ? null : _mapper.Map<IList<GetMovieProjectionDTO>>(entitiesList);
         }
     }
 }

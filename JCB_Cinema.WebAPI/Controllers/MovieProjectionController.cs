@@ -15,15 +15,14 @@ namespace JCB_Cinema.WebAPI.Controllers
         {
             _movieProjectionService = movieProjectionService;
         }
-
+        
         [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> Get([FromQuery] RequestMovieProjection request)
+        public async Task<IActionResult> Get([FromQuery] string screenType)
         {
             try
             {
-                var result = await _movieProjectionService.Get(request);
-                return Ok(result);
+                var result = await _movieProjectionService.Get(screenType);
+                return result == null ? NotFound() : Ok(result);
             }
             catch
             {

@@ -1,5 +1,4 @@
 ﻿using JCB_Cinema.Application.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JCB_Cinema.WebAPI.Controllers
@@ -13,14 +12,14 @@ namespace JCB_Cinema.WebAPI.Controllers
         {
             _genreService = genreService;
         }
-
+        
         [HttpGet]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Get()
         {
             try
             {
-                return Ok(await _genreService.Get());
+                var request = await _genreService.Get();
+                return request == null ? NotFound() : Ok(request);
             }
             catch
             {
