@@ -6,6 +6,7 @@ namespace JCB_Cinema.Application.Interfaces
 {
     public interface IMovieService
     {
-        public Task<IList<GetMovieDTO>> Get([FromQuery] RequestMovies query);
+        public Task<IList<GetMovieDTO>?> Get(int genreId);
+        public Task<IList<GetMovieDTO>?> Get(string genreName);
     }
 }

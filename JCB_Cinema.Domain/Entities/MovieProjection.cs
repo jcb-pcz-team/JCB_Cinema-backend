@@ -12,7 +12,7 @@ namespace JCB_Cinema.Domain.Entities
         public DateTime ScreeningTime { get; set; }
         public ScreenType ScreenType { get; set; }
 
-        public int CinemHallId { get; set; }
+        public int CinemaHallId { get; set; }
         public CinemaHall CinemaHall { get; set; } = null!;
         public Photo? Poster { get; set; }
 
