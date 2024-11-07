@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using JCB_Cinema.Application.DTOs;
 using JCB_Cinema.Application.Interfaces;
+using JCB_Cinema.Application.Requests;
 using JCB_Cinema.Domain.Entities;
+using JCB_Cinema.Domain.ValueObjects;
 using JCB_Cinema.Infrastructure.Data.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+using JCB_Cinema.Tools;
 using Microsoft.EntityFrameworkCore;
 
 namespace JCB_Cinema.Application.Servicies
@@ -19,13 +21,20 @@ namespace JCB_Cinema.Application.Servicies
             _mapper = mapper;
         }
 
-        public async Task<IList<GetMovieProjectionDTO>?> Get([FromQuery] string screenType)
+        public async Task<IList<GetMovieProjectionDTO>?> Get(RequestMovieProjection request)
         {
-            var entitiesQuery = _unitOfWork.Repository<MovieProjection>().Queryable();
-            if (!string.IsNullOrWhiteSpace(screenType))
-                entitiesQuery.Where(a => a.ScreeningTime.Equals(screenType));
-            var entitiesList = await entitiesQuery.ToListAsync();
-            return entitiesList == null ? null : _mapper.Map<IList<GetMovieProjectionDTO>>(entitiesList);
+            var query = _unitOfWork.Repository<MovieProjection>().Queryable();
+            if (!string.IsNullOrWhiteSpace(request.ScreenTypeName))
+            {
+                var genreValue = EnumExtensions.GetValueFromDescription<ScreenType>(request.ScreenTypeName);
+                query = query.Where(m => m.ScreenType == genreValue);
+            }
+            if (request.CinemaHallId.HasValue)
+            {
+                query = query.Where(a => a.CinemaHallId == request.CinemaHallId);
+            }
+            var entities = await query.ToListAsync();
+            return entities == null ? null : _mapper.Map<IList<GetMovieProjectionDTO>>(entities);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using JCB_Cinema.Application.Interfaces;
+using JCB_Cinema.Application.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JCB_Cinema.WebAPI.Controllers
@@ -13,26 +14,13 @@ namespace JCB_Cinema.WebAPI.Controllers
         {
             _movieService = movieService;
         }
-        
+
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] int? genreId, [FromQuery] string? genreName)
+        public async Task<IActionResult> Get([FromQuery] RequestMovies request)
         {
             try
             {
-                if (genreId.HasValue)
-                {
-                    var request = await _movieService.Get(genreId.Value);
-                    return request == null ? NotFound() : Ok(request);
-                }
-                else if (!string.IsNullOrWhiteSpace(genreName))
-                {
-                    var request = await _movieService.Get(genreName);
-                    return request == null ? NotFound() : Ok(request);
-                }
-                else
-                {
-                    return BadRequest("Either genreId or genreName must be provided.");
-                }
+                return Ok(await _movieService.Get(request));
             }
             catch
             {

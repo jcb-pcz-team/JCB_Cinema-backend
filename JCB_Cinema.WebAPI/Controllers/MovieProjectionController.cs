@@ -1,6 +1,5 @@
 ﻿using JCB_Cinema.Application.Interfaces;
 using JCB_Cinema.Application.Requests;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JCB_Cinema.WebAPI.Controllers
@@ -15,14 +14,14 @@ namespace JCB_Cinema.WebAPI.Controllers
         {
             _movieProjectionService = movieProjectionService;
         }
-        
+
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] string screenType)
+        public async Task<IActionResult> Get([FromQuery] RequestMovieProjection request)
         {
             try
             {
-                var result = await _movieProjectionService.Get(screenType);
-                return result == null ? NotFound() : Ok(result);
+                var result = await _movieProjectionService.Get(request);
+                return Ok(result);
             }
             catch
             {

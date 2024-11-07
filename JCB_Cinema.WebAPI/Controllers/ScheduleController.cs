@@ -1,4 +1,5 @@
 ﻿using JCB_Cinema.Application.Interfaces;
+using JCB_Cinema.Application.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JCB_Cinema.WebAPI.Controllers
@@ -13,14 +14,13 @@ namespace JCB_Cinema.WebAPI.Controllers
         {
             _scheduleService = scheduleService;
         }
-        
+
         [HttpGet]
-        public async Task<IActionResult> GetFilteredSchedulesAsync([FromQuery] string date)
+        public async Task<IActionResult> GetFilteredSchedulesAsync([FromQuery] RequestSchedule request)
         {
             try
             {
-                var request = await _scheduleService.GetFilteredSchedulesAsync(date);
-                return request == null ? NotFound() : Ok(request);
+                return Ok(await _scheduleService.Get(request));
             }
             catch
             {

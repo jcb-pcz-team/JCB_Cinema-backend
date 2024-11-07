@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using JCB_Cinema.Application.DTOs;
 using JCB_Cinema.Application.Interfaces;
+using JCB_Cinema.Application.Requests;
 using JCB_Cinema.Domain.Entities;
 using JCB_Cinema.Domain.ValueObjects;
 using JCB_Cinema.Infrastructure.Data.Interfaces;
@@ -20,21 +21,19 @@ namespace JCB_Cinema.Application.Servicies
             _mapper = mapper;
         }
 
-        public async Task<IList<GetMovieDTO>?> Get(int genreId)
+        public async Task<IList<GetMovieDTO>?> Get(RequestMovies request)
         {
-            var allMovies = await _unitOfWork.Repository<Movie>().Queryable().Where(m => m.Genre.HasValue && (int)m.Genre.Value == genreId).ToListAsync();
-            return allMovies == null ? null : _mapper.Map<IList<GetMovieDTO>>(allMovies);
-        }
-
-        public async Task<IList<GetMovieDTO>?> Get(string genreName)
-        {
-            var allMovies = _unitOfWork.Repository<Movie>().Queryable();
-            if (!string.IsNullOrWhiteSpace(genreName))
+            var query = _unitOfWork.Repository<Movie>().Queryable();
+            if (request.GenreId.HasValue)
             {
-                Genre? genreValue = EnumExtensions.GetValueFromDescription<Genre>(genreName);
-                allMovies = allMovies.Where(m => m.Genre == genreValue);
+                query = query.Where(m => (int?)m.Genre == request.GenreId);
             }
-            var moviesList = await allMovies.ToListAsync();
+            else if (!string.IsNullOrWhiteSpace(request.GenreName))
+            {
+                Genre? genreValue = EnumExtensions.GetValueFromDescription<Genre>(request.GenreName);
+                query = query.Where(m => m.Genre == genreValue);
+            }
+            var moviesList = await query.ToListAsync();
             return moviesList == null ? null : _mapper.Map<IList<GetMovieDTO>>(moviesList);
         }
     }

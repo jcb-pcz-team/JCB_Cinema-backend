@@ -2,6 +2,7 @@
 {
     public class RequestMovieProjection
     {
-        public string ScreenTypeName { get; set; } = string.Empty;
+        public string? ScreenTypeName { get; set; }
+        public int? CinemaHallId { get; set; }
     }
 }

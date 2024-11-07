@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using JCB_Cinema.Application.DTOs;
 using JCB_Cinema.Application.Interfaces;
+using JCB_Cinema.Application.Requests;
 using JCB_Cinema.Domain.Entities;
 using JCB_Cinema.Infrastructure.Data.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace JCB_Cinema.Application.Servicies
@@ -19,16 +19,20 @@ namespace JCB_Cinema.Application.Servicies
             _mapper = mapper;
         }
 
-        public async Task<IList<GetScheduleDTO>> GetFilteredSchedulesAsync([FromQuery] string date)
+        public async Task<IList<GetScheduleDTO>?> Get(RequestSchedule request)
         {
-            var allSchedules = _unitOfWork.Repository<Schedule>().Queryable();
+            var query = _unitOfWork.Repository<Schedule>().Queryable();
+            if (request.DateFrom.HasValue)
+            {
+                query = query.Where(a => a.Date >= request.DateFrom);
+            }
+            if (request.DateTo.HasValue)
+            {
+                query = query.Where(a => a.Date <= request.DateTo);
+            }
 
-            DateOnly stringToDate = DateOnly.Parse(date);
-
-            allSchedules = allSchedules.Where(x => x.Date == stringToDate);
-
-            var allSchedulesList = await allSchedules.ToListAsync();
-            return _mapper.Map<IList<GetScheduleDTO>>(allSchedulesList);
+            var entities = await query.ToListAsync();
+            return entities == null ? null : _mapper.Map<IList<GetScheduleDTO>>(entities);
         }
     }
 }
