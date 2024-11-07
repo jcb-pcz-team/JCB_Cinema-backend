@@ -3,22 +3,19 @@ using JCB_Cinema.Application.DTOs;
 using JCB_Cinema.Application.Interfaces;
 using JCB_Cinema.Application.Requests;
 using JCB_Cinema.Domain.Entities;
+using JCB_Cinema.Domain.Interface;
 using JCB_Cinema.Domain.ValueObjects;
 using JCB_Cinema.Infrastructure.Data.Interfaces;
 using JCB_Cinema.Tools;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace JCB_Cinema.Application.Servicies
 {
-    public class MovieService : IMovieService
+    public class MovieService : ServiceBase, IMovieService
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-
-        public MovieService(IUnitOfWork unitOfWork, IMapper mapper)
+        public MovieService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IUserContextService userContextService) : base(unitOfWork, mapper, userManager, userContextService)
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
         }
 
         public async Task<IList<GetMovieDTO>?> Get(RequestMovies request)

@@ -1,6 +1,7 @@
 ﻿using JCB_Cinema.Application.Interfaces;
 using JCB_Cinema.Application.Mappers;
 using JCB_Cinema.Application.Servicies;
+using JCB_Cinema.Domain.Interface;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JCB_Cinema.Application.Configurations
@@ -15,6 +16,7 @@ namespace JCB_Cinema.Application.Configurations
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IUserRoleService, UserRoleService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserContextService, UserContextService>();
             services.AddScoped<IScheduleService, ScheduleService>();
             services.AddScoped<ICinemaHallService, CinemaHallService>();
             services.AddAutoMapper(typeof(GenreServiceProfile), typeof(MovieServiceProfile), typeof(MovieProjectionServiceProfile), typeof(ScheduleServiceProfile), typeof(CinemaHallServiceProfile));

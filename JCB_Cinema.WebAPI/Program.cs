@@ -92,6 +92,7 @@ namespace JCB_Cinema.WebAPI
                 };
             });
 
+            builder.Services.AddHttpContextAccessor();
             var app = builder.Build();
 
             using (var scope = app.Services.CreateScope())
