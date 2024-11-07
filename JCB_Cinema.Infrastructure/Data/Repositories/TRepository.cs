@@ -40,26 +40,5 @@ namespace JCB_Cinema.Infrastructure.Data.Repositories
 
             return !entity.IsDeleted ? entity : null;
         }
-
-        public async void Add(T entity)
-        {
-            entity.Created = DateTime.UtcNow;
-            //entity.Creator
-            await _dbSet.AddAsync(entity);
-        }
-
-        // Aktualizacja encji
-        public void Update(T entity)
-        {
-            entity.Modified = DateTime.UtcNow;
-            //entity.Modifier
-            _dbSet.Update(entity);
-        }
-
-        public void Delete(T entity)
-        {
-            entity.IsDeleted = true;
-            entity.Modified = DateTime.UtcNow;
-        }
     }
 }

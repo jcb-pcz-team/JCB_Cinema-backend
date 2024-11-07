@@ -2,18 +2,15 @@
 using JCB_Cinema.Application.DTOs;
 using JCB_Cinema.Application.Interfaces;
 using JCB_Cinema.Domain.ValueObjects;
-using JCB_Cinema.Infrastructure.Data.Interfaces;
 
 namespace JCB_Cinema.Application.Servicies
 {
     public class GenreService : IGenreService
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public GenreService(IUnitOfWork unitOfWork, IMapper mapper)
+        public GenreService(IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 

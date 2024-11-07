@@ -3,20 +3,17 @@ using JCB_Cinema.Application.DTOs;
 using JCB_Cinema.Application.Interfaces;
 using JCB_Cinema.Application.Requests;
 using JCB_Cinema.Domain.Entities;
+using JCB_Cinema.Domain.Interface;
 using JCB_Cinema.Infrastructure.Data.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace JCB_Cinema.Application.Servicies
 {
-    public class ScheduleService : IScheduleService
+    public class ScheduleService : ServiceBase, IScheduleService
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-
-        public ScheduleService(IUnitOfWork unitOfWork, IMapper mapper)
+        public ScheduleService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IUserContextService userContextService) : base(unitOfWork, mapper, userManager, userContextService)
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
         }
 
         public async Task<IList<GetScheduleDTO>?> Get(RequestSchedule request)
