@@ -144,7 +144,6 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                     ScreenType = ScreenType.IMAX,
                     CinemaHall = cinemaHalls[0],
                     CinemaHallId = cinemaHalls[0].CinemaHallId,
-                    Poster = movies[0].Poster,
                     Created = GetDate(false),
                     Creator = "System",
                     Modified = DateTime.Now,
@@ -158,7 +157,6 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                     ScreenType = ScreenType.ThreeD,
                     CinemaHall = cinemaHalls[1],
                     CinemaHallId = cinemaHalls[1].CinemaHallId,
-                    Poster = movies[0].Poster,
                     Created = GetDate(false),
                     Creator = "System",
                     Modified = DateTime.Now,
@@ -172,7 +170,6 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                     ScreenType = ScreenType.ThreeD,
                     CinemaHall = cinemaHalls[2],
                     CinemaHallId = cinemaHalls[2].CinemaHallId,
-                    Poster = movies[0].Poster,
                     Created = DateTime.Now,
                     Creator = "System",
                     Modified = DateTime.Now,
@@ -186,7 +183,6 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                     ScreenType = ScreenType.TwoD,
                     CinemaHall = cinemaHalls[3],
                     CinemaHallId = cinemaHalls[3].CinemaHallId,
-                    Poster = movies[0].Poster,
                     Created = GetDate(false),
                     Creator = "System",
                     Modified = DateTime.Now,
@@ -568,9 +564,10 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
         private static DateTime GetDate(bool isFuture)
         {
             Random random = new Random();
-            DateTime today = DateTime.Today;
-            int daysOffset = random.Next(0, 3);
-            return isFuture ? today.AddDays(+daysOffset) : today.AddDays(-daysOffset);
+            DateTime today = DateTime.Now;
+            int daysOffset = random.Next(0, 4);
+            int hourOffset = random.Next(1, 24);
+            return isFuture ? today.AddDays(+daysOffset).AddHours(+hourOffset) : today.AddDays(-daysOffset).AddHours(-hourOffset);
         }
     }
 }

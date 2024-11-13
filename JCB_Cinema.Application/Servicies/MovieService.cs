@@ -9,6 +9,7 @@ using JCB_Cinema.Infrastructure.Data.Interfaces;
 using JCB_Cinema.Tools;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace JCB_Cinema.Application.Servicies
 {
@@ -33,6 +34,18 @@ namespace JCB_Cinema.Application.Servicies
 
             var moviesList = await query.ToListAsync();
             return moviesList == null ? null : _mapper.Map<IList<GetMovieDTO>>(moviesList);
+        }
+
+        public async Task<GetMovieDTO?> GetDetails(int id)
+        {
+            var query = await _unitOfWork.Repository<Movie>().Queryable().FirstOrDefaultAsync(m => m.MovieId == id);
+            return query == null ? null : _mapper.Map<GetMovieDTO>(query);
+        }
+
+        public async Task<bool> IsAny(Expression<Func<Movie, bool>> predicate)
+        {
+            var entity = await _unitOfWork.Repository<Movie>().Queryable().AnyAsync(predicate);
+            return entity;
         }
     }
 }
