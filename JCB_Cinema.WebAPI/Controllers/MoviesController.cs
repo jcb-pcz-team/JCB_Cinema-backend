@@ -27,5 +27,22 @@ namespace JCB_Cinema.WebAPI.Controllers
                 return BadRequest("Error occurred");
             }
         }
+
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> GetDetails(int Id)
+        {
+            try
+            {
+                if (!await _movieService.IsAny(m => m.MovieId == Id))
+                {
+                    return NotFound("No Movie Found");
+                }
+                return Ok(await _movieService.GetDetails(Id));
+            }
+            catch
+            {
+                return BadRequest("Error occurred");
+            }
+        }
     }
 }
