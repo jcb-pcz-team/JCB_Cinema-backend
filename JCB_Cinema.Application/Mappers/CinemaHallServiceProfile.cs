@@ -35,7 +35,7 @@ namespace JCB_Cinema.Application.Mappers
                 .ForMember(dest => dest.ScreeningTime, opt => opt.MapFrom(src => src.ScreeningTime))
                 .ForMember(dest => dest.ScreenType, opt => opt.MapFrom(src => src.ScreenType.ToString()))
                 .ForMember(dest => dest.CinemaHall, opt => opt.MapFrom(src => src.CinemaHall))
-                .ForMember(dest => dest.Poster, opt => opt.MapFrom(src => src.Poster))
+                .ForMember(dest => dest.PosterURL, opt => opt.MapFrom(src => src.PosterURL))
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
                 .ForMember(dest => dest.OccupiedSeats, opt => opt.MapFrom(src => src.OccupiedSeats))
                 .ForMember(dest => dest.AvailableSeats, opt => opt.MapFrom(src => src.AvailableSeats));
@@ -43,9 +43,9 @@ namespace JCB_Cinema.Application.Mappers
             CreateMap<GetMovieProjectionDTO, MovieProjection>()
                 .ForMember(dest => dest.Movie, opt => opt.Ignore()) // Ignore Movie mapping for now as we don't have GetMovieDTO details
                 .ForMember(dest => dest.ScreeningTime, opt => opt.MapFrom(src => src.ScreeningTime))
-                .ForMember(dest => dest.ScreenType, opt => opt.MapFrom(src => Enum.Parse<ScreenType>(src.ScreenType ?? "TwoD"))) // Default to 2D
+                .ForMember(dest => dest.ScreenType, opt => opt.MapFrom(src => Enum.Parse<ScreenType>(src.ScreenType ?? "2D"))) // Default to 2D
                 .ForMember(dest => dest.CinemaHall, opt => opt.MapFrom(src => src.CinemaHall))
-                .ForMember(dest => dest.Poster, opt => opt.MapFrom(src => src.Poster))
+                .ForMember(dest => dest.PosterURL, opt => opt.MapFrom(src => src.PosterURL))
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
                 .ForMember(dest => dest.MovieProjectionId, opt => opt.Ignore()) // Ignore MovieProjectionId
                 .ForMember(dest => dest.OccupiedSeats, opt => opt.Ignore()) // Handled internally
