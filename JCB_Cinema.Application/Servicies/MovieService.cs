@@ -42,6 +42,12 @@ namespace JCB_Cinema.Application.Servicies
             return query == null ? null : _mapper.Map<GetMovieDTO>(query);
         }
 
+        public async Task<IList<GetMovieDTO>?> GetUpcoming()
+        {
+            var query = await _unitOfWork.Repository<Movie>().Queryable().Where(m => m.ReleaseDate > DateTime.UtcNow).ToListAsync();
+            return query == null ? null : _mapper.Map<IList<GetMovieDTO>>(query);
+        }
+
         public async Task<bool> IsAny(Expression<Func<Movie, bool>> predicate)
         {
             var entity = await _unitOfWork.Repository<Movie>().Queryable().AnyAsync(predicate);

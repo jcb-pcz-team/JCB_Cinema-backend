@@ -10,5 +10,6 @@ namespace JCB_Cinema.Application.Interfaces
         public Task<IList<GetMovieDTO>?> Get(RequestMovies request);
         public Task<GetMovieDTO?> GetDetails(int id);
         Task<bool> IsAny(Expression<Func<Movie, bool>> predicate);
+        public Task<IList<GetMovieDTO>?> GetUpcoming();
     }
 }
