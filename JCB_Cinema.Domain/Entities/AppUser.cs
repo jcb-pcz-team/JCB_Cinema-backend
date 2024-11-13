@@ -8,5 +8,7 @@ namespace JCB_Cinema.Domain.Entities
         public string LastName { get; set; } = null!;
         public DateTime? Created { get; set; }
         public bool IsDeleted { get; set; } = false;
+
+        public List<BookingTicket> BookingTickets { get; set; } = new List<BookingTicket>();
     }
 }
