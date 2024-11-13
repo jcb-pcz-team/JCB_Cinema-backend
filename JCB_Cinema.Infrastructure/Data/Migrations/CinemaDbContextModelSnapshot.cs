@@ -553,6 +553,10 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
+
                     b.HasDiscriminator().HasValue("AppUser");
                 });
 
