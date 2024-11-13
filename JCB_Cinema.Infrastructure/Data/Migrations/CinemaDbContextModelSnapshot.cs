@@ -170,9 +170,6 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MovieProjectionId"));
 
-                    b.Property<int>("CinemHallId")
-                        .HasColumnType("int");
-
                     b.Property<int>("CinemaHallId")
                         .HasColumnType("int");
 
