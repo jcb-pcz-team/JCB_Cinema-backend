@@ -1,4 +1,5 @@
 ﻿using JCB_Cinema.Domain.ValueObjects;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JCB_Cinema.Domain.Entities
 {
@@ -14,7 +15,9 @@ namespace JCB_Cinema.Domain.Entities
 
         public int CinemaHallId { get; set; }
         public CinemaHall CinemaHall { get; set; } = null!;
-        public Photo? Poster { get; set; }
+
+        [NotMapped]
+        public string? PosterURL => Movie.PosterURL;
 
         public Price Price { get; private set; }// in cents!!!
 

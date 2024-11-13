@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JCB_Cinema.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(CinemaDbContext))]
-    [Migration("20241113115658_BaseMig")]
+    [Migration("20241113123057_BaseMig")]
     partial class BaseMig
     {
         /// <inheritdoc />
@@ -148,7 +148,7 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<string>("Modifier")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PosterId")
+                    b.Property<int?>("PhotoId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("ReleaseDate")
@@ -160,7 +160,7 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
 
                     b.HasKey("MovieId");
 
-                    b.HasIndex("PosterId");
+                    b.HasIndex("PhotoId");
 
                     b.ToTable("Movies");
                 });
@@ -195,9 +195,6 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<int>("MovieId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PosterId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("ScheduleId")
                         .HasColumnType("int");
 
@@ -212,8 +209,6 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.HasIndex("CinemaHallId");
 
                     b.HasIndex("MovieId");
-
-                    b.HasIndex("PosterId");
 
                     b.HasIndex("ScheduleId");
 
@@ -594,7 +589,7 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                 {
                     b.HasOne("JCB_Cinema.Domain.Entities.Photo", "Poster")
                         .WithMany()
-                        .HasForeignKey("PosterId");
+                        .HasForeignKey("PhotoId");
 
                     b.Navigation("Poster");
                 });
@@ -612,10 +607,6 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("JCB_Cinema.Domain.Entities.Photo", "Poster")
-                        .WithMany()
-                        .HasForeignKey("PosterId");
 
                     b.HasOne("JCB_Cinema.Domain.Entities.Schedule", null)
                         .WithMany("Screenings")
@@ -637,8 +628,6 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Navigation("CinemaHall");
 
                     b.Navigation("Movie");
-
-                    b.Navigation("Poster");
 
                     b.Navigation("Price")
                         .IsRequired();
