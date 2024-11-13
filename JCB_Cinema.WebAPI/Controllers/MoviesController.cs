@@ -28,7 +28,7 @@ namespace JCB_Cinema.WebAPI.Controllers
             }
         }
 
-        [HttpGet("{Id}")]
+        [HttpGet("/{Id}")]
         public async Task<IActionResult> GetDetails(int Id)
         {
             try
@@ -38,6 +38,22 @@ namespace JCB_Cinema.WebAPI.Controllers
                     return NotFound("No Movie Found");
                 }
                 return Ok(await _movieService.GetDetails(Id));
+            }
+            catch
+            {
+                return BadRequest("Error occurred");
+            }
+        }
+
+        [HttpGet("/upcoming")]
+        public async Task<IActionResult> GetUpcoming()
+        {
+            try
+            {
+                var result = await _movieService.GetUpcoming();
+                if (result == null || result.Count == 0)
+                    return NotFound("No upcoming premieres");
+                return Ok(result);
             }
             catch
             {
