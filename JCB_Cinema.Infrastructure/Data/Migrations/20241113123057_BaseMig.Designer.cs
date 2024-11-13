@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JCB_Cinema.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(CinemaDbContext))]
-    [Migration("20241026094828_BasicMig")]
-    partial class BasicMig
+    [Migration("20241113123057_BaseMig")]
+    partial class BaseMig
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -148,7 +148,7 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<string>("Modifier")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PosterId")
+                    b.Property<int?>("PhotoId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("ReleaseDate")
@@ -160,7 +160,7 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
 
                     b.HasKey("MovieId");
 
-                    b.HasIndex("PosterId");
+                    b.HasIndex("PhotoId");
 
                     b.ToTable("Movies");
                 });
@@ -172,9 +172,6 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MovieProjectionId"));
-
-                    b.Property<int>("CinemHallId")
-                        .HasColumnType("int");
 
                     b.Property<int>("CinemaHallId")
                         .HasColumnType("int");
@@ -198,9 +195,6 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<int>("MovieId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PosterId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("ScheduleId")
                         .HasColumnType("int");
 
@@ -215,8 +209,6 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.HasIndex("CinemaHallId");
 
                     b.HasIndex("MovieId");
-
-                    b.HasIndex("PosterId");
 
                     b.HasIndex("ScheduleId");
 
@@ -559,13 +551,17 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
+
                     b.HasDiscriminator().HasValue("AppUser");
                 });
 
             modelBuilder.Entity("JCB_Cinema.Domain.Entities.BookingTicket", b =>
                 {
                     b.HasOne("JCB_Cinema.Domain.Entities.AppUser", "AppUser")
-                        .WithMany()
+                        .WithMany("BookingTickets")
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -593,7 +589,7 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                 {
                     b.HasOne("JCB_Cinema.Domain.Entities.Photo", "Poster")
                         .WithMany()
-                        .HasForeignKey("PosterId");
+                        .HasForeignKey("PhotoId");
 
                     b.Navigation("Poster");
                 });
@@ -611,10 +607,6 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("JCB_Cinema.Domain.Entities.Photo", "Poster")
-                        .WithMany()
-                        .HasForeignKey("PosterId");
 
                     b.HasOne("JCB_Cinema.Domain.Entities.Schedule", null)
                         .WithMany("Screenings")
@@ -636,8 +628,6 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Navigation("CinemaHall");
 
                     b.Navigation("Movie");
-
-                    b.Navigation("Poster");
 
                     b.Navigation("Price")
                         .IsRequired();
@@ -716,6 +706,11 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                 });
 
             modelBuilder.Entity("JCB_Cinema.Domain.Entities.Seat", b =>
+                {
+                    b.Navigation("BookingTickets");
+                });
+
+            modelBuilder.Entity("JCB_Cinema.Domain.Entities.AppUser", b =>
                 {
                     b.Navigation("BookingTickets");
                 });

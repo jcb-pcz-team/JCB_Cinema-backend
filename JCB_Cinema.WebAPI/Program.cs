@@ -64,9 +64,12 @@ namespace JCB_Cinema.WebAPI
 
             //JWT
 
-            builder.Services.AddIdentity<AppUser, IdentityRole>()
-                .AddEntityFrameworkStores<CinemaDbContext>()
-                .AddDefaultTokenProviders();
+            builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            })
+               .AddEntityFrameworkStores<CinemaDbContext>()
+               .AddDefaultTokenProviders();
 
             var secret = builder.Configuration["JWT:Secret"] ?? throw new InvalidOperationException("Secret not configured");
             builder.Services.AddAuthentication(options =>

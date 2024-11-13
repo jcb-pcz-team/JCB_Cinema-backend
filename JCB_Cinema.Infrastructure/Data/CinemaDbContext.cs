@@ -21,6 +21,10 @@ namespace JCB_Cinema.Infrastructure.Data
         {
             base.OnModelCreating(builder);
 
+            builder.Entity<AppUser>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+
             builder.Entity<Seat>()
                 .HasMany(a => a.BookingTickets)
                 .WithOne(a => a.Seat)

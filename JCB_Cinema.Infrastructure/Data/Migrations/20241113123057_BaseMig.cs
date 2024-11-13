@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace JCB_Cinema.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class BasicMig : Migration
+    public partial class BaseMig : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -254,7 +254,7 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     Duration = table.Column<int>(type: "int", nullable: true),
                     ReleaseDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Genre = table.Column<int>(type: "int", nullable: true),
-                    PosterId = table.Column<int>(type: "int", nullable: true),
+                    PhotoId = table.Column<int>(type: "int", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Creator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -265,8 +265,8 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                 {
                     table.PrimaryKey("PK_Movies", x => x.MovieId);
                     table.ForeignKey(
-                        name: "FK_Movies_Photos_PosterId",
-                        column: x => x.PosterId,
+                        name: "FK_Movies_Photos_PhotoId",
+                        column: x => x.PhotoId,
                         principalTable: "Photos",
                         principalColumn: "Id");
                 });
@@ -280,9 +280,7 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     MovieId = table.Column<int>(type: "int", nullable: false),
                     ScreeningTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ScreenType = table.Column<int>(type: "int", nullable: false),
-                    CinemHallId = table.Column<int>(type: "int", nullable: false),
                     CinemaHallId = table.Column<int>(type: "int", nullable: false),
-                    PosterId = table.Column<int>(type: "int", nullable: true),
                     ScheduleId = table.Column<int>(type: "int", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Creator = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -305,11 +303,6 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                         principalTable: "Movies",
                         principalColumn: "MovieId",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_MoviesProjection_Photos_PosterId",
-                        column: x => x.PosterId,
-                        principalTable: "Photos",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_MoviesProjection_Schedules_ScheduleId",
                         column: x => x.ScheduleId,
@@ -391,6 +384,13 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_Email",
+                table: "AspNetUsers",
+                column: "Email",
+                unique: true,
+                filter: "[Email] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
@@ -413,9 +413,9 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                 column: "SeatId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Movies_PosterId",
+                name: "IX_Movies_PhotoId",
                 table: "Movies",
-                column: "PosterId");
+                column: "PhotoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MoviesProjection_CinemaHallId",
@@ -426,11 +426,6 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                 name: "IX_MoviesProjection_MovieId",
                 table: "MoviesProjection",
                 column: "MovieId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MoviesProjection_PosterId",
-                table: "MoviesProjection",
-                column: "PosterId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MoviesProjection_ScheduleId",

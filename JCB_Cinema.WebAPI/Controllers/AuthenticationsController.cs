@@ -4,10 +4,6 @@ using JCB_Cinema.Application.Requests;
 using JCB_Cinema.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace JCB_Cinema.WebAPI.Controllers
 {
@@ -123,63 +119,6 @@ namespace JCB_Cinema.WebAPI.Controllers
                 _logger.LogError(ex, "Error assigning role to user.");
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while assigning role.");
             }
-        }
-
-        private ClaimsPrincipal? GetPrincipalFromExpiredToken(string token)
-        {
-            var secret = _configuration["JWT:Secret"] ?? throw new InvalidOperationException("Secret not configured");
-
-            var validation = new TokenValidationParameters
-            {
-                ValidIssuer = _configuration["JWT:ValidIssuer"],
-                ValidAudience = _configuration["JWT:ValidAudience"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),
-                ValidateLifetime = false
-            };
-
-            return new JwtSecurityTokenHandler().ValidateToken(token, validation, out _);
-        }
-
-        private async Task<JwtSecurityToken> GenerateJwt(AppUser user, string? role = null)
-        {
-            if (user == null || string.IsNullOrEmpty(user.UserName))
-            {
-                throw new Exception("User is not valid");
-            }
-            var authClaims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            };
-
-            if (role != null)
-            {
-                authClaims.Add(new Claim(ClaimTypes.Role, role));
-            }
-            else
-            {
-                var userRoles = await _userManager.GetRolesAsync(user);
-
-                foreach (var userRole in userRoles)
-                {
-                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-                }
-            }
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                _configuration["JWT:Secret"] ?? throw new InvalidOperationException("Secret not configured")));
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["JWT:ValidIssuer"],
-                audience: _configuration["JWT:ValidAudience"],
-                expires: DateTime.UtcNow.AddSeconds(
-                    double.Parse(_configuration["JWTExtraSettings:TokenExpirySeconds"] ?? 450000.ToString())
-                ),
-                claims: authClaims,
-                signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
-            );
-
-            return token;
         }
     }
 }
