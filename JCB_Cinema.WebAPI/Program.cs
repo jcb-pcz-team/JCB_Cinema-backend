@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using JCB_Cinema.Infrastructure.Data.Seed;
 
 namespace JCB_Cinema.WebAPI
 {
@@ -95,10 +96,11 @@ namespace JCB_Cinema.WebAPI
             builder.Services.AddHttpContextAccessor();
             var app = builder.Build();
 
+            // Seed Data
             using (var scope = app.Services.CreateScope())
             {
-                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                await EnsureRolesAsync(roleManager);
+                var serviceProvider = scope.ServiceProvider;
+                await Seed.Init(serviceProvider);
             }
 
             // Configure the HTTP request pipeline.
@@ -107,6 +109,9 @@ namespace JCB_Cinema.WebAPI
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            // Tu mo¿na seed
+
 
             app.UseHttpsRedirection();
 
@@ -139,17 +144,17 @@ namespace JCB_Cinema.WebAPI
                 return Task.CompletedTask;
             }
 
-            static async Task EnsureRolesAsync(RoleManager<IdentityRole> roleManager)
-            {
-                string[] roleNames = { "Admin", "User", "Manager" };
-                foreach (var roleName in roleNames)
-                {
-                    if (!await roleManager.RoleExistsAsync(roleName))
-                    {
-                        await roleManager.CreateAsync(new IdentityRole(roleName));
-                    }
-                }
-            }
+            //static async Task EnsureRolesAsync(RoleManager<IdentityRole> roleManager)
+            //{
+            //    string[] roleNames = { "Admin", "User", "Manager" };
+            //    foreach (var roleName in roleNames)
+            //    {
+            //        if (!await roleManager.RoleExistsAsync(roleName))
+            //        {
+            //            await roleManager.CreateAsync(new IdentityRole(roleName));
+            //        }
+            //    }
+            //}
         }
     }
 }

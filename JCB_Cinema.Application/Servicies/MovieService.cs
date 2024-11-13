@@ -30,6 +30,7 @@ namespace JCB_Cinema.Application.Servicies
                 Genre? genreValue = EnumExtensions.GetValueFromDescription<Genre>(request.GenreName);
                 query = query.Where(m => m.Genre == genreValue);
             }
+
             var moviesList = await query.ToListAsync();
             return moviesList == null ? null : _mapper.Map<IList<GetMovieDTO>>(moviesList);
         }

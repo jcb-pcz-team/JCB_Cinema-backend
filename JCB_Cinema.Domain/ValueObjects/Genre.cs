@@ -41,6 +41,12 @@ namespace JCB_Cinema.Domain.ValueObjects
         Romance,
 
         [Description("Musical")]
-        Musical
+        Musical,
+
+        [Description("War")]
+        War,
+
+        [Description("Spy")]
+        Spy
     }
 }
