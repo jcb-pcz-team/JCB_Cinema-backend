@@ -170,9 +170,6 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MovieProjectionId"));
 
-                    b.Property<int>("CinemHallId")
-                        .HasColumnType("int");
-
                     b.Property<int>("CinemaHallId")
                         .HasColumnType("int");
 
@@ -562,7 +559,7 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
             modelBuilder.Entity("JCB_Cinema.Domain.Entities.BookingTicket", b =>
                 {
                     b.HasOne("JCB_Cinema.Domain.Entities.AppUser", "AppUser")
-                        .WithMany()
+                        .WithMany("BookingTickets")
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -713,6 +710,11 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                 });
 
             modelBuilder.Entity("JCB_Cinema.Domain.Entities.Seat", b =>
+                {
+                    b.Navigation("BookingTickets");
+                });
+
+            modelBuilder.Entity("JCB_Cinema.Domain.Entities.AppUser", b =>
                 {
                     b.Navigation("BookingTickets");
                 });

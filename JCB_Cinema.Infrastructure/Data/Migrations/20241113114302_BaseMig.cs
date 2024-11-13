@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace JCB_Cinema.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class BasicMig : Migration
+    public partial class BaseMig : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -280,7 +280,6 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     MovieId = table.Column<int>(type: "int", nullable: false),
                     ScreeningTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ScreenType = table.Column<int>(type: "int", nullable: false),
-                    CinemHallId = table.Column<int>(type: "int", nullable: false),
                     CinemaHallId = table.Column<int>(type: "int", nullable: false),
                     PosterId = table.Column<int>(type: "int", nullable: true),
                     ScheduleId = table.Column<int>(type: "int", nullable: true),

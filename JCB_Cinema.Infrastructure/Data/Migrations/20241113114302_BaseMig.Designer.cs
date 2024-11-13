@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JCB_Cinema.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(CinemaDbContext))]
-    [Migration("20241026094828_BasicMig")]
-    partial class BasicMig
+    [Migration("20241113114302_BaseMig")]
+    partial class BaseMig
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -172,9 +172,6 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MovieProjectionId"));
-
-                    b.Property<int>("CinemHallId")
-                        .HasColumnType("int");
 
                     b.Property<int>("CinemaHallId")
                         .HasColumnType("int");
@@ -565,7 +562,7 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
             modelBuilder.Entity("JCB_Cinema.Domain.Entities.BookingTicket", b =>
                 {
                     b.HasOne("JCB_Cinema.Domain.Entities.AppUser", "AppUser")
-                        .WithMany()
+                        .WithMany("BookingTickets")
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -716,6 +713,11 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                 });
 
             modelBuilder.Entity("JCB_Cinema.Domain.Entities.Seat", b =>
+                {
+                    b.Navigation("BookingTickets");
+                });
+
+            modelBuilder.Entity("JCB_Cinema.Domain.Entities.AppUser", b =>
                 {
                     b.Navigation("BookingTickets");
                 });
