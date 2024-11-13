@@ -8,7 +8,8 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
 {
     public static class Seed
     {
-        public static async Task Init(IServiceProvider serviceProvider) {
+        public static async Task Init(IServiceProvider serviceProvider)
+        {
             var dbContext = serviceProvider.GetRequiredService<CinemaDbContext>();
             var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -133,7 +134,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
         // Movie Projections
         private static List<MovieProjection> GetMovieProjections(List<Movie> movies, List<CinemaHall> cinemaHalls)
         {
-            return new List<MovieProjection> 
+            return new List<MovieProjection>
             {
                 new MovieProjection
                 {
@@ -360,7 +361,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
         }
         private static async Task UpdateCinemaHalls(List<Seat> cinemaSeats, List<CinemaHall> cinemaHalls, CinemaDbContext dbContext)
         {
-            
+
             foreach (var cinHal in cinemaHalls)
             {
                 cinHal.Seats = cinemaSeats;
@@ -402,7 +403,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 var existingUser = await userManager.FindByEmailAsync(user.Email == null ? "" : user.Email);
                 if (existingUser == null)
                 {
-                    var result = await userManager.CreateAsync(user, "Password123!");
+                    var result = await userManager.CreateAsync(user, "Haslo123!");
                     if (result.Succeeded)
                     {
                         string role = user.Email!.Contains("admin") ? "Admin" :
@@ -430,11 +431,11 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
         {
             var users = new List<AppUser>
             {
-                new AppUser { UserName = "admin@example.com", FirstName = "Admin", LastName = "User", Email = "admin@example.com", Created = GetDate(false) },
-                new AppUser { UserName = "user1@example.com", FirstName = "John", LastName = "Doe", Email = "user1@example.com", Created = GetDate(false) },
-                new AppUser { UserName = "user2@example.com", FirstName = "Jane", LastName = "Doe", Email = "user2@example.com", Created = GetDate(false) },
-                new AppUser { UserName = "manager@example.com", FirstName = "Sam", LastName = "Smith", Email = "manager@example.com", Created = GetDate(false) },
-                new AppUser { UserName = "user3@example.com", FirstName = "Bob", LastName = "Brown", Email = "user3@example.com", Created = GetDate(false) }
+                new AppUser { UserName = "admin", FirstName = "Admin", LastName = "User", Email = "admin@example.com", Created = GetDate(false) },
+                new AppUser { UserName = "user1", FirstName = "John", LastName = "Doe", Email = "user1@example.com", Created = GetDate(false) },
+                new AppUser { UserName = "user2", FirstName = "Jane", LastName = "Doe", Email = "user2@example.com", Created = GetDate(false) },
+                new AppUser { UserName = "manag", FirstName = "Sam", LastName = "Smith", Email = "manager@example.com", Created = GetDate(false) },
+                new AppUser { UserName = "user3", FirstName = "Bob", LastName = "Brown", Email = "user3@example.com", Created = GetDate(false) }
             };
 
             return users;
