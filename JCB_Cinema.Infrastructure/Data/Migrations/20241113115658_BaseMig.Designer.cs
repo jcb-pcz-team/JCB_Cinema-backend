@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JCB_Cinema.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(CinemaDbContext))]
-    [Migration("20241113114302_BaseMig")]
+    [Migration("20241113115658_BaseMig")]
     partial class BaseMig
     {
         /// <inheritdoc />
@@ -555,6 +555,10 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
 
                     b.HasDiscriminator().HasValue("AppUser");
                 });
