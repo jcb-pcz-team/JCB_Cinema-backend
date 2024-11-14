@@ -22,6 +22,8 @@ namespace JCB_Cinema.Application.Servicies
         public async Task<IList<GetMovieDTO>?> Get(RequestMovies request)
         {
             var query = _unitOfWork.Repository<Movie>().Queryable();
+            query = query.Include(a => a.Poster);
+
             if (request.GenreId.HasValue)
             {
                 query = query.Where(m => (int?)m.Genre == request.GenreId);
@@ -31,6 +33,10 @@ namespace JCB_Cinema.Application.Servicies
                 Genre? genreValue = EnumExtensions.GetValueFromDescription<Genre>(request.GenreName);
                 query = query.Where(m => m.Genre == genreValue);
             }
+            if (request.Release.HasValue)
+            {
+                query = query.Where(a => a.ReleaseDate == request.Release);
+            }
 
             var moviesList = await query.ToListAsync();
             return moviesList == null ? null : _mapper.Map<IList<GetMovieDTO>>(moviesList);
@@ -38,19 +44,26 @@ namespace JCB_Cinema.Application.Servicies
 
         public async Task<GetMovieDTO?> GetDetails(int id)
         {
-            var query = await _unitOfWork.Repository<Movie>().Queryable().FirstOrDefaultAsync(m => m.MovieId == id);
+            var query = await _unitOfWork.Repository<Movie>().Queryable()
+                .Include(a => a.Poster)
+                .FirstOrDefaultAsync(m => m.MovieId == id);
             return query == null ? null : _mapper.Map<GetMovieDTO>(query);
         }
 
         public async Task<IList<GetMovieDTO>?> GetUpcoming()
         {
-            var query = await _unitOfWork.Repository<Movie>().Queryable().Where(m => m.ReleaseDate > DateTime.UtcNow).ToListAsync();
+            var query = await _unitOfWork.Repository<Movie>().Queryable()
+                .Include(a => a.Poster)
+                .Where(m => m.ReleaseDate > DateOnly.FromDateTime(DateTime.UtcNow))
+                .ToListAsync();
             return query == null ? null : _mapper.Map<IList<GetMovieDTO>>(query);
         }
 
         public async Task<bool> IsAny(Expression<Func<Movie, bool>> predicate)
         {
-            var entity = await _unitOfWork.Repository<Movie>().Queryable().AnyAsync(predicate);
+            var entity = await _unitOfWork.Repository<Movie>().Queryable()
+                .Include(a => a.Poster)
+                .AnyAsync(predicate);
             return entity;
         }
     }

@@ -10,7 +10,7 @@ namespace JCB_Cinema.Domain.Entities
         public string Title { get; set; } = null!;
         public string? Description { get; set; }
         public int? Duration { get; set; }
-        public DateTime? ReleaseDate { get; set; }
+        public DateOnly? ReleaseDate { get; set; }
         public Genre? Genre { get; set; }
         public string? GenreDescription => Genre?.GetDescription();
         public int? PhotoId { get; set; }

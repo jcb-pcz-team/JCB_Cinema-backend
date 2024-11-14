@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JCB_Cinema.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(CinemaDbContext))]
-    [Migration("20241113123057_BaseMig")]
+    [Migration("20241114101439_BaseMig")]
     partial class BaseMig
     {
         /// <inheritdoc />
@@ -151,8 +151,8 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     b.Property<int?>("PhotoId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("ReleaseDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly?>("ReleaseDate")
+                        .HasColumnType("date");
 
                     b.Property<string>("Title")
                         .IsRequired()

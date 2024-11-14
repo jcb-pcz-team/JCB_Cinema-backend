@@ -496,7 +496,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                     Title = photos.FirstOrDefault(x => x.Description == "1917")!.Description!,
                     Description = "Dwóch brytyjskich żołnierzy zostaje wysłanych z misją, by przekazać ważne ostrzeżenie, ryzykując życie na frontach I wojny światowej.",
                     Duration = 148,
-                    ReleaseDate = GetDate(true),
+                    ReleaseDate = GetDateOnly(true),
                     Genre = Genre.War,
                     Poster = photos.FirstOrDefault(x => x.Description == "1917")!,
                     Created = GetDate(false),
@@ -509,7 +509,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                     Title = photos.FirstOrDefault(x => x.Description == "The Dark Knight")!.Description!,
                     Description = "Batman faces the Joker in Gotham City.",
                     Duration = 152,
-                    ReleaseDate = GetDate(true),
+                    ReleaseDate = GetDateOnly(true),
                     Genre = Genre.Action,
                     Poster = photos.FirstOrDefault(x => x.Description == "The Dark Knight")!,
                     Created = GetDate(false),
@@ -522,7 +522,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                     Title = photos.FirstOrDefault(x => x.Description == "Matrix")!.Description!,
                     Description = "A hacker discovers the reality he lives in is a simulation.",
                     Duration = 136,
-                    ReleaseDate = GetDate(true),
+                    ReleaseDate = GetDateOnly(true),
                     Genre = Genre.ScienceFiction,
                     Poster = photos.FirstOrDefault(x => x.Description == "Matrix")!,
                     Created = GetDate(false),
@@ -535,7 +535,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                     Title = photos.FirstOrDefault(x => x.Description == "Forrest Gump")!.Description!,
                     Description = "A simple man with a big heart experiences life and love.",
                     Duration = 142,
-                    ReleaseDate = GetDate(true),
+                    ReleaseDate = GetDateOnly(true),
                     Genre = Genre.Drama,
                     Poster = photos.FirstOrDefault(x => x.Description == "Forrest Gump")!,
                     Created = GetDate(false),
@@ -548,7 +548,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                     Title = photos.FirstOrDefault(x => x.Description == "No Time To Die")!.Description!,
                     Description = "James Bond returns on a mission to face a new, dangerous adversary while solving a mystery from the past.",
                     Duration = 142,
-                    ReleaseDate = GetDate(true),
+                    ReleaseDate = GetDateOnly(true),
                     Genre = Genre.Spy,
                     Poster = photos.FirstOrDefault(x => x.Description == "No Time To Die")!,
                     Created = GetDate(false),
@@ -568,6 +568,15 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             int daysOffset = random.Next(0, 4);
             int hourOffset = random.Next(1, 24);
             return isFuture ? today.AddDays(+daysOffset).AddHours(+hourOffset) : today.AddDays(-daysOffset).AddHours(-hourOffset);
+        }
+
+        private static DateOnly GetDateOnly(bool isFuture)
+        {
+            Random random = new Random();
+            DateTime today = DateTime.Now;
+            int daysOffset = random.Next(0, 4);
+            var result = DateOnly.FromDateTime(isFuture ? today.AddDays(+daysOffset) : today.AddDays(-daysOffset));
+            return result;
         }
     }
 }

@@ -21,6 +21,10 @@ namespace JCB_Cinema.Application.Servicies
         public async Task<IList<GetMovieProjectionDTO>?> Get(RequestMovieProjection request)
         {
             var query = _unitOfWork.Repository<MovieProjection>().Queryable();
+
+            query = query.Include(a => a.Movie)
+                .Include(a => a.CinemaHall);
+
             if (!string.IsNullOrWhiteSpace(request.ScreenTypeName))
             {
                 var genreValue = EnumExtensions.GetValueFromDescription<ScreenType>(request.ScreenTypeName);

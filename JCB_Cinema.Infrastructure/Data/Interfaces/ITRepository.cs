@@ -6,7 +6,7 @@ namespace JCB_Cinema.Infrastructure.Data.Interfaces
     public interface ITRepository<T>
         where T : EntityBase
     {
-        public IQueryable<T> Queryable(EntityStatusFilter entityStatus = EntityStatusFilter.Exists);
-        public Task<T?> GetByIdAsync(int id, EntityStatusFilter entityStatus = EntityStatusFilter.Exists);
+        IQueryable<T> Queryable(EntityStatusFilter entityStatus = EntityStatusFilter.Exists);
+        Task<T?> GetByIdAsync(int id, EntityStatusFilter entityStatus = EntityStatusFilter.Exists);
     }
 }

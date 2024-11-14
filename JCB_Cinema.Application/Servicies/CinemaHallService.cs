@@ -20,6 +20,7 @@ namespace JCB_Cinema.Application.Servicies
         public async Task<IList<GetCinemaHallDTO>?> Get(RequestCinemaHall request)
         {
             var query = _unitOfWork.Repository<CinemaHall>().Queryable();
+            query = query.Include(a => a.Seats);
 
             if (!string.IsNullOrWhiteSpace(request.Name))
             {
@@ -34,6 +35,7 @@ namespace JCB_Cinema.Application.Servicies
         {
             var entity = await _unitOfWork.Repository<CinemaHall>()
                 .Queryable()
+                .Include(a => a.Seats)
                 .FirstOrDefaultAsync(a => a.CinemaHallId == id);
             return entity == null ? null : _mapper.Map<GetCinemaHallDTO>(entity);
         }
@@ -42,6 +44,7 @@ namespace JCB_Cinema.Application.Servicies
         {
             var entity = await _unitOfWork.Repository<CinemaHall>()
                 .Queryable()
+                .Include(a => a.Seats)
                 .AnyAsync(predicate);
             return entity;
         }

@@ -252,7 +252,7 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Duration = table.Column<int>(type: "int", nullable: true),
-                    ReleaseDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ReleaseDate = table.Column<DateOnly>(type: "date", nullable: true),
                     Genre = table.Column<int>(type: "int", nullable: true),
                     PhotoId = table.Column<int>(type: "int", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),

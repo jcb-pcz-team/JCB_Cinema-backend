@@ -19,6 +19,12 @@ namespace JCB_Cinema.Application.Servicies
         public async Task<IList<GetScheduleDTO>?> Get(RequestSchedule request)
         {
             var query = _unitOfWork.Repository<Schedule>().Queryable();
+            query = query
+                .Include(a => a.Screenings)
+                    .ThenInclude(a => a.Movie)
+                .Include(a => a.Screenings)
+                    .ThenInclude(a => a.CinemaHall)
+                    .ThenInclude(a => a.Seats);
             if (request.DateFrom.HasValue)
             {
                 query = query.Where(a => a.Date >= request.DateFrom);
