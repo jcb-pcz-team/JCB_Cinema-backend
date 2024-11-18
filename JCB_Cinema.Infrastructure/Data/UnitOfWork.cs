@@ -36,5 +36,10 @@ namespace JCB_Cinema.Infrastructure.Data
         {
             _dbContext.Dispose();
         }
+
+       public CinemaDbContext DbContext()
+       {
+            return _dbContext;
+       }
     }
 }

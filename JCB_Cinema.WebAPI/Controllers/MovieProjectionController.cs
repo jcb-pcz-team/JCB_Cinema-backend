@@ -15,13 +15,27 @@ namespace JCB_Cinema.WebAPI.Controllers
             _movieProjectionService = movieProjectionService;
         }
 
-        [HttpGet]
+        [HttpGet("api/moviesprojection")]
         public async Task<IActionResult> Get([FromQuery] RequestMovieProjection request)
         {
             try
             {
                 var result = await _movieProjectionService.Get(request);
                 return Ok(result);
+            }
+            catch
+            {
+                return BadRequest("Error occured");
+            }
+        }
+
+        [HttpGet("api/moviesprojection/{projectionId}")]
+        public async Task<IActionResult> GetDetails(int projectionId)
+        {
+            try
+            {
+                var req = await _movieProjectionService.GetDetails(projectionId);
+                return req == null ? NotFound() : Ok(req);
             }
             catch
             {

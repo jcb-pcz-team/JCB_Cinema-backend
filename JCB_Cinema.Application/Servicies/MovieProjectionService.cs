@@ -37,5 +37,19 @@ namespace JCB_Cinema.Application.Servicies
             var entities = await query.ToListAsync();
             return entities == null ? null : _mapper.Map<IList<GetMovieProjectionDTO>>(entities);
         }
+
+        public async Task<GetMovieProjectionDTO?> GetDetails(int id)
+        {
+            var query = _unitOfWork.Repository<MovieProjection>().Queryable();
+            var entity = await query.FirstOrDefaultAsync(m => m.MovieProjectionId == id);
+
+            query.Include(a => a.Movie)
+                .Include(g => g.Movie.Genre)
+                .Include(s => s.ScreenType)
+                .Include(c => c.CinemaHall)
+                .Include(p => p.Price);
+
+            return entity == null ? null : _mapper.Map<GetMovieProjectionDTO>(entity);
+        }
     }
 }

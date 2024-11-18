@@ -6,5 +6,6 @@ namespace JCB_Cinema.Infrastructure.Data.Interfaces
     {
         public ITRepository<T> Repository<T>() where T : EntityBase;
         public Task<int> SaveToDatabaseAsync();
+        public CinemaDbContext DbContext();
     }
 }
