@@ -26,7 +26,7 @@ namespace JCB_Cinema.WebAPI.Controllers
                 {
                     return NotFound("No Cinema Hall Found");
                 }
-                return Ok(await _movieProjectionService.Get(new RequestMovieProjection { CinemaHallId = id }));
+                return Ok(await _movieProjectionService.Get(new RequestMovieProjections { CinemaHallId = id }));
             }
             catch
             {

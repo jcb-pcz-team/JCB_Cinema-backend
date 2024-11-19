@@ -431,11 +431,66 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
         {
             var users = new List<AppUser>
             {
-                new AppUser { UserName = "admin", FirstName = "Admin", LastName = "User", Email = "admin@example.com", Created = GetDate(false) },
-                new AppUser { UserName = "user1", FirstName = "John", LastName = "Doe", Email = "user1@example.com", Created = GetDate(false) },
-                new AppUser { UserName = "user2", FirstName = "Jane", LastName = "Doe", Email = "user2@example.com", Created = GetDate(false) },
-                new AppUser { UserName = "manag", FirstName = "Sam", LastName = "Smith", Email = "manager@example.com", Created = GetDate(false) },
-                new AppUser { UserName = "user3", FirstName = "Bob", LastName = "Brown", Email = "user3@example.com", Created = GetDate(false) }
+                new AppUser
+                {
+                    UserName = "admin",
+                    FirstName = "Admin",
+                    LastName = "User",
+                    Street = "Main Street",
+                    HouseNumber = "1A",
+                    Town = "AdminTown",
+                    Email = "admin@example.com",
+                    Created = GetDate(false),
+                    IsDeleted = false
+                },
+                new AppUser
+                {
+                    UserName = "user1",
+                    FirstName = "John",
+                    LastName = "Doe",
+                    Street = "Broadway",
+                    HouseNumber = "23",
+                    Town = "Springfield",
+                    Email = "user1@example.com",
+                    Created = GetDate(false),
+                    IsDeleted = false
+                },
+                new AppUser
+                {
+                    UserName = "user2",
+                    FirstName = "Jane",
+                    LastName = "Doe",
+                    Street = "Elm Street",
+                    HouseNumber = "42B",
+                    Town = "Springfield",
+                    Email = "user2@example.com",
+                    Created = GetDate(false),
+                    IsDeleted = false
+                },
+                new AppUser
+                {
+                    UserName = "manager",
+                    FirstName = "Sam",
+                    LastName = "Smith",
+                    Street = "Market Street",
+                    HouseNumber = "7",
+                    Town = "ManagerVille",
+                    Email = "manager@example.com",
+                    Created = GetDate(false),
+                    IsDeleted = false
+                },
+                new AppUser
+                {
+                    UserName = "user3",
+                    FirstName = "Bob",
+                    LastName = "Brown",
+                    Street = "Oak Avenue",
+                    HouseNumber = "10",
+                    Town = "OldTown",
+                    Email = "user3@example.com",
+                    Created = GetDate(false),
+                    IsDeleted = false
+                }
             };
 
             return users;
@@ -551,6 +606,71 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                     ReleaseDate = GetDateOnly(true),
                     Genre = Genre.Spy,
                     Poster = photos.FirstOrDefault(x => x.Description == "No Time To Die")!,
+                    Created = GetDate(false),
+                    Creator = "System",
+                    Modified = DateTime.Now,
+                    Modifier = "System"
+                },
+                new Movie
+                {
+                    Title = photos.FirstOrDefault(x => x.Description == "Die Hard")!.Description!,
+                    Description = "Bruce Willis stars as New York police officer John McClane, who faces off against a group of terrorists taking over a Los Angeles skyscraper during a Christmas party.",
+                    Duration = 120,
+                    ReleaseDate = GetDateOnly(true),
+                    Genre = Genre.Action,
+                    Poster = photos.FirstOrDefault(x => x.Description == "Die Hard")!,
+                    Created = GetDate(false),
+                    Creator = "System",
+                    Modified = DateTime.Now,
+                    Modifier = "System"
+                },
+                new Movie
+                {
+                    Title = photos.FirstOrDefault(x => x.Description == "Interstellar")!.Description!,
+                    Description = "Cooper, a former NASA pilot and devoted father, embarks on a mission through a wormhole to save humanity and secure a future for his children",
+                    Duration = 129,
+                    ReleaseDate = GetDateOnly(true),
+                    Genre = Genre.Drama,
+                    Poster = photos.FirstOrDefault(x => x.Description == "Interstellar")!,
+                    Created = GetDate(false),
+                    Creator = "System",
+                    Modified = DateTime.Now,
+                    Modifier = "System"
+                },
+                new Movie
+                {
+                    Title = photos.FirstOrDefault(x => x.Description == "Mandalorian")!.Description!,
+                    Description = "Pedro Pascal stars as the Mandalorian, a lone bounty hunter navigating the outer reaches of the galaxy while protecting a mysterious child with extraordinary powers.",
+                    Duration = 154,
+                    ReleaseDate = GetDateOnly(true),
+                    Genre = Genre.Adventure,
+                    Poster = photos.FirstOrDefault(x => x.Description == "Mandalorian")!,
+                    Created = GetDate(false),
+                    Creator = "System",
+                    Modified = DateTime.Now,
+                    Modifier = "System"
+                },
+                new Movie
+                {
+                    Title = photos.FirstOrDefault(x => x.Description == "Spider-Man No Way Home")!.Description!,
+                    Description = "Tom Holland stars as Spider-Man, who faces multiverse chaos and battles iconic villains from alternate realities while seeking to restore his secret identity and protect those he loves.",
+                    Duration = 142,
+                    ReleaseDate = GetDateOnly(true),
+                    Genre = Genre.ScienceFiction,
+                    Poster = photos.FirstOrDefault(x => x.Description == "Spider-Man No Way Home")!,
+                    Created = GetDate(false),
+                    Creator = "System",
+                    Modified = DateTime.Now,
+                    Modifier = "System"
+                },
+                new Movie
+                {
+                    Title = photos.FirstOrDefault(x => x.Description == "Venom Last Dance")!.Description!,
+                    Description = "Tom Hardy stars as Eddie Brock, who struggles to control the symbiote Venom while facing a new threat in the form of a powerful villain, forcing him to make difficult choices to protect those he cares about.",
+                    Duration = 132,
+                    ReleaseDate = GetDateOnly(true),
+                    Genre = Genre.ScienceFiction,
+                    Poster = photos.FirstOrDefault(x => x.Description == "Venom Last Dance")!,
                     Created = GetDate(false),
                     Creator = "System",
                     Modified = DateTime.Now,

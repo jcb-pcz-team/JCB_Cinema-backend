@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace JCB_Cinema.Infrastructure.Data.Repositories
 {
     public class TRepository<T> : ITRepository<T>
-        where T : EntityBase
+        where T : class
     {
         private readonly CinemaDbContext _context;
         private readonly DbSet<T> _dbSet;
@@ -20,25 +20,36 @@ namespace JCB_Cinema.Infrastructure.Data.Repositories
         public IQueryable<T> Queryable(EntityStatusFilter entityStatus = EntityStatusFilter.Exists)
         {
             var entities = _dbSet.AsQueryable();
-            if (entityStatus == EntityStatusFilter.All)
+            if (entityStatus != EntityStatusFilter.All && typeof(EntityBase).IsAssignableFrom(typeof(T)))
             {
-                return entities;
+                var baseEntities = entities.Cast<EntityBase>();
+
+                var filtered = entityStatus == EntityStatusFilter.Exists
+                    ? baseEntities.Where(a => a.IsDeleted == false)
+                    : baseEntities.Where(a => a.IsDeleted == true);
+
+                entities = filtered.Cast<T>();
             }
-            return entityStatus == EntityStatusFilter.Exists
-                ? entities.Where(a => a.IsDeleted == false)
-                    : entities.Where(a => a.IsDeleted == true);
+            return entities;
         }
 
         public async Task<T?> GetByIdAsync(int id, EntityStatusFilter entityStatus = EntityStatusFilter.Exists)
         {
             var entity = await _dbSet.FindAsync(id);
-            if (entityStatus == EntityStatusFilter.All || entity == null)
-                return entity;
 
-            if (entityStatus == EntityStatusFilter.Deleted)
-                return entity.IsDeleted ? entity : null;
+            if (entity == null)
+                return null;
 
-            return !entity.IsDeleted ? entity : null;
+            if (entity is EntityBase baseEntity)
+            {
+                if (entityStatus == EntityStatusFilter.Deleted && !baseEntity.IsDeleted)
+                    return null;
+
+                if (entityStatus == EntityStatusFilter.Exists && baseEntity.IsDeleted)
+                    return null;
+            }
+
+            return entity as T;
         }
     }
 }

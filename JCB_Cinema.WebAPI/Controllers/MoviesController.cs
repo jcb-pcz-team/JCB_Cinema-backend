@@ -28,7 +28,7 @@ namespace JCB_Cinema.WebAPI.Controllers
             }
         }
 
-        [HttpGet("/{Id}")]
+        [HttpGet("{Id}")]
         public async Task<IActionResult> GetDetails(int Id)
         {
             try
@@ -45,7 +45,7 @@ namespace JCB_Cinema.WebAPI.Controllers
             }
         }
 
-        [HttpGet("/upcoming")]
+        [HttpGet("upcoming")]
         public async Task<IActionResult> GetUpcoming()
         {
             try
