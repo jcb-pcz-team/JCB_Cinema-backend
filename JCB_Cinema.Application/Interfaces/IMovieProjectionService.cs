@@ -5,7 +5,7 @@ namespace JCB_Cinema.Application.Interfaces
 {
     public interface IMovieProjectionService
     {
-        public Task<IList<GetMovieProjectionDTO>?> Get(RequestMovieProjection request);
+        public Task<IList<GetMovieProjectionDTO>?> Get(RequestMovieProjections request);
         public Task<GetMovieProjectionDTO?> GetDetails(int id);
     }
 }

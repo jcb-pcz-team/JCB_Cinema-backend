@@ -18,7 +18,7 @@ namespace JCB_Cinema.Application.Servicies
         {
         }
 
-        public async Task<IList<GetMovieProjectionDTO>?> Get(RequestMovieProjection request)
+        public async Task<IList<GetMovieProjectionDTO>?> Get(RequestMovieProjections request)
         {
             var query = _unitOfWork.Repository<MovieProjection>().Queryable();
 

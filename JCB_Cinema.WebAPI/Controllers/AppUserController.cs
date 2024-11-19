@@ -17,12 +17,12 @@ namespace JCB_Cinema.WebAPI.Controllers
             _appUserService = appUserService;
         }
 
-        [HttpGet("api/users/{userId}")]
-        public async Task<IActionResult> Get(string userId)
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] RequestAppUser request)
         {
             try
             {
-                var req = await _appUserService.GetAppUserAsync(userId);
+                var req = await _appUserService.GetAppUserAsync(request);
                 return req == null ? NotFound() : Ok(req);
             }
             catch
@@ -31,14 +31,21 @@ namespace JCB_Cinema.WebAPI.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
-        [HttpPut("api/users/{userId}")]
-        public async Task<IActionResult> Put(RequestAppUser reqUser)
+        [HttpPut]
+        public async Task<IActionResult> Put([FromQuery] PutAppUserDetails reqUser)
         {
             try
             {
                 await _appUserService.PutAppUserAsync(reqUser);
                 return Created();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+            catch (InvalidOperationException)
+            {
+                return BadRequest();
             }
             catch
             {

@@ -9,8 +9,8 @@ namespace JCB_Cinema.Application.Mappers
     {
         public AppUserServiceProfile()
         {
-            CreateMap<AppUser, AppUserDTO>();
-            CreateMap<RequestAppUser, AppUser>();
+            CreateMap<AppUser, AppUserDTO>().ReverseMap();
+            CreateMap<PutAppUserDetails, AppUser>().ReverseMap();
         }
     }
 }

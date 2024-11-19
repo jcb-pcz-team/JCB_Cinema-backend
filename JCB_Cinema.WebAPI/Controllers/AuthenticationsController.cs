@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace JCB_Cinema.WebAPI.Controllers
 {
     [ApiController]
-    [Route("api/authentications")]
+    [Route("api/auth")]
     public class AuthenticationsController : Controller
     {
         private readonly IConfiguration _configuration;
