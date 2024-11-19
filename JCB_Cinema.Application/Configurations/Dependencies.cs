@@ -20,7 +20,8 @@ namespace JCB_Cinema.Application.Configurations
             services.AddScoped<IScheduleService, ScheduleService>();
             services.AddScoped<ICinemaHallService, CinemaHallService>();
             services.AddScoped<IAppUserService, AppUserService>();
-            services.AddAutoMapper(typeof(GenreServiceProfile), typeof(MovieServiceProfile), typeof(MovieProjectionServiceProfile), typeof(ScheduleServiceProfile), typeof(CinemaHallServiceProfile), typeof(AppUserServiceProfile));
+            services.AddScoped<IBookingTicketService, BookingTicketService>();
+            services.AddAutoMapper(typeof(GenreServiceProfile), typeof(MovieServiceProfile), typeof(MovieProjectionServiceProfile), typeof(ScheduleServiceProfile), typeof(CinemaHallServiceProfile), typeof(AppUserServiceProfile), typeof(BookingTicketServiceProfile));
 
             //DI for Infrastructure
             Infrastructure.Configurations.Dependencies.Register(services);

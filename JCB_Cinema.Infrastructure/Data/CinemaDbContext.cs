@@ -25,6 +25,12 @@ namespace JCB_Cinema.Infrastructure.Data
                 .HasIndex(u => u.Email)
                 .IsUnique();
 
+            builder.Entity<AppUser>()
+                .HasMany(a => a.BookingTickets)
+                .WithOne(b => b.AppUser)
+                .HasForeignKey(b => b.AppUserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
             builder.Entity<Seat>()
                 .HasMany(a => a.BookingTickets)
                 .WithOne(a => a.Seat)
