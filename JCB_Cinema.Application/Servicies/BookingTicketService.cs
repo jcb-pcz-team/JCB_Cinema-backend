@@ -22,7 +22,19 @@ namespace JCB_Cinema.Application.Servicies
             if (string.IsNullOrEmpty(currentUserName))
                 throw new UnauthorizedAccessException("Brak uprawnień do wykonania tej operacji.");
 
+            var include = _unitOfWork.Repository<AppUser>()
+                .Queryable()
+                .Include(a => a.BookingTickets)
+                    .ThenInclude(a => a.Seat)
+                .Include(a => a.BookingTickets)
+                    .ThenInclude(a => a.MovieProjection)
+                    .ThenInclude(a => a.Movie)
+                .Include(a => a.BookingTickets)
+                    .ThenInclude(a => a.MovieProjection)
+                        .ThenInclude(a => a.CinemaHall);
+
             var currentUser = await _userManager.FindByNameAsync(currentUserName);
+
             if (currentUser == null)
                 throw new UnauthorizedAccessException("Brak uprawnień do wykonania tej operacji.");
 
@@ -34,19 +46,20 @@ namespace JCB_Cinema.Application.Servicies
 
                 if (!string.IsNullOrEmpty(requestAppUser.Login))
                 {
-                    user = await _userManager.FindByNameAsync(requestAppUser.Login);
+                    user = await include.FirstOrDefaultAsync(a => a.NormalizedUserName == _userManager.NormalizeName(requestAppUser.Login));
+
                     return user == null ? null : _mapper.Map<IList<BookingTicketDTO>?>(user.BookingTickets);
                 }
                 else if (!string.IsNullOrEmpty(requestAppUser.Email))
                 {
-                    user = await _userManager.FindByEmailAsync(requestAppUser.Email);
+                    user = await include.FirstOrDefaultAsync(a => a.NormalizedEmail == _userManager.NormalizeEmail(requestAppUser.Email));
+
                     return user == null ? null : _mapper.Map<IList<BookingTicketDTO>?>(user.BookingTickets);
                 }
             }
 
-            // user wants to get data about yourself
-            return _mapper.Map<IList<BookingTicketDTO>?>(currentUser.BookingTickets);
-
+            currentUser = await include.FirstOrDefaultAsync(a => a.NormalizedUserName == _userManager.NormalizeName(currentUserName));
+            return _mapper.Map<IList<BookingTicketDTO>?>(currentUser?.BookingTickets);
         }
     }
 }
