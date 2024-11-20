@@ -11,7 +11,6 @@ namespace JCB_Cinema.Domain.Entities
         public string? Town { get; set; }
         public DateTime? Created { get; set; }
         public bool IsDeleted { get; set; } = false;
-
         public List<BookingTicket> BookingTickets { get; set; } = new List<BookingTicket>();
     }
 }

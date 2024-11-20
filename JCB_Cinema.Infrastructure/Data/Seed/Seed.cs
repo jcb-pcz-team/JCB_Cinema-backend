@@ -47,6 +47,9 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             await AddEntitiesAsync(dbContext, schedule);
             await AddEntitiesAsync(dbContext, bookingTickets);
 
+            // Update User.BookingTickets
+            await UpdateUsers(bookingTickets, users, dbContext);
+
             //Update Seats - dodać booking Tickets
             await UpdateSeats(await dbContext.BookingTickets.ToListAsync(), await dbContext.Seats.ToListAsync(), dbContext);
         }
@@ -494,6 +497,17 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             };
 
             return users;
+        }
+
+        private static async Task UpdateUsers(List<BookingTicket> bookingTickets, List<AppUser> users, CinemaDbContext dbContext)
+        {
+            // Uwaga liczba userów musi być większa niż liczba booking tickets
+            for (int i = 0; i < bookingTickets.Count; i++)
+            {
+                users[i].BookingTickets = new List<BookingTicket>() { bookingTickets[i] };
+                dbContext.Update(users[i]);
+            }
+            await dbContext.SaveChangesAsync();
         }
 
 
