@@ -1,5 +1,6 @@
 using JCB_Cinema.Domain.Entities;
 using JCB_Cinema.Infrastructure.Data;
+using JCB_Cinema.Infrastructure.Data.Seed;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,6 @@ using Microsoft.OpenApi.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using JCB_Cinema.Infrastructure.Data.Seed;
 
 namespace JCB_Cinema.WebAPI
 {
@@ -97,7 +97,20 @@ namespace JCB_Cinema.WebAPI
             });
 
             builder.Services.AddHttpContextAccessor();
+
+            builder.Services.AddCors(opt =>
+            {
+                opt.AddPolicy("AllowAllOrigins", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+            });
+
             var app = builder.Build();
+
+            app.UseCors("AllowAllOrigins");
 
             // Seed Data
             using (var scope = app.Services.CreateScope())
