@@ -31,6 +31,7 @@ namespace JCB_Cinema.Application.Servicies
                 return _mapper.Map<GetAppUserDTO>(currentUser);
             }
 
+            // there user is admin
             AppUser? user = null;
             if (!string.IsNullOrEmpty(request.Login))
             {
@@ -46,6 +47,7 @@ namespace JCB_Cinema.Application.Servicies
                 return _mapper.Map<GetAppUserDTO>(currentUser);
             }
 
+            // there Admin gets data from other user
             return _mapper.Map<GetAppUserDTO>(user);
         }
 

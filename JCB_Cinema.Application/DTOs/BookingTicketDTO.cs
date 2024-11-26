@@ -1,7 +1,4 @@
-﻿using JCB_Cinema.Domain.Entities;
-using JCB_Cinema.Domain.ValueObjects;
-
-namespace JCB_Cinema.Application.DTOs
+﻿namespace JCB_Cinema.Application.DTOs
 {
     public class BookingTicketDTO
     {
