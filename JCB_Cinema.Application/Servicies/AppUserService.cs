@@ -15,7 +15,7 @@ namespace JCB_Cinema.Application.Servicies
         public AppUserService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IUserContextService userContextService) : base(unitOfWork, mapper, userManager, userContextService) { }
 
 
-        public async Task<AppUserDTO?> GetAppUserAsync(RequestAppUser request)
+        public async Task<GetAppUserDTO?> GetAppUserAsync(RequestAppUser request)
         {
             var currentUserName = _userContextService.GetUserName();
             if (string.IsNullOrEmpty(currentUserName))
@@ -28,7 +28,7 @@ namespace JCB_Cinema.Application.Servicies
             if (!await _userManager.IsInRoleAsync(currentUser, "Admin"))
             {
                 // the user is not admin, so he cant get other users details
-                return _mapper.Map<AppUserDTO>(currentUser);
+                return _mapper.Map<GetAppUserDTO>(currentUser);
             }
 
             AppUser? user = null;
@@ -43,10 +43,10 @@ namespace JCB_Cinema.Application.Servicies
             else
             {
                 // if every RequestAppUser property is null, thats mean Admin wants own User details
-                return _mapper.Map<AppUserDTO>(currentUser);
+                return _mapper.Map<GetAppUserDTO>(currentUser);
             }
 
-            return _mapper.Map<AppUserDTO>(user);
+            return _mapper.Map<GetAppUserDTO>(user);
         }
 
 

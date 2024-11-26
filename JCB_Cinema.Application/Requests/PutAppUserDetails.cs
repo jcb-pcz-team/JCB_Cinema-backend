@@ -8,5 +8,6 @@
         public string? HouseNumber { get; set; }
         public string? Town { get; set; }
         public string? PhoneNumber { get; set; }
+        public string? DialCode { get; set; }
     }
 }
