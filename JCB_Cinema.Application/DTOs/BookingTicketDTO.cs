@@ -6,11 +6,10 @@ namespace JCB_Cinema.Application.DTOs
     public class BookingTicketDTO
     {
         public string MovieTitle { get; set; } = null!;
-        public ScreenType ScreenType { get; set; }
+        public string? ScreenType { get; set; }
         public DateTime ScreenignTime { get; set; }
-        public CinemaHall CienemaHall { get; set; } = null!;
+        public string CienemaHall { get; set; } = null!;
         public int SeatNumber { get; set; }
-        public string? UserName { get; set; }
         public string? BookingURL { get; set; }
     }
 }
