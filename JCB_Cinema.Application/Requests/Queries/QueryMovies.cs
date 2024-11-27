@@ -1,6 +1,6 @@
-﻿namespace JCB_Cinema.Application.Requests
+﻿namespace JCB_Cinema.Application.Requests.Queries
 {
-    public class RequestMovies
+    public class QueryMovies
     {
         public int? GenreId { get; set; }
         public string? GenreName { get; set; }

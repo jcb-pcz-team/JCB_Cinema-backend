@@ -1,6 +1,6 @@
 ﻿using JCB_Cinema.Application.DTOs.Auth;
 using JCB_Cinema.Application.Interfaces;
-using JCB_Cinema.Application.Requests;
+using JCB_Cinema.Application.Requests.Update;
 using JCB_Cinema.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;

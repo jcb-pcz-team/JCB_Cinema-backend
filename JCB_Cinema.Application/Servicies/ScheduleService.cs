@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using JCB_Cinema.Application.DTOs;
 using JCB_Cinema.Application.Interfaces;
-using JCB_Cinema.Application.Requests;
+using JCB_Cinema.Application.Requests.Queries;
 using JCB_Cinema.Domain.Entities;
 using JCB_Cinema.Domain.Interface;
 using JCB_Cinema.Infrastructure.Data.Interfaces;
@@ -16,7 +16,7 @@ namespace JCB_Cinema.Application.Servicies
         {
         }
 
-        public async Task<IList<GetScheduleDTO>?> Get(RequestSchedule request)
+        public async Task<IList<GetScheduleDTO>?> Get(QuerySchedule request)
         {
             var query = _unitOfWork.Repository<Schedule>().Queryable();
             query = query

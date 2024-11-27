@@ -1,4 +1,4 @@
-﻿namespace JCB_Cinema.Application.Requests
+﻿namespace JCB_Cinema.Application.Requests.Update
 {
     public class PutAppUserDetails
     {
