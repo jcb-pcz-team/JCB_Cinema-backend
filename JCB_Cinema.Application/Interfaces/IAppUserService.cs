@@ -6,6 +6,6 @@ namespace JCB_Cinema.Application.Interfaces
     public interface IAppUserService
     {
         public Task<GetAppUserDTO?> GetAppUserAsync(RequestAppUser request);
-        public Task PutAppUserAsync(PutAppUserDetails appUserDTO);
+        public Task PutAppUserAsync(RequestAppUserDetails appUserDTO);
     }
 }
