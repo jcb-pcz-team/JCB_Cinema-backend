@@ -1,6 +1,6 @@
 ﻿namespace JCB_Cinema.Application.Requests.Update
 {
-    public class RequestAppUserDetails
+    public class PutAppUserDetails
     {
         public string? FirstName { get; set; }
         public string? LastName { get; set; }

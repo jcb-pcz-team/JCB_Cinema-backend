@@ -51,7 +51,7 @@ namespace JCB_Cinema.Application.Servicies
         }
 
 
-        public async Task PutAppUserAsync(RequestAppUserDetails appUserRequest)
+        public async Task PutAppUserAsync(PutAppUserDetails appUserRequest)
         {
             var currentUserName = _userContextService.GetUserName();
 
