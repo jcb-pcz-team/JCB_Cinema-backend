@@ -3,11 +3,14 @@ using JCB_Cinema.Domain.ValueObjects;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace JCB_Cinema.Infrastructure.Data.Seed
 {
     public static class Seed
     {
+        private static readonly Random random = new Random();
+
         public static async Task Init(IServiceProvider serviceProvider)
         {
             var dbContext = serviceProvider.GetRequiredService<CinemaDbContext>();
@@ -430,6 +433,14 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             }
         }
 
+        public static string GeneratePhoneNumber()
+        {
+            string phoneNumber = string.Empty;
+            for (int i = 0; i < 9; i++)
+                phoneNumber += random.Next(0, 10);
+
+            return phoneNumber;
+        }
         private static List<AppUser> GetUsers()
         {
             var users = new List<AppUser>
@@ -443,6 +454,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                     HouseNumber = "1A",
                     Town = "AdminTown",
                     Email = "admin@example.com",
+                    PhoneNumber = GeneratePhoneNumber(),
                     Created = GetDate(false),
                     IsDeleted = false
                 },
@@ -455,6 +467,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                     HouseNumber = "23",
                     Town = "Springfield",
                     Email = "user1@example.com",
+                    PhoneNumber = GeneratePhoneNumber(),
                     Created = GetDate(false),
                     IsDeleted = false
                 },
@@ -467,6 +480,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                     HouseNumber = "42B",
                     Town = "Springfield",
                     Email = "user2@example.com",
+                    PhoneNumber = GeneratePhoneNumber(),
                     Created = GetDate(false),
                     IsDeleted = false
                 },
@@ -479,6 +493,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                     HouseNumber = "7",
                     Town = "ManagerVille",
                     Email = "manager@example.com",
+                    PhoneNumber = GeneratePhoneNumber(),
                     Created = GetDate(false),
                     IsDeleted = false
                 },
@@ -491,6 +506,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                     HouseNumber = "10",
                     Town = "OldTown",
                     Email = "user3@example.com",
+                    PhoneNumber = GeneratePhoneNumber(),
                     Created = GetDate(false),
                     IsDeleted = false
                 }
@@ -697,7 +713,6 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
         // Date Methods
         private static DateTime GetDate(bool isFuture)
         {
-            Random random = new Random();
             DateTime today = DateTime.Now;
             int daysOffset = random.Next(0, 4);
             int hourOffset = random.Next(1, 24);
@@ -706,7 +721,6 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
 
         private static DateOnly GetDateOnly(bool isFuture)
         {
-            Random random = new Random();
             DateTime today = DateTime.Now;
             int daysOffset = random.Next(0, 4);
             var result = DateOnly.FromDateTime(isFuture ? today.AddDays(+daysOffset) : today.AddDays(-daysOffset));

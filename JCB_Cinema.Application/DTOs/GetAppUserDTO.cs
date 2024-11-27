@@ -9,6 +9,6 @@
         public string? Street { get; set; }
         public string? HouseNumber { get; set; }
         public int? PhoneNumber { get; set; }
-        public int? DialCode { get; set; }
+        public string? DialCode { get; set; }
     }
 }

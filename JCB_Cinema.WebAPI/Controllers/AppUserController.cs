@@ -33,7 +33,7 @@ namespace JCB_Cinema.WebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put([FromQuery] PutAppUserDetails reqUser)
+        public async Task<IActionResult> Put([FromQuery] RequestAppUserDetails reqUser)
         {
             try
             {
