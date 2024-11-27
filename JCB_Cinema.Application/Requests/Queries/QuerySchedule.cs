@@ -1,6 +1,6 @@
-﻿namespace JCB_Cinema.Application.Requests
+﻿namespace JCB_Cinema.Application.Requests.Queries
 {
-    public class RequestSchedule
+    public class QuerySchedule
     {
         public DateOnly? DateFrom { get; set; }
         public DateOnly? DateTo { get; set; }

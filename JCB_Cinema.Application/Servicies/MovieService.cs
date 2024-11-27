@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using JCB_Cinema.Application.DTOs;
 using JCB_Cinema.Application.Interfaces;
-using JCB_Cinema.Application.Requests;
+using JCB_Cinema.Application.Requests.Queries;
 using JCB_Cinema.Domain.Entities;
 using JCB_Cinema.Domain.Interface;
 using JCB_Cinema.Domain.ValueObjects;
@@ -19,7 +19,7 @@ namespace JCB_Cinema.Application.Servicies
         {
         }
 
-        public async Task<IList<GetMovieDTO>?> Get(RequestMovies request)
+        public async Task<IList<GetMovieDTO>?> Get(QueryMovies request)
         {
             var query = _unitOfWork.Repository<Movie>().Queryable();
             query = query.Include(a => a.Poster);

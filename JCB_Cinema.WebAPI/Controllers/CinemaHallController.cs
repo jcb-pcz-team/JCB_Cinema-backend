@@ -1,5 +1,6 @@
 ﻿using JCB_Cinema.Application.Interfaces;
 using JCB_Cinema.Application.Requests;
+using JCB_Cinema.Application.Requests.Queries;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JCB_Cinema.WebAPI.Controllers
@@ -26,7 +27,7 @@ namespace JCB_Cinema.WebAPI.Controllers
                 {
                     return NotFound("No Cinema Hall Found");
                 }
-                return Ok(await _movieProjectionService.Get(new RequestMovieProjections { CinemaHallId = id }));
+                return Ok(await _movieProjectionService.Get(new QueryMovieProjections { CinemaHallId = id }));
             }
             catch
             {
@@ -35,7 +36,7 @@ namespace JCB_Cinema.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] RequestCinemaHall request)
+        public async Task<IActionResult> Get([FromQuery] QueryCinemaHall request)
         {
             try
             {

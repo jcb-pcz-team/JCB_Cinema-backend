@@ -1,5 +1,5 @@
 ﻿using JCB_Cinema.Application.Interfaces;
-using JCB_Cinema.Application.Requests;
+using JCB_Cinema.Application.Requests.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +19,7 @@ namespace JCB_Cinema.WebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put([FromQuery] RequestAppUserEmail reqUserEmail)
+        public async Task<IActionResult> Put([FromQuery] QueryAppUserEmail reqUserEmail)
         {
             try
             {

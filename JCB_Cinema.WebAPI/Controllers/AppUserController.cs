@@ -1,5 +1,6 @@
 ﻿using JCB_Cinema.Application.Interfaces;
-using JCB_Cinema.Application.Requests;
+using JCB_Cinema.Application.Requests.Queries;
+using JCB_Cinema.Application.Requests.Update;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +19,7 @@ namespace JCB_Cinema.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] RequestAppUser request)
+        public async Task<IActionResult> Get([FromQuery] QueryAppUser request)
         {
             try
             {
@@ -32,7 +33,7 @@ namespace JCB_Cinema.WebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put([FromQuery] RequestAppUserDetails reqUser)
+        public async Task<IActionResult> Put([FromQuery] PutAppUserDetails reqUser)
         {
             try
             {

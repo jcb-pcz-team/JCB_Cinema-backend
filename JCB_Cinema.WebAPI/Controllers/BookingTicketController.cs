@@ -1,5 +1,5 @@
 ﻿using JCB_Cinema.Application.Interfaces;
-using JCB_Cinema.Application.Requests;
+using JCB_Cinema.Application.Requests.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +18,7 @@ namespace JCB_Cinema.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUserReservationHistory([FromQuery] RequestAppUser reqAppUser)
+        public async Task<IActionResult> GetUserReservationHistory([FromQuery] QueryAppUser reqAppUser)
         {
             try
             {

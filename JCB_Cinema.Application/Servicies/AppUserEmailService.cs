@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using JCB_Cinema.Application.Interfaces;
-using JCB_Cinema.Application.Requests;
+using JCB_Cinema.Application.Requests.Queries;
 using JCB_Cinema.Domain.Entities;
 using JCB_Cinema.Domain.Interface;
 using JCB_Cinema.Infrastructure.Data.Interfaces;
@@ -12,7 +12,7 @@ namespace JCB_Cinema.Application.Servicies
     {
         public AppUserEmailService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IUserContextService userContextService) : base(unitOfWork, mapper, userManager, userContextService) { }
 
-        public async Task PutAppUserEmailAsync(RequestAppUserEmail appUserEmail)
+        public async Task PutAppUserEmailAsync(QueryAppUserEmail appUserEmail)
         {
             var currentUserName = _userContextService.GetUserName();
 

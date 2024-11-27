@@ -1,5 +1,5 @@
 ﻿using JCB_Cinema.Application.DTOs.Auth;
-using JCB_Cinema.Application.Requests;
+using JCB_Cinema.Application.Requests.Update;
 using Microsoft.AspNetCore.Identity;
 
 namespace JCB_Cinema.Application.Interfaces

@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using JCB_Cinema.Application.DTOs;
 using JCB_Cinema.Application.Interfaces;
-using JCB_Cinema.Application.Requests;
+using JCB_Cinema.Application.Requests.Queries;
+using JCB_Cinema.Application.Requests.Update;
 using JCB_Cinema.Domain.Entities;
 using JCB_Cinema.Domain.Interface;
 using JCB_Cinema.Infrastructure.Data.Interfaces;
@@ -15,7 +16,7 @@ namespace JCB_Cinema.Application.Servicies
         public AppUserService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IUserContextService userContextService) : base(unitOfWork, mapper, userManager, userContextService) { }
 
 
-        public async Task<GetAppUserDTO?> GetAppUserAsync(RequestAppUser request)
+        public async Task<GetAppUserDTO?> GetAppUserAsync(QueryAppUser request)
         {
             var currentUserName = _userContextService.GetUserName();
             if (string.IsNullOrEmpty(currentUserName))
@@ -31,7 +32,6 @@ namespace JCB_Cinema.Application.Servicies
                 return _mapper.Map<GetAppUserDTO>(currentUser);
             }
 
-            // there user is admin
             AppUser? user = null;
             if (!string.IsNullOrEmpty(request.Login))
             {
@@ -39,7 +39,7 @@ namespace JCB_Cinema.Application.Servicies
             }
             else if (!string.IsNullOrEmpty(request.Email))
             {
-                user = await _userManager.FindByEmailAsync(request.Email);
+                user = await _userManager.FindByNameAsync(request.Email);
             }
             else
             {
@@ -47,12 +47,11 @@ namespace JCB_Cinema.Application.Servicies
                 return _mapper.Map<GetAppUserDTO>(currentUser);
             }
 
-            // there Admin gets data from other user
             return _mapper.Map<GetAppUserDTO>(user);
         }
 
 
-        public async Task PutAppUserAsync(RequestAppUserDetails appUserRequest)
+        public async Task PutAppUserAsync(PutAppUserDetails appUserRequest)
         {
             var currentUserName = _userContextService.GetUserName();
 

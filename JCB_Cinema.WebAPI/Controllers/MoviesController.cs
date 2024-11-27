@@ -1,5 +1,5 @@
 ﻿using JCB_Cinema.Application.Interfaces;
-using JCB_Cinema.Application.Requests;
+using JCB_Cinema.Application.Requests.Queries;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JCB_Cinema.WebAPI.Controllers
@@ -16,7 +16,7 @@ namespace JCB_Cinema.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] RequestMovies request)
+        public async Task<IActionResult> Get([FromQuery] QueryMovies request)
         {
             try
             {
