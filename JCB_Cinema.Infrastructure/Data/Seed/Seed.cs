@@ -709,9 +709,9 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             };
         }
 
-        private static string NormalizeMovieName(this string title)
+        public static string NormalizeMovieName(this string title)
         {
-            return title.Replace(" ", "-");
+            return title.ToLower().Replace(" ", "-");
         }
 
 

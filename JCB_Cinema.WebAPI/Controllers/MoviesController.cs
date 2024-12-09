@@ -1,5 +1,8 @@
 ﻿using JCB_Cinema.Application.Interfaces;
+using JCB_Cinema.Application.Requests.Create;
 using JCB_Cinema.Application.Requests.Queries;
+using JCB_Cinema.Application.Requests.Update;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JCB_Cinema.WebAPI.Controllers
@@ -28,7 +31,7 @@ namespace JCB_Cinema.WebAPI.Controllers
             }
         }
 
-        [HttpGet("{Id}")]
+        [HttpGet("{title}")]
         public async Task<IActionResult> GetDetails(string title)
         {
             try
@@ -54,6 +57,44 @@ namespace JCB_Cinema.WebAPI.Controllers
                 if (result == null || result.Count == 0)
                     return NotFound("No upcoming premieres");
                 return Ok(result);
+            }
+            catch
+            {
+                return BadRequest("Error occurred");
+            }
+        }
+
+        [HttpPost("add")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AddMovie([FromQuery] AddMovieDTO movie) 
+        { 
+            try
+            {
+                await _movieService.AddMovie(movie);
+                return Created();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+            catch
+            {
+                return BadRequest("Error occurred");
+            }
+        }
+
+        [HttpPut("update")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateMovie([FromQuery] UpdateMovieDTO movie)
+        {
+            try
+            {
+                await _movieService.UpdateMovie(movie);
+                return Created();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
             }
             catch
             {

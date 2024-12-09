@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using JCB_Cinema.Application.DTOs;
+using JCB_Cinema.Application.Requests.Create;
+using JCB_Cinema.Application.Requests.Update;
 using JCB_Cinema.Domain.Entities;
 
 namespace JCB_Cinema.Application.Mappers
@@ -20,6 +22,9 @@ namespace JCB_Cinema.Application.Mappers
              .ReverseMap()
              .ForMember(src => src.Genre, opt => opt.MapFrom(dest => dest.Genre))
              .ForPath(src => src.ReleaseDate, opt => opt.MapFrom(dest => dest.Release));
+
+            CreateMap<AddMovieDTO, Movie>();
+            CreateMap<UpdateMovieDTO, Movie>();
         }
     }
 }
