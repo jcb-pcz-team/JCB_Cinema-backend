@@ -42,11 +42,11 @@ namespace JCB_Cinema.Application.Servicies
             return moviesList == null ? null : _mapper.Map<IList<GetMovieDTO>>(moviesList);
         }
 
-        public async Task<GetMovieDTO?> GetDetails(int id)
+        public async Task<GetMovieDTO?> GetDetails(string title)
         {
             var query = await _unitOfWork.Repository<Movie>().Queryable()
                 .Include(a => a.Poster)
-                .FirstOrDefaultAsync(m => m.MovieId == id);
+                .FirstOrDefaultAsync(m => m.Title == title);
             return query == null ? null : _mapper.Map<GetMovieDTO>(query);
         }
 

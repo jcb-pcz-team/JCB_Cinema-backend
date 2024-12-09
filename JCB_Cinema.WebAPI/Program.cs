@@ -126,9 +126,6 @@ namespace JCB_Cinema.WebAPI
                 app.UseSwaggerUI();
             }
 
-            // Tu mo¿na seed
-
-
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
