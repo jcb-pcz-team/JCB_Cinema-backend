@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using JCB_Cinema.Application.DTOs;
+using JCB_Cinema.Application.Requests.Create;
+using JCB_Cinema.Application.Requests.Update;
 using JCB_Cinema.Domain.Entities;
 using JCB_Cinema.Domain.ValueObjects;
 using JCB_Cinema.Tools;
@@ -30,6 +32,9 @@ namespace JCB_Cinema.Application.Mappers
                 .ForMember(dest => dest.MovieProjectionId, opt => opt.Ignore())
                 .ForMember(dest => dest.OccupiedSeats, opt => opt.Ignore())
                 .ForMember(dest => dest.AvailableSeats, opt => opt.Ignore());
+
+            CreateMap<AddMovieProjectionDTO, MovieProjection>();
+            CreateMap<UpdateMovieProjectionDTO, MovieProjection>();
         }
     }
 }

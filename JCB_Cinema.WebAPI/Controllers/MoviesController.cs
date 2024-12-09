@@ -90,7 +90,7 @@ namespace JCB_Cinema.WebAPI.Controllers
             try
             {
                 await _movieService.UpdateMovie(movie);
-                return Created();
+                return NoContent();
             }
             catch (UnauthorizedAccessException)
             {
