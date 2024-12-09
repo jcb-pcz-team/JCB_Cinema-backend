@@ -39,7 +39,7 @@ namespace JCB_Cinema.Application.Servicies
             }
             else if (!string.IsNullOrEmpty(request.Email))
             {
-                user = await _userManager.FindByNameAsync(request.Email);
+                user = await _userManager.FindByEmailAsync(request.Email);
             }
             else
             {

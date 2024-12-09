@@ -29,15 +29,15 @@ namespace JCB_Cinema.WebAPI.Controllers
         }
 
         [HttpGet("{Id}")]
-        public async Task<IActionResult> GetDetails(int Id)
+        public async Task<IActionResult> GetDetails(string title)
         {
             try
             {
-                if (!await _movieService.IsAny(m => m.MovieId == Id))
+                if (!await _movieService.IsAny(m => m.Title == title))
                 {
                     return NotFound("No Movie Found");
                 }
-                return Ok(await _movieService.GetDetails(Id));
+                return Ok(await _movieService.GetDetails(title));
             }
             catch
             {

@@ -120,5 +120,32 @@ namespace JCB_Cinema.WebAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while assigning role.");
             }
         }
+
+        /// <summary>
+        /// Changing user password.
+        /// </summary>
+        /// <param name="user">A ChangePasswordModel object containing the user's login credentials (username and password).</param>
+        /// <returns>
+        ///   * Status204 (no data): If the changing is successful, the method returns a 204 response
+        ///   * Status401 Unauthorized (no data): If the username or password is incorrect, the method returns a 401 Unauthorized response.
+        ///   * Status500 InternalServerError (no data): If an unexpected error occurs during login, the method returns a 500 Internal Server Error response with a generic error message. Consider providing more specific error details in a production environment. 
+        /// </returns>
+        [HttpPut("change-password")]
+        public async Task<IActionResult> ChangePassword([FromQuery] ChangeUserPassword user)
+        {
+            try
+            {
+                await _userService.ChangePassword(user);
+                return NoContent();
+            }
+            catch (InvalidOperationException ex) {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error assigning role to user.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while assigning role.");
+            }
+        }
     }
 }

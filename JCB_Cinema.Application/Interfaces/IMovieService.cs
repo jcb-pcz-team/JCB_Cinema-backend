@@ -8,7 +8,7 @@ namespace JCB_Cinema.Application.Interfaces
     public interface IMovieService
     {
         public Task<IList<GetMovieDTO>?> Get(QueryMovies request);
-        public Task<GetMovieDTO?> GetDetails(int id);
+        public Task<GetMovieDTO?> GetDetails(string title);
         Task<bool> IsAny(Expression<Func<Movie, bool>> predicate);
         public Task<IList<GetMovieDTO>?> GetUpcoming();
     }
