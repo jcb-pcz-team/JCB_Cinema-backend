@@ -73,9 +73,8 @@ namespace JCB_Cinema.WebAPI.Controllers
             {
                 return ValidationProblem("Wysłano niepoprawny plik.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
                 return BadRequest();
             }
         }

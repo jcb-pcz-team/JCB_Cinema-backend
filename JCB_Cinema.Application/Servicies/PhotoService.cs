@@ -6,6 +6,7 @@ using JCB_Cinema.Application.Requests.Queries;
 using JCB_Cinema.Domain.Entities;
 using JCB_Cinema.Domain.Interface;
 using JCB_Cinema.Infrastructure.Data.Interfaces;
+using JCB_Cinema.Infrastructure.Data.Seed;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -44,7 +45,7 @@ namespace JCB_Cinema.Application.Servicies
             var newPhoto = new Photo
             {
                 Bytes = fileBytes,
-                Description = photo.Description,
+                Description = photo.Description == null ? null : photo.Description.NormalizeMovieName(),
                 FileExtension = Path.GetExtension(photo.File.FileName),
                 Size = photo.File.Length / 1024.0 // Rozmiar w KB
             };

@@ -9,6 +9,6 @@ namespace JCB_Cinema.Application.Requests.Create
         public int Duration { get; set; }
         public DateOnly ReleaseDate { get; set; }
         public Genre Genre { get; set; }
-        public int? PhotoId { get; set; }
+        public UploadPhoto? Poster { get; set; }
     }
 }

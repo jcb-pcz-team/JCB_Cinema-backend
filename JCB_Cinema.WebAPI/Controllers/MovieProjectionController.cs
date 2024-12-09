@@ -50,7 +50,7 @@ namespace JCB_Cinema.WebAPI.Controllers
 
         [HttpPost("add-movie-projection")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddMovieProjection(AddMovieProjectionDTO request)
+        public async Task<IActionResult> AddMovieProjection([FromQuery] AddMovieProjectionDTO request)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace JCB_Cinema.WebAPI.Controllers
 
         [HttpPut("update-movie-projection")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateMovieProjection(UpdateMovieProjectionDTO request)
+        public async Task<IActionResult> UpdateMovieProjection([FromQuery] UpdateMovieProjectionDTO request)
         {
             try
             {

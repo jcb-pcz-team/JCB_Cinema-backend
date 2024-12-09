@@ -18,11 +18,14 @@ namespace JCB_Cinema.Application.Servicies
 {
     public class MovieService : ServiceBase, IMovieService
     {
-        public MovieService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IUserContextService userContextService) : base(unitOfWork, mapper, userManager, userContextService)
+
+        private readonly IPhotoService _photoService;
+        public MovieService(IPhotoService photoService, IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IUserContextService userContextService) : base(unitOfWork, mapper, userManager, userContextService)
         {
+            _photoService = photoService;
         }
 
-        public async Task AddMovie(AddMovieDTO addmovie)
+        public async Task AddMovie(AddMovieDTO addMovie)
         {
             var currentUserName = _userContextService.GetUserName();
 
@@ -33,15 +36,22 @@ namespace JCB_Cinema.Application.Servicies
             if (currentUser == null)
                 throw new UnauthorizedAccessException();
 
-            if (await _userManager.IsInRoleAsync(currentUser, "Admin"))
-            {
-                var movie = _mapper.Map<Movie>(addmovie);
-                await _unitOfWork.Repository<Movie>().AddAsync(movie);
-            }
-            else
-            {
+            if (!await _userManager.IsInRoleAsync(currentUser, "Admin"))
                 throw new UnauthorizedAccessException();
+
+            addMovie.Title = addMovie.Title.NormalizeMovieName();
+            Movie movie = _mapper.Map<Movie>(addMovie);
+
+            Photo? photo = null;
+            if (addMovie.Poster != null)
+            {
+                addMovie.Poster.Description = addMovie.Title;
+                var photoDTO = await _photoService.UploadPhoto(addMovie.Poster);
+                photo = _mapper.Map<Photo>(photoDTO);
+                movie.PhotoId = photo.Id;
             }
+
+            await _unitOfWork.Repository<Movie>().AddAsync(movie);
         }
 
         public async Task<IList<GetMovieDTO>?> Get(QueryMovies request)
