@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using JCB_Cinema.Application.DTOs;
 using JCB_Cinema.Application.Interfaces;
+using JCB_Cinema.Application.Requests.Create;
 using JCB_Cinema.Application.Requests.Queries;
+using JCB_Cinema.Application.Requests.Update;
 using JCB_Cinema.Domain.Entities;
 using JCB_Cinema.Domain.Interface;
 using JCB_Cinema.Domain.ValueObjects;
@@ -16,6 +18,28 @@ namespace JCB_Cinema.Application.Servicies
     {
         public MovieProjectionService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IUserContextService userContextService) : base(unitOfWork, mapper, userManager, userContextService)
         {
+        }
+
+        public async Task AddMovieProjection(AddMovieProjectionDTO movieProjectionDTO)
+        {
+            var currentUserName = _userContextService.GetUserName();
+
+            if (string.IsNullOrEmpty(currentUserName))
+                throw new UnauthorizedAccessException();
+
+            var currentUser = await _userManager.FindByNameAsync(currentUserName);
+            if (currentUser == null)
+                throw new UnauthorizedAccessException();
+
+            if (await _userManager.IsInRoleAsync(currentUser, "Admin"))
+            {
+                MovieProjection movie = _mapper.Map<MovieProjection>(movieProjectionDTO);
+                await _unitOfWork.Repository<MovieProjection>().AddAsync(movie);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         public async Task<IList<GetMovieProjectionDTO>?> Get(QueryMovieProjections request)
@@ -50,6 +74,28 @@ namespace JCB_Cinema.Application.Servicies
                 .Include(p => p.Price);
 
             return entity == null ? null : _mapper.Map<GetMovieProjectionDTO>(entity);
+        }
+
+        public async Task UpdateMovieProjection(UpdateMovieProjectionDTO movieProjectionDTO)
+        {
+            var currentUserName = _userContextService.GetUserName();
+
+            if (string.IsNullOrEmpty(currentUserName))
+                throw new UnauthorizedAccessException();
+
+            var currentUser = await _userManager.FindByNameAsync(currentUserName);
+            if (currentUser == null)
+                throw new UnauthorizedAccessException();
+
+            if (await _userManager.IsInRoleAsync(currentUser, "Admin"))
+            {
+                MovieProjection movie = _mapper.Map<MovieProjection>(movieProjectionDTO);
+                await _unitOfWork.Repository<MovieProjection>().UpdateAsync(movie);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
     }
 }

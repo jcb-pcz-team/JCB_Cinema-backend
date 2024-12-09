@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using JCB_Cinema.Application.DTOs;
 using JCB_Cinema.Application.Interfaces;
+using JCB_Cinema.Application.Requests.Create;
 using JCB_Cinema.Application.Requests.Queries;
+using JCB_Cinema.Application.Requests.Update;
 using JCB_Cinema.Domain.Entities;
 using JCB_Cinema.Domain.Interface;
 using JCB_Cinema.Domain.ValueObjects;
 using JCB_Cinema.Infrastructure.Data.Interfaces;
+using JCB_Cinema.Infrastructure.Data.Seed;
 using JCB_Cinema.Tools;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -15,8 +18,40 @@ namespace JCB_Cinema.Application.Servicies
 {
     public class MovieService : ServiceBase, IMovieService
     {
-        public MovieService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IUserContextService userContextService) : base(unitOfWork, mapper, userManager, userContextService)
+
+        private readonly IPhotoService _photoService;
+        public MovieService(IPhotoService photoService, IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IUserContextService userContextService) : base(unitOfWork, mapper, userManager, userContextService)
         {
+            _photoService = photoService;
+        }
+
+        public async Task AddMovie(AddMovieDTO addMovie)
+        {
+            var currentUserName = _userContextService.GetUserName();
+
+            if (string.IsNullOrEmpty(currentUserName))
+                throw new UnauthorizedAccessException();
+
+            var currentUser = await _userManager.FindByNameAsync(currentUserName);
+            if (currentUser == null)
+                throw new UnauthorizedAccessException();
+
+            if (!await _userManager.IsInRoleAsync(currentUser, "Admin"))
+                throw new UnauthorizedAccessException();
+
+            addMovie.Title = addMovie.Title.NormalizeMovieName();
+            Movie movie = _mapper.Map<Movie>(addMovie);
+
+            Photo? photo = null;
+            if (addMovie.Poster != null)
+            {
+                addMovie.Poster.Description = addMovie.Title;
+                var photoDTO = await _photoService.UploadPhoto(addMovie.Poster);
+                photo = _mapper.Map<Photo>(photoDTO);
+                movie.PhotoId = photo.Id;
+            }
+
+            await _unitOfWork.Repository<Movie>().AddAsync(movie);
         }
 
         public async Task<IList<GetMovieDTO>?> Get(QueryMovies request)
@@ -46,7 +81,7 @@ namespace JCB_Cinema.Application.Servicies
         {
             var query = await _unitOfWork.Repository<Movie>().Queryable()
                 .Include(a => a.Poster)
-                .FirstOrDefaultAsync(m => m.Title == title);
+                .FirstOrDefaultAsync(m => m.Title == title.NormalizeMovieName());
             return query == null ? null : _mapper.Map<GetMovieDTO>(query);
         }
 
@@ -65,6 +100,28 @@ namespace JCB_Cinema.Application.Servicies
                 .Include(a => a.Poster)
                 .AnyAsync(predicate);
             return entity;
+        }
+
+        public async Task UpdateMovie(UpdateMovieDTO updatemovie)
+        {
+            var currentUserName = _userContextService.GetUserName();
+
+            if (string.IsNullOrEmpty(currentUserName))
+                throw new UnauthorizedAccessException();
+
+            var currentUser = await _userManager.FindByNameAsync(currentUserName);
+            if (currentUser == null)
+                throw new UnauthorizedAccessException();
+
+            if (await _userManager.IsInRoleAsync(currentUser, "Admin"))
+            {
+                var movie = _mapper.Map<Movie>(updatemovie);
+                await _unitOfWork.Repository<Movie>().UpdateAsync(movie);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
     }
 }
