@@ -30,6 +30,7 @@ namespace JCB_Cinema.Application.Mappers
                 .ForMember(dest => dest.ReleaseDate, opt => opt.MapFrom(src => src.ReleaseDate))
                 .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => src.Genre))
                 .ForMember(dest => dest.Poster, opt => opt.Ignore());
+
             CreateMap<UpdateMovieDTO, Movie>();
         }
     }

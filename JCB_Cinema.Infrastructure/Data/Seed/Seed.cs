@@ -3,7 +3,6 @@ using JCB_Cinema.Domain.ValueObjects;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace JCB_Cinema.Infrastructure.Data.Seed
 {
@@ -543,11 +542,12 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                     Modified = DateTime.Now,
                     Modifier = "System",
                     IsDeleted = false,
-                    Description = Path.GetFileNameWithoutExtension(filePath),
-                    FileExtension = "jpg",
+                    Description = Path.GetFileNameWithoutExtension(filePath).NormalizeMovieName(),
+                    FileExtension = Path.GetExtension(filePath),
                     Size = (new FileInfo(filePath).Length) / 1024.0, // Rozmiar w KB
                     Bytes = File.ReadAllBytes(filePath)
                 };
+                //Console.WriteLine(filePath);
 
                 photos.Add(photo);
             }
@@ -566,9 +566,14 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             {
                 throw new ArgumentException("Folder not found at path: " + folderPath);
             }
-            Console.WriteLine("Aktualny katalog: " + folderPath);
+            //Console.WriteLine("Aktualny katalog: " + folderPath);
 
-            return Directory.GetFiles(folderPath, "*.jpg");
+            HashSet<string> allowedExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                ".jpg", ".jpeg", ".png", ".bmp", ".gif"
+            };
+
+            return Directory.GetFiles(folderPath, "*.*").Where(file => allowedExtensions.Contains(Path.GetExtension(file)));
         }
 
 
@@ -578,7 +583,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             return new List<Movie> {
                 new Movie
                 {
-                    Title = photos.FirstOrDefault(x => x.Description == "1917")!.Description!.NormalizeMovieName(),
+                    Title = photos.FirstOrDefault(x => x.Description == "1917")!.Description!,
                     Description = "Dwóch brytyjskich żołnierzy zostaje wysłanych z misją, by przekazać ważne ostrzeżenie, ryzykując życie na frontach I wojny światowej.",
                     Duration = 148,
                     ReleaseDate = GetDateOnly(true),
@@ -591,12 +596,12 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 },
                 new Movie
                 {
-                    Title = photos.FirstOrDefault(x => x.Description == "The Dark Knight")!.Description!.NormalizeMovieName(),
+                    Title = photos.FirstOrDefault(x => x.Description == "the-dark-knight")!.Description!,
                     Description = "Batman faces the Joker in Gotham City.",
                     Duration = 152,
                     ReleaseDate = GetDateOnly(true),
                     Genre = Genre.Action,
-                    Poster = photos.FirstOrDefault(x => x.Description == "The Dark Knight")!,
+                    Poster = photos.FirstOrDefault(x => x.Description == "the-dark-knight")!,
                     Created = GetDate(false),
                     Creator = "System",
                     Modified = DateTime.Now,
@@ -604,12 +609,12 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 },
                 new Movie
                 {
-                    Title = photos.FirstOrDefault(x => x.Description == "Matrix")!.Description!.NormalizeMovieName(),
+                    Title = photos.FirstOrDefault(x => x.Description == "matrix")!.Description!,
                     Description = "A hacker discovers the reality he lives in is a simulation.",
                     Duration = 136,
                     ReleaseDate = GetDateOnly(true),
                     Genre = Genre.ScienceFiction,
-                    Poster = photos.FirstOrDefault(x => x.Description == "Matrix")!,
+                    Poster = photos.FirstOrDefault(x => x.Description == "matrix")!,
                     Created = GetDate(false),
                     Creator = "System",
                     Modified = DateTime.Now,
@@ -617,12 +622,12 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 },
                 new Movie
                 {
-                    Title = photos.FirstOrDefault(x => x.Description == "Forrest Gump")!.Description!.NormalizeMovieName(),
+                    Title = photos.FirstOrDefault(x => x.Description == "forrest-gump")!.Description!,
                     Description = "A simple man with a big heart experiences life and love.",
                     Duration = 142,
                     ReleaseDate = GetDateOnly(true),
                     Genre = Genre.Drama,
-                    Poster = photos.FirstOrDefault(x => x.Description == "Forrest Gump")!,
+                    Poster = photos.FirstOrDefault(x => x.Description == "forrest-gump")!,
                     Created = GetDate(false),
                     Creator = "System",
                     Modified = DateTime.Now,
@@ -630,12 +635,12 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 },
                 new Movie
                 {
-                    Title = photos.FirstOrDefault(x => x.Description == "No Time To Die")!.Description.NormalizeMovieName()!,
+                    Title = photos.FirstOrDefault(x => x.Description == "no-time-to-die")!.Description!,
                     Description = "James Bond returns on a mission to face a new, dangerous adversary while solving a mystery from the past.",
                     Duration = 142,
                     ReleaseDate = GetDateOnly(true),
                     Genre = Genre.Spy,
-                    Poster = photos.FirstOrDefault(x => x.Description == "No Time To Die")!,
+                    Poster = photos.FirstOrDefault(x => x.Description == "no-time-to-die")!,
                     Created = GetDate(false),
                     Creator = "System",
                     Modified = DateTime.Now,
@@ -643,12 +648,12 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 },
                 new Movie
                 {
-                    Title = photos.FirstOrDefault(x => x.Description == "Die Hard")!.Description!.NormalizeMovieName(),
+                    Title = photos.FirstOrDefault(x => x.Description == "die-hard")!.Description!,
                     Description = "Bruce Willis stars as New York police officer John McClane, who faces off against a group of terrorists taking over a Los Angeles skyscraper during a Christmas party.",
                     Duration = 120,
                     ReleaseDate = GetDateOnly(true),
                     Genre = Genre.Action,
-                    Poster = photos.FirstOrDefault(x => x.Description == "Die Hard")!,
+                    Poster = photos.FirstOrDefault(x => x.Description == "die-hard")!,
                     Created = GetDate(false),
                     Creator = "System",
                     Modified = DateTime.Now,
@@ -656,12 +661,12 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 },
                 new Movie
                 {
-                    Title = photos.FirstOrDefault(x => x.Description == "Interstellar")!.Description!.NormalizeMovieName(),
+                    Title = photos.FirstOrDefault(x => x.Description == "interstellar")!.Description!,
                     Description = "Cooper, a former NASA pilot and devoted father, embarks on a mission through a wormhole to save humanity and secure a future for his children",
                     Duration = 129,
                     ReleaseDate = GetDateOnly(true),
                     Genre = Genre.Drama,
-                    Poster = photos.FirstOrDefault(x => x.Description == "Interstellar")!,
+                    Poster = photos.FirstOrDefault(x => x.Description == "interstellar")!,
                     Created = GetDate(false),
                     Creator = "System",
                     Modified = DateTime.Now,
@@ -669,12 +674,12 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 },
                 new Movie
                 {
-                    Title = photos.FirstOrDefault(x => x.Description == "Mandalorian")!.Description!.NormalizeMovieName(),
+                    Title = photos.FirstOrDefault(x => x.Description == "mandalorian")!.Description!,
                     Description = "Pedro Pascal stars as the Mandalorian, a lone bounty hunter navigating the outer reaches of the galaxy while protecting a mysterious child with extraordinary powers.",
                     Duration = 154,
                     ReleaseDate = GetDateOnly(true),
                     Genre = Genre.Adventure,
-                    Poster = photos.FirstOrDefault(x => x.Description == "Mandalorian")!,
+                    Poster = photos.FirstOrDefault(x => x.Description == "mandalorian")!,
                     Created = GetDate(false),
                     Creator = "System",
                     Modified = DateTime.Now,
@@ -682,12 +687,12 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 },
                 new Movie
                 {
-                    Title = photos.FirstOrDefault(x => x.Description == "Spider-Man No Way Home")!.Description!.NormalizeMovieName(),
+                    Title = photos.FirstOrDefault(x => x.Description == "spider-man-no-way-home")!.Description!,
                     Description = "Tom Holland stars as Spider-Man, who faces multiverse chaos and battles iconic villains from alternate realities while seeking to restore his secret identity and protect those he loves.",
                     Duration = 142,
                     ReleaseDate = GetDateOnly(true),
                     Genre = Genre.ScienceFiction,
-                    Poster = photos.FirstOrDefault(x => x.Description == "Spider-Man No Way Home")!,
+                    Poster = photos.FirstOrDefault(x => x.Description == "spider-man-no-way-home")!,
                     Created = GetDate(false),
                     Creator = "System",
                     Modified = DateTime.Now,
@@ -695,12 +700,12 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 },
                 new Movie
                 {
-                    Title = photos.FirstOrDefault(x => x.Description == "Venom Last Dance")!.Description!.NormalizeMovieName(),
+                    Title = photos.FirstOrDefault(x => x.Description == "venom-last-dance")!.Description!,
                     Description = "Tom Hardy stars as Eddie Brock, who struggles to control the symbiote Venom while facing a new threat in the form of a powerful villain, forcing him to make difficult choices to protect those he cares about.",
                     Duration = 132,
                     ReleaseDate = GetDateOnly(true),
                     Genre = Genre.ScienceFiction,
-                    Poster = photos.FirstOrDefault(x => x.Description == "Venom Last Dance")!,
+                    Poster = photos.FirstOrDefault(x => x.Description == "venom-last-dance")!,
                     Created = GetDate(false),
                     Creator = "System",
                     Modified = DateTime.Now,

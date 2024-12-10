@@ -16,6 +16,11 @@ namespace JCB_Cinema.Application.Servicies
     {
         public PhotoService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IUserContextService userContextService) : base(unitOfWork, mapper, userManager, userContextService) { }
 
+        public async Task Delete(int id)
+        {
+            await _unitOfWork.Repository<Photo>().DeleteAsync(id);
+        }
+
         public async Task<PhotoDTO?> Get(int id)
         {
             var entity = await _unitOfWork.Repository<Photo>().Queryable()
@@ -26,6 +31,34 @@ namespace JCB_Cinema.Application.Servicies
         public Task<IList<PhotoDTO?>> Get(QueryPhotos query)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<PhotoDTO> Update(UpdatePhoto photo)
+        {
+            if (photo.File == null || photo.File.Length == 0)
+            {
+                throw new NullReferenceException();
+            }
+
+            byte[] fileBytes;
+            using (var memoryStream = new MemoryStream())
+            {
+                await photo.File.CopyToAsync(memoryStream);
+                fileBytes = memoryStream.ToArray();
+            }
+
+            var newPhoto = new Photo
+            {
+                Id = photo.Id,
+                Bytes = fileBytes,
+                Description = photo.Description == null ? null : photo.Description.NormalizeMovieName(),
+                FileExtension = Path.GetExtension(photo.File.FileName),
+                Size = photo.File.Length / 1024.0 // Rozmiar w KB
+            };
+
+            await _unitOfWork.Repository<Photo>().UpdateAsync(newPhoto);
+
+            return _mapper.Map<PhotoDTO>(newPhoto);
         }
 
         public async Task<PhotoDTO?> UploadPhoto(UploadPhoto photo)
