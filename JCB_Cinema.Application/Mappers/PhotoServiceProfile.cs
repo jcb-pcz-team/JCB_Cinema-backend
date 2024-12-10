@@ -10,6 +10,7 @@ namespace JCB_Cinema.Application.Mappers
         public PhotoServiceProfile()
         {
             CreateMap<Photo, PhotoDTO>().ReverseMap();
+            CreateMap<UpdatePhoto, Photo>();
         }
     }
 }

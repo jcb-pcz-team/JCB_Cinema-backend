@@ -54,6 +54,20 @@ namespace JCB_Cinema.Application.Servicies
             await _unitOfWork.Repository<Movie>().AddAsync(movie);
         }
 
+        public async Task DeleteMovie(int id)
+        {
+            Movie? movie = await _unitOfWork.Repository<Movie>().Queryable()
+                .Include(a => a.Poster)
+                .FirstOrDefaultAsync(m => m.MovieId == id);
+
+            if (movie == null)
+                throw new NullReferenceException();
+            if (movie.PhotoId != null) {
+                await _unitOfWork.Repository<Photo>().DeleteAsync((int)movie.PhotoId);
+            }
+            await _unitOfWork.Repository<Movie>().DeleteAsync(movie.MovieId);
+        }
+
         public async Task<IList<GetMovieDTO>?> Get(QueryMovies request)
         {
             var query = _unitOfWork.Repository<Movie>().Queryable();
@@ -81,7 +95,7 @@ namespace JCB_Cinema.Application.Servicies
         {
             var query = await _unitOfWork.Repository<Movie>().Queryable()
                 .Include(a => a.Poster)
-                .FirstOrDefaultAsync(m => m.Title == title.NormalizeMovieName());
+                .FirstOrDefaultAsync(m => m.Title == title);
             return query == null ? null : _mapper.Map<GetMovieDTO>(query);
         }
 
@@ -102,10 +116,9 @@ namespace JCB_Cinema.Application.Servicies
             return entity;
         }
 
-        public async Task UpdateMovie(UpdateMovieDTO updatemovie)
+        public async Task UpdateMovie(UpdateMovieDTO updateMovie)
         {
             var currentUserName = _userContextService.GetUserName();
-
             if (string.IsNullOrEmpty(currentUserName))
                 throw new UnauthorizedAccessException();
 
@@ -113,15 +126,36 @@ namespace JCB_Cinema.Application.Servicies
             if (currentUser == null)
                 throw new UnauthorizedAccessException();
 
-            if (await _userManager.IsInRoleAsync(currentUser, "Admin"))
+            if (!await _userManager.IsInRoleAsync(currentUser, "Admin"))
+                throw new UnauthorizedAccessException();
+
+            updateMovie.Title = updateMovie.Title.NormalizeMovieName();
+
+            var existingMovie = await _unitOfWork.Repository<Movie>()
+                .Queryable()
+                .FirstOrDefaultAsync(m => m.MovieId == updateMovie.Id);
+
+            if (existingMovie == null)
+                throw new NullReferenceException();
+
+            var movie = _mapper.Map(updateMovie, existingMovie);
+
+            if (updateMovie.Poster != null)
             {
-                var movie = _mapper.Map<Movie>(updatemovie);
-                await _unitOfWork.Repository<Movie>().UpdateAsync(movie);
+                updateMovie.Poster.Description = updateMovie.Title;
+
+                var photoDTO = await _photoService.Update(updateMovie.Poster);
+                var photo = _mapper.Map<Photo>(photoDTO);
+
+                movie.Poster = photo;
             }
             else
             {
-                throw new UnauthorizedAccessException();
+                movie.PhotoId = existingMovie.PhotoId;
             }
+
+            await _unitOfWork.Repository<Movie>().UpdateAsync(movie);
         }
+
     }
 }

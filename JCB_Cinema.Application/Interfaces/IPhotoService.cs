@@ -9,5 +9,7 @@ namespace JCB_Cinema.Application.Interfaces
         Task<PhotoDTO?> UploadPhoto(UploadPhoto photo);
         Task<PhotoDTO?> Get(int id);
         Task<IList<PhotoDTO?>> Get(QueryPhotos query);
+        Task Delete(int id);
+        Task<PhotoDTO> Update(UpdatePhoto photo);
     }
 }

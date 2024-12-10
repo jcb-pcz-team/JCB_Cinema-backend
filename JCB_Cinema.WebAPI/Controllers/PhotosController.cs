@@ -51,7 +51,7 @@ namespace JCB_Cinema.WebAPI.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPost("upload")]
         public async Task<IActionResult> UploadPhoto([FromForm] UploadPhoto uploadPhoto)
         {
@@ -79,6 +79,52 @@ namespace JCB_Cinema.WebAPI.Controllers
             }
         }
 
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdatePhoto([FromForm] UpdatePhoto updatePhoto)
+        {
+            try
+            {
+                await _photoService.Update(updatePhoto);
+                return NoContent();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+            catch (NullReferenceException)
+            {
+                return ValidationProblem("Wysłano niepoprawny plik.");
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeletePhoto(int id)
+        {
+            try
+            {
+                await _photoService.Delete(id);
+                return NoContent();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+            catch (NullReferenceException)
+            {
+                return ValidationProblem("Wysłano niepoprawny plik.");
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
         #region Mime
         private string GetMimeType(string fileExtension)
         {

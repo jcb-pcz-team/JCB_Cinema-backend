@@ -101,5 +101,28 @@ namespace JCB_Cinema.WebAPI.Controllers
                 return BadRequest("Error occurred");
             }
         }
+
+        [HttpDelete("delete/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteMovie(int id)
+        {
+            try
+            {
+                await _movieService.DeleteMovie(id);
+                return NoContent();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+            catch (NullReferenceException)
+            {
+                return NotFound();
+            }
+            catch
+            {
+                return BadRequest("Error occurred");
+            }
+        }
     }
 }
