@@ -8,7 +8,7 @@
         public int? Duration { get; set; }
         public DateOnly? ReleaseDate { get; set; }
         public GetGenreDTO? Genre { get; set; }
-        public string? PosterURL { get; set; }
+        public string? NormalizedTitle { get; set; }
         public DateOnly? Release { get; set; }
     }
 }

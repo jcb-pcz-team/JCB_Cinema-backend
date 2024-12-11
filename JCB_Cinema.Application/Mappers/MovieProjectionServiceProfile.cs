@@ -17,7 +17,7 @@ namespace JCB_Cinema.Application.Mappers
                 .ForMember(dest => dest.ScreeningTime, opt => opt.MapFrom(src => src.ScreeningTime))
                 .ForMember(dest => dest.ScreenType, opt => opt.MapFrom(src => src.ScreenType.GetDescription()))
                 .ForMember(dest => dest.CinemaHall, opt => opt.MapFrom(src => src.CinemaHall))
-                .ForMember(dest => dest.PosterURL, opt => opt.MapFrom(src => src.PosterURL))
+                .ForMember(dest => dest.NormalizedMovieTitle, opt => opt.MapFrom(src => src.MovieNormalizedTitle))
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
                 .ForMember(dest => dest.OccupiedSeats, opt => opt.MapFrom(src => src.OccupiedSeats))
                 .ForMember(dest => dest.AvailableSeats, opt => opt.MapFrom(src => src.AvailableSeats));
@@ -27,7 +27,7 @@ namespace JCB_Cinema.Application.Mappers
                 .ForMember(dest => dest.ScreeningTime, opt => opt.MapFrom(src => src.ScreeningTime))
                 .ForMember(dest => dest.ScreenType, opt => opt.MapFrom(src => EnumExtensions.GetValueFromDescription<ScreenType>(src.ScreenType ?? ScreenType.TwoD.GetDescription())))
                 .ForMember(dest => dest.CinemaHall, opt => opt.MapFrom(src => src.CinemaHall))
-                .ForMember(dest => dest.PosterURL, opt => opt.MapFrom(src => src.PosterURL))
+                .ForMember(dest => dest.MovieNormalizedTitle, opt => opt.MapFrom(src => src.NormalizedMovieTitle))
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
                 .ForMember(dest => dest.MovieProjectionId, opt => opt.Ignore())
                 .ForMember(dest => dest.OccupiedSeats, opt => opt.Ignore())

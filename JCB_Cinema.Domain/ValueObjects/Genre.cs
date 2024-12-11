@@ -1,7 +1,9 @@
-﻿using System.ComponentModel;
+﻿using JCB_Cinema.Tools;
+using System.ComponentModel;
 
 namespace JCB_Cinema.Domain.ValueObjects
 {
+    [TypeConverter(typeof(EnumDescriptionTypeConverter<Genre>))]
     public enum Genre
     {
         [Description("Action")]

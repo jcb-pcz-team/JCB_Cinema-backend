@@ -8,7 +8,6 @@ using JCB_Cinema.Domain.Entities;
 using JCB_Cinema.Domain.Interface;
 using JCB_Cinema.Domain.ValueObjects;
 using JCB_Cinema.Infrastructure.Data.Interfaces;
-using JCB_Cinema.Infrastructure.Data.Seed;
 using JCB_Cinema.Tools;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -39,7 +38,7 @@ namespace JCB_Cinema.Application.Servicies
             if (!await _userManager.IsInRoleAsync(currentUser, "Admin"))
                 throw new UnauthorizedAccessException();
 
-            addMovie.Title = addMovie.Title.NormalizeMovieName();
+            addMovie.Title = addMovie.Title.NormalizeString();
             Movie movie = _mapper.Map<Movie>(addMovie);
 
             Photo? photo = null;
@@ -62,7 +61,8 @@ namespace JCB_Cinema.Application.Servicies
 
             if (movie == null)
                 throw new NullReferenceException();
-            if (movie.PhotoId != null) {
+            if (movie.PhotoId != null)
+            {
                 await _unitOfWork.Repository<Photo>().DeleteAsync((int)movie.PhotoId);
             }
             await _unitOfWork.Repository<Movie>().DeleteAsync(movie.MovieId);
@@ -129,7 +129,7 @@ namespace JCB_Cinema.Application.Servicies
             if (!await _userManager.IsInRoleAsync(currentUser, "Admin"))
                 throw new UnauthorizedAccessException();
 
-            updateMovie.Title = updateMovie.Title.NormalizeMovieName();
+            updateMovie.Title = updateMovie.Title.NormalizeString();
 
             var existingMovie = await _unitOfWork.Repository<Movie>()
                 .Queryable()

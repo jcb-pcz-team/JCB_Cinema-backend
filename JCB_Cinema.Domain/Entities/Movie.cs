@@ -1,6 +1,5 @@
 ﻿using JCB_Cinema.Domain.ValueObjects;
 using JCB_Cinema.Tools;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JCB_Cinema.Domain.Entities
 {
@@ -15,9 +14,7 @@ namespace JCB_Cinema.Domain.Entities
         public string? GenreDescription => Genre?.GetDescription();
         public int? PhotoId { get; set; }
         public Photo? Poster { get; set; }
-
-        [NotMapped]
-        public string? PosterURL => $"photos/{PhotoId}";
+        public string NormalizedTitle => Title.NormalizeString();
 
         public override object Key => MovieId;
     }

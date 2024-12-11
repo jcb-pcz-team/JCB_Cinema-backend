@@ -17,7 +17,7 @@ namespace JCB_Cinema.Domain.Entities
         public CinemaHall CinemaHall { get; set; } = null!;
 
         [NotMapped]
-        public string? PosterURL => Movie.PosterURL;
+        public string? MovieNormalizedTitle => Movie.NormalizedTitle;
 
         public Price Price { get; private set; }// in cents!!!
 
