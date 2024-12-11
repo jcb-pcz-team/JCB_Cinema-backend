@@ -20,5 +20,18 @@ namespace JCB_Cinema.Application.Servicies
         {
             return _httpContextAccessor.HttpContext?.User?.Identity?.Name;
         }
+
+        public async Task<AppUser?> GetAppUser(string? email, string? userName)
+        {
+            if (!string.IsNullOrWhiteSpace(email))
+            {
+                return await _userManager.FindByEmailAsync(email);
+            }
+            else if (!string.IsNullOrWhiteSpace(userName))
+            {
+                return await _userManager.FindByNameAsync(userName);
+            }
+            return null;
+        }
     }
 }

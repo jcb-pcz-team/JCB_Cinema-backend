@@ -4,6 +4,7 @@ using JCB_Cinema.Application.Interfaces;
 using JCB_Cinema.Application.Requests.Update;
 using JCB_Cinema.Domain.Entities;
 using JCB_Cinema.Domain.Interface;
+using JCB_Cinema.Infrastructure.Data.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 
@@ -16,9 +17,10 @@ namespace JCB_Cinema.Application.Servicies
         private readonly UserManager<AppUser> _userManager;
         private readonly IUserRoleService _userRoleService;
         private readonly IUserContextService _userContextService;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public UserService(IConfiguration configuration, IJwtService jwtService, UserManager<AppUser> userManager, IUserRoleService roleService, IUserContextService userContextService, IMapper mapper)
+        public UserService(IConfiguration configuration, IJwtService jwtService, UserManager<AppUser> userManager, IUserRoleService roleService, IUserContextService userContextService, IMapper mapper, IUnitOfWork unitOfWork)
         {
             _configuration = configuration;
             _jwtService = jwtService;
@@ -26,6 +28,7 @@ namespace JCB_Cinema.Application.Servicies
             _userRoleService = roleService;
             _userContextService = userContextService;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<IdentityResult> RegisterUserAsync(RegistrationModel model)
@@ -100,57 +103,23 @@ namespace JCB_Cinema.Application.Servicies
 
             IdentityResult? updateResult = null;
 
-            // if user
-            // user wants to change his own password
-            if (await _userManager.IsInRoleAsync(currentUser, "User"))
-            {
-                changeUserPasswd.Email = currentUser.Email;
-                changeUserPasswd.Login = currentUser.UserName;
-                _mapper.Map(changeUserPasswd, currentUser);
-
-                updateResult = await _userManager.UpdateAsync(currentUser);
-            }
-
             // if admin
             if (await _userManager.IsInRoleAsync(currentUser, "Admin"))
             {
-                // admin wants to change password of some user by his Email
-                if (!string.IsNullOrEmpty(changeUserPasswd.Email))
+                var user = await _userContextService.GetAppUser(changeUserPasswd.Email, changeUserPasswd.Login);
+                if (user != null)
                 {
-                    var someUser = await _userManager.FindByEmailAsync(changeUserPasswd.Email);
-
-                    if (someUser == null)
-                        throw new InvalidOperationException();
-                    changeUserPasswd.Login = someUser.UserName;
-                    _mapper.Map(changeUserPasswd, someUser);
-
-                    updateResult = await _userManager.UpdateAsync(someUser);
+                    updateResult = await _userManager.ChangePasswordAsync(user, changeUserPasswd.OldPassword, changeUserPasswd.NewPassword);
+                    if (updateResult == null || !updateResult.Succeeded)
+                        throw new InvalidOperationException("New or current password is invalid.");
+                    return;
                 }
-                // admin wants to change password of some user by his Login
-                else if (!string.IsNullOrEmpty(changeUserPasswd.Login))
-                {
-                    var someUser = await _userManager.FindByNameAsync(changeUserPasswd.Login);
-
-                    if (someUser == null)
-                        throw new InvalidOperationException();
-                    changeUserPasswd.Email = someUser.Email;
-                    _mapper.Map(changeUserPasswd, someUser);
-
-                    updateResult = await _userManager.UpdateAsync(someUser);
-                }
-                else
-                {
-                    // admin wants to change his own password
-                    changeUserPasswd.Email = currentUser.Email;
-                    changeUserPasswd.Login = currentUser.UserName;
-                    _mapper.Map(changeUserPasswd, currentUser);
-
-                    updateResult = await _userManager.UpdateAsync(currentUser);
-                }
-
             }
+
+            updateResult = await _userManager.ChangePasswordAsync(currentUser, changeUserPasswd.OldPassword, changeUserPasswd.NewPassword);
+
             if (updateResult == null || !updateResult.Succeeded)
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("New or current password is invalid.");
         }
     }
 }

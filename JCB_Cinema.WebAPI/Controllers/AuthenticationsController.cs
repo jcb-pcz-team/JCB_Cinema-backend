@@ -126,7 +126,7 @@ namespace JCB_Cinema.WebAPI.Controllers
         /// </summary>
         /// <param name="user">A ChangePasswordModel object containing the user's login credentials (username and password).</param>
         /// <returns>
-        ///   * Status204 (no data): If the changing is successful, the method returns a 204 response
+        ///   * Status200 If the changing is successful, the method returns a 200 response
         ///   * Status401 Unauthorized (no data): If the username or password is incorrect, the method returns a 401 Unauthorized response.
         ///   * Status500 InternalServerError (no data): If an unexpected error occurs during login, the method returns a 500 Internal Server Error response with a generic error message. Consider providing more specific error details in a production environment. 
         /// </returns>
@@ -136,9 +136,14 @@ namespace JCB_Cinema.WebAPI.Controllers
             try
             {
                 await _userService.ChangePassword(user);
-                return NoContent();
+                return Ok();
             }
-            catch (InvalidOperationException ex) {
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+            catch (InvalidOperationException ex)
+            {
                 return BadRequest(new { Message = ex.Message });
             }
             catch (Exception ex)
