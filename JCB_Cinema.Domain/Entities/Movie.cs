@@ -6,7 +6,18 @@ namespace JCB_Cinema.Domain.Entities
     public class Movie : EntityBase
     {
         public int MovieId { get; set; }
-        public string Title { get; set; } = null!;
+
+        private string _title = null!;
+        public string Title
+        {
+            get => _title;
+            set
+            {
+                _title = value;
+                NormalizedTitle = _title.NormalizeString();
+            }
+        }
+
         public string? Description { get; set; }
         public int? Duration { get; set; }
         public DateOnly? ReleaseDate { get; set; }
@@ -14,7 +25,13 @@ namespace JCB_Cinema.Domain.Entities
         public string? GenreDescription => Genre?.GetDescription();
         public int? PhotoId { get; set; }
         public Photo? Poster { get; set; }
-        public string NormalizedTitle => Title.NormalizeString();
+
+        private string _normalizedTitle = null!;
+        public string NormalizedTitle
+        {
+            get => _normalizedTitle;
+            private set => _normalizedTitle = value;
+        }
 
         public override object Key => MovieId;
     }

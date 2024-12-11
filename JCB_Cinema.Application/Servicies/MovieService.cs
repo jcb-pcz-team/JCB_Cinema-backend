@@ -24,7 +24,7 @@ namespace JCB_Cinema.Application.Servicies
             _photoService = photoService;
         }
 
-        public async Task AddMovie(AddMovieDTO addMovie)
+        public async Task<string> AddMovie(AddMovieDTO addMovie)
         {
             var currentUserName = _userContextService.GetUserName();
 
@@ -38,19 +38,19 @@ namespace JCB_Cinema.Application.Servicies
             if (!await _userManager.IsInRoleAsync(currentUser, "Admin"))
                 throw new UnauthorizedAccessException();
 
-            addMovie.Title = addMovie.Title.NormalizeString();
             Movie movie = _mapper.Map<Movie>(addMovie);
 
             Photo? photo = null;
             if (addMovie.Poster != null)
             {
-                addMovie.Poster.Description = addMovie.Title;
+                addMovie.Poster.Description = movie.NormalizedTitle;
                 var photoDTO = await _photoService.UploadPhoto(addMovie.Poster);
                 photo = _mapper.Map<Photo>(photoDTO);
                 movie.PhotoId = photo.Id;
             }
 
             await _unitOfWork.Repository<Movie>().AddAsync(movie);
+            return movie.NormalizedTitle;
         }
 
         public async Task DeleteMovie(int id)
@@ -95,7 +95,7 @@ namespace JCB_Cinema.Application.Servicies
         {
             var query = await _unitOfWork.Repository<Movie>().Queryable()
                 .Include(a => a.Poster)
-                .FirstOrDefaultAsync(m => m.Title == title);
+                .FirstOrDefaultAsync(m => m.NormalizedTitle == title);
             return query == null ? null : _mapper.Map<GetMovieDTO>(query);
         }
 

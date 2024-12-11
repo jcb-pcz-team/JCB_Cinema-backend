@@ -36,7 +36,7 @@ namespace JCB_Cinema.WebAPI.Controllers
         {
             try
             {
-                if (!await _movieService.IsAny(m => m.Title == title))
+                if (!await _movieService.IsAny(m => m.NormalizedTitle == title))
                 {
                     return NotFound("No Movie Found");
                 }
@@ -66,12 +66,13 @@ namespace JCB_Cinema.WebAPI.Controllers
 
         [HttpPost("add")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddMovie([FromQuery] AddMovieDTO movie) 
-        { 
+        public async Task<IActionResult> AddMovie([FromQuery] AddMovieDTO movie)
+        {
             try
             {
-                await _movieService.AddMovie(movie);
-                return Created();
+                var title = await _movieService.AddMovie(movie);
+
+                return CreatedAtAction(nameof(GetDetails), new { title = title }, title);
             }
             catch (UnauthorizedAccessException)
             {

@@ -16,19 +16,15 @@ namespace JCB_Cinema.WebAPI.Controllers
             _photoService = photoService;
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetPhoto(int id)
+        [HttpGet("{description}")]
+        public async Task<IActionResult> GetPhoto(string description)
         {
             try
             {
-                var result = await _photoService.Get(id);
-                if (result == null)
+                var result = await _photoService.Get(description);
+                if (result == null || result.Bytes == null)
                 {
                     return NotFound();
-                }
-                if (result.Bytes == null)
-                {
-                    return NoContent();
                 }
 
                 var mimeType = GetMimeType(result.FileExtension);
@@ -63,7 +59,7 @@ namespace JCB_Cinema.WebAPI.Controllers
                     return Conflict();
                 }
 
-                return CreatedAtAction(nameof(GetPhoto), new { id = result.Id }, result);
+                return CreatedAtAction(nameof(GetPhoto), new { description = result.Description }, result.Description);
             }
             catch (UnauthorizedAccessException)
             {

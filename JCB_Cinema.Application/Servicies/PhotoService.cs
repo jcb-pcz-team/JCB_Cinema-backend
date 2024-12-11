@@ -21,10 +21,10 @@ namespace JCB_Cinema.Application.Servicies
             await _unitOfWork.Repository<Photo>().DeleteAsync(id);
         }
 
-        public async Task<PhotoDTO?> Get(int id)
+        public async Task<PhotoDTO?> Get(string description)
         {
             var entity = await _unitOfWork.Repository<Photo>().Queryable()
-                .FirstOrDefaultAsync(a => a.Id == id);
+                .FirstOrDefaultAsync(a => a.Description == description);
             return _mapper.Map<PhotoDTO?>(entity);
         }
 
