@@ -47,7 +47,8 @@ namespace JCB_Cinema.Application.Servicies
             var query = _unitOfWork.Repository<MovieProjection>().Queryable();
 
             query = query.Include(a => a.Movie)
-                .Include(a => a.CinemaHall);
+                .Include(a => a.CinemaHall)
+                .Include(a => a.Price);
 
             if (!string.IsNullOrWhiteSpace(request.ScreenTypeName))
             {
