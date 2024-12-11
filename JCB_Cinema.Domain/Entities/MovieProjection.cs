@@ -11,7 +11,17 @@ namespace JCB_Cinema.Domain.Entities
         public int MovieId { get; set; }
         public Movie Movie { get; set; } = null!;
         public DateTime ScreeningTime { get; set; }
-        public ScreenType ScreenType { get; set; }
+
+        private ScreenType _screenType;
+        public ScreenType ScreenType
+        {
+            get => _screenType;
+            set
+            {
+                _screenType = value;
+                UpdatePrice(); // Update Price when ScreenType changes
+            }
+        }
 
         public int CinemaHallId { get; set; }
         public CinemaHall CinemaHall { get; set; } = null!;
@@ -19,12 +29,14 @@ namespace JCB_Cinema.Domain.Entities
         [NotMapped]
         public string? MovieNormalizedTitle => Movie.NormalizedTitle;
 
-        public Price Price { get; private set; }// in cents!!!
+        public Price Price { get; private set; } // in cents!!!
 
         public MovieProjection()
         {
-            Price = new Price(_basePrice + CalculateSubchargeForTicketPrice(ScreenType), "pln");
+            _screenType = ScreenType.TwoD; // Default ScreenType
+            Price = new Price(_basePrice + CalculateSubchargeForTicketPrice(_screenType), "pln");
         }
+
         public int OccupiedSeats
         {
             get
@@ -40,7 +52,13 @@ namespace JCB_Cinema.Domain.Entities
                 return CinemaHall.TotalSeats.HasValue ? CinemaHall.TotalSeats.Value - OccupiedSeats : 0;
             }
         }
+
         public override object Key => MovieProjectionId;
+
+        private void UpdatePrice()
+        {
+            Price = new Price(_basePrice + CalculateSubchargeForTicketPrice(_screenType), "pln");
+        }
 
         public static int CalculateSubchargeForTicketPrice(ScreenType screenType = ScreenType.TwoD)
         {
@@ -64,4 +82,5 @@ namespace JCB_Cinema.Domain.Entities
             return surcharge; // returns subcharge for ticket
         }
     }
+
 }

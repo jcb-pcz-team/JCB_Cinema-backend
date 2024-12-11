@@ -2,8 +2,8 @@
 {
     public class Price : IEquatable<Price>
     {
-        public int AmountInCents { get; }
-        public string Currency { get; }
+        public int AmountInCents { get; private set; }
+        public string Currency { get; private set; }
 
         public Price(int amountInCents, string currency)
         {
