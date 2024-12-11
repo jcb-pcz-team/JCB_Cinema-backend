@@ -106,7 +106,7 @@ namespace JCB_Cinema.Application.Servicies
             // if admin
             if (await _userManager.IsInRoleAsync(currentUser, "Admin"))
             {
-                var user = await _userContextService.GetAppUser(changeUserPasswd.Email, changeUserPasswd.Login);
+                var user = await _userContextService.GetAppUser(changeUserPasswd.Email, changeUserPasswd.UserName);
                 if (user != null)
                 {
                     updateResult = await _userManager.ChangePasswordAsync(user, changeUserPasswd.OldPassword, changeUserPasswd.NewPassword);
