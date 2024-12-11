@@ -1,6 +1,7 @@
 using JCB_Cinema.Domain.Entities;
 using JCB_Cinema.Infrastructure.Data;
 using JCB_Cinema.Infrastructure.Data.Seed;
+using JCB_Cinema.Tools;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -57,6 +58,7 @@ namespace JCB_Cinema.WebAPI
                         Array.Empty<string>()
                     }
                 });
+                options.SchemaFilter<EnumDescriptionSchemaFilter>();
             });
 
             //DI

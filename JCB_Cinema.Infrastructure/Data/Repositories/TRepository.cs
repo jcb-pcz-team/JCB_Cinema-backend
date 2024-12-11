@@ -132,6 +132,5 @@ namespace JCB_Cinema.Infrastructure.Data.Repositories
             entity.Modified = DateTime.UtcNow;
             entity.Modifier = userName;
         }
-
     }
 }

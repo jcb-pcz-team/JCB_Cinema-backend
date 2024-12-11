@@ -17,7 +17,7 @@ namespace JCB_Cinema.Application.Mappers
              .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.Duration))
              .ForMember(dest => dest.ReleaseDate, opt => opt.MapFrom(src => src.ReleaseDate))
              .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => src.Genre)) // Mapowanie do GetGenreDTO
-             .ForMember(dest => dest.PosterURL, opt => opt.MapFrom(src => src.PosterURL))
+             .ForMember(dest => dest.NormalizedTitle, opt => opt.MapFrom(src => src.NormalizedTitle))
              .ForMember(dest => dest.Release, opt => opt.MapFrom(src => src.ReleaseDate))
              .ReverseMap()
              .ForMember(src => src.Genre, opt => opt.MapFrom(dest => dest.Genre))

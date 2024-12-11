@@ -1,5 +1,6 @@
 ﻿using JCB_Cinema.Domain.Entities;
 using JCB_Cinema.Domain.ValueObjects;
+using JCB_Cinema.Tools;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -542,7 +543,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                     Modified = DateTime.Now,
                     Modifier = "System",
                     IsDeleted = false,
-                    Description = Path.GetFileNameWithoutExtension(filePath).NormalizeMovieName(),
+                    Description = Path.GetFileNameWithoutExtension(filePath).NormalizeString(),
                     FileExtension = Path.GetExtension(filePath),
                     Size = (new FileInfo(filePath).Length) / 1024.0, // Rozmiar w KB
                     Bytes = File.ReadAllBytes(filePath)
@@ -583,7 +584,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             return new List<Movie> {
                 new Movie
                 {
-                    Title = photos.FirstOrDefault(x => x.Description == "1917")!.Description!,
+                    Title = "1917",
                     Description = "Dwóch brytyjskich żołnierzy zostaje wysłanych z misją, by przekazać ważne ostrzeżenie, ryzykując życie na frontach I wojny światowej.",
                     Duration = 148,
                     ReleaseDate = GetDateOnly(true),
@@ -596,7 +597,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 },
                 new Movie
                 {
-                    Title = photos.FirstOrDefault(x => x.Description == "the-dark-knight")!.Description!,
+                    Title = "The Dark Knight",
                     Description = "Batman faces the Joker in Gotham City.",
                     Duration = 152,
                     ReleaseDate = GetDateOnly(true),
@@ -609,7 +610,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 },
                 new Movie
                 {
-                    Title = photos.FirstOrDefault(x => x.Description == "matrix")!.Description!,
+                    Title = "The Matrix",
                     Description = "A hacker discovers the reality he lives in is a simulation.",
                     Duration = 136,
                     ReleaseDate = GetDateOnly(true),
@@ -622,7 +623,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 },
                 new Movie
                 {
-                    Title = photos.FirstOrDefault(x => x.Description == "forrest-gump")!.Description!,
+                    Title = "Forrest Gump",
                     Description = "A simple man with a big heart experiences life and love.",
                     Duration = 142,
                     ReleaseDate = GetDateOnly(true),
@@ -635,7 +636,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 },
                 new Movie
                 {
-                    Title = photos.FirstOrDefault(x => x.Description == "no-time-to-die")!.Description!,
+                    Title = "No Time to Die",
                     Description = "James Bond returns on a mission to face a new, dangerous adversary while solving a mystery from the past.",
                     Duration = 142,
                     ReleaseDate = GetDateOnly(true),
@@ -648,7 +649,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 },
                 new Movie
                 {
-                    Title = photos.FirstOrDefault(x => x.Description == "die-hard")!.Description!,
+                    Title = "Die Hard",
                     Description = "Bruce Willis stars as New York police officer John McClane, who faces off against a group of terrorists taking over a Los Angeles skyscraper during a Christmas party.",
                     Duration = 120,
                     ReleaseDate = GetDateOnly(true),
@@ -661,7 +662,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 },
                 new Movie
                 {
-                    Title = photos.FirstOrDefault(x => x.Description == "interstellar")!.Description!,
+                    Title = "Interstellar",
                     Description = "Cooper, a former NASA pilot and devoted father, embarks on a mission through a wormhole to save humanity and secure a future for his children",
                     Duration = 129,
                     ReleaseDate = GetDateOnly(true),
@@ -674,7 +675,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 },
                 new Movie
                 {
-                    Title = photos.FirstOrDefault(x => x.Description == "mandalorian")!.Description!,
+                    Title = "The Mandalorian",
                     Description = "Pedro Pascal stars as the Mandalorian, a lone bounty hunter navigating the outer reaches of the galaxy while protecting a mysterious child with extraordinary powers.",
                     Duration = 154,
                     ReleaseDate = GetDateOnly(true),
@@ -687,7 +688,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 },
                 new Movie
                 {
-                    Title = photos.FirstOrDefault(x => x.Description == "spider-man-no-way-home")!.Description!,
+                    Title = "Spider-Man: No Way Home",
                     Description = "Tom Holland stars as Spider-Man, who faces multiverse chaos and battles iconic villains from alternate realities while seeking to restore his secret identity and protect those he loves.",
                     Duration = 142,
                     ReleaseDate = GetDateOnly(true),
@@ -700,7 +701,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 },
                 new Movie
                 {
-                    Title = photos.FirstOrDefault(x => x.Description == "venom-last-dance")!.Description!,
+                    Title = "Venom: Last Dance",
                     Description = "Tom Hardy stars as Eddie Brock, who struggles to control the symbiote Venom while facing a new threat in the form of a powerful villain, forcing him to make difficult choices to protect those he cares about.",
                     Duration = 132,
                     ReleaseDate = GetDateOnly(true),
@@ -713,12 +714,6 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 }
             };
         }
-
-        public static string NormalizeMovieName(this string title)
-        {
-            return title.ToLower().Replace(" ", "-");
-        }
-
 
         // Date Methods
         private static DateTime GetDate(bool isFuture)
