@@ -11,7 +11,6 @@ namespace JCB_Cinema.Application.Mappers
         public MovieServiceProfile()
         {
             CreateMap<Movie, GetMovieDTO>()
-             .ForMember(dest => dest.MovieId, opt => opt.MapFrom(src => src.MovieId))
              .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
              .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
              .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.Duration))
