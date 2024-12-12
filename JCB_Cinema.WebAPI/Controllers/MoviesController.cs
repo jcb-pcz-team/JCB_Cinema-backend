@@ -84,14 +84,14 @@ namespace JCB_Cinema.WebAPI.Controllers
             }
         }
 
-        [HttpPut("update")]
+        [HttpPut("update/{title}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateMovie([FromQuery] UpdateMovieDTO movie)
+        public async Task<IActionResult> UpdateMovie(string title, [FromQuery] UpdateMovieDTO movie)
         {
             try
             {
-                await _movieService.UpdateMovie(movie);
-                return NoContent();
+                await _movieService.UpdateMovie(title, movie);
+                return Ok();
             }
             catch (UnauthorizedAccessException)
             {

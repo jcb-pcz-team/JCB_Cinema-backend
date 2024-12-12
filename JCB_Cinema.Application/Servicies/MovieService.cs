@@ -56,12 +56,12 @@ namespace JCB_Cinema.Application.Servicies
         public async Task DeleteMovie(string title)
         {
             var delEntity = await _unitOfWork.Repository<Movie>().Queryable()
-                .Include(a => a.Poster)
+                .Include(a => a.Photo)
                 .Where(a => a.NormalizedTitle == title)
                 .Select(a => new
                 {
                     Id = a.MovieId,
-                    PosterId = a.Poster != null ? a.Poster.Id : 0
+                    PosterId = a.Photo != null ? a.Photo.Id : 0
                 })
                 .FirstOrDefaultAsync();
 
@@ -77,7 +77,7 @@ namespace JCB_Cinema.Application.Servicies
         public async Task<IList<GetMovieDTO>?> Get(QueryMovies request)
         {
             var query = _unitOfWork.Repository<Movie>().Queryable();
-            query = query.Include(a => a.Poster);
+            query = query.Include(a => a.Photo);
 
             if (request.GenreId.HasValue)
             {
@@ -100,7 +100,7 @@ namespace JCB_Cinema.Application.Servicies
         public async Task<GetMovieDTO?> GetDetails(string title)
         {
             var query = await _unitOfWork.Repository<Movie>().Queryable()
-                .Include(a => a.Poster)
+                .Include(a => a.Photo)
                 .FirstOrDefaultAsync(m => m.NormalizedTitle == title);
             return query == null ? null : _mapper.Map<GetMovieDTO>(query);
         }
@@ -108,7 +108,7 @@ namespace JCB_Cinema.Application.Servicies
         public async Task<IList<GetMovieDTO>?> GetUpcoming()
         {
             var query = await _unitOfWork.Repository<Movie>().Queryable()
-                .Include(a => a.Poster)
+                .Include(a => a.Photo)
                 .Where(m => m.ReleaseDate > DateOnly.FromDateTime(DateTime.UtcNow))
                 .ToListAsync();
             return query == null ? null : _mapper.Map<IList<GetMovieDTO>>(query);
@@ -117,12 +117,12 @@ namespace JCB_Cinema.Application.Servicies
         public async Task<bool> IsAny(Expression<Func<Movie, bool>> predicate)
         {
             var entity = await _unitOfWork.Repository<Movie>().Queryable()
-                .Include(a => a.Poster)
+                .Include(a => a.Photo)
                 .AnyAsync(predicate);
             return entity;
         }
 
-        public async Task UpdateMovie(UpdateMovieDTO updateMovie)
+        public async Task UpdateMovie(string title, UpdateMovieDTO updateMovie)
         {
             var currentUserName = _userContextService.GetUserName();
             if (string.IsNullOrEmpty(currentUserName))
@@ -135,11 +135,10 @@ namespace JCB_Cinema.Application.Servicies
             if (!await _userManager.IsInRoleAsync(currentUser, "Admin"))
                 throw new UnauthorizedAccessException();
 
-            updateMovie.Title = updateMovie.Title.NormalizeString();
-
             var existingMovie = await _unitOfWork.Repository<Movie>()
                 .Queryable()
-                .FirstOrDefaultAsync(m => m.MovieId == updateMovie.Id);
+                .Include(a => a.Photo)
+                .FirstOrDefaultAsync(m => m.NormalizedTitle == title);
 
             if (existingMovie == null)
                 throw new NullReferenceException();
@@ -148,12 +147,12 @@ namespace JCB_Cinema.Application.Servicies
 
             if (updateMovie.Poster != null)
             {
-                updateMovie.Poster.Description = updateMovie.Title;
+                updateMovie.Poster.Description = existingMovie.NormalizedTitle;
 
                 var photoDTO = await _photoService.Update(updateMovie.Poster);
                 var photo = _mapper.Map<Photo>(photoDTO);
 
-                movie.Poster = photo;
+                movie.Photo = photo;
             }
             else
             {
@@ -162,6 +161,5 @@ namespace JCB_Cinema.Application.Servicies
 
             await _unitOfWork.Repository<Movie>().UpdateAsync(movie);
         }
-
     }
 }
