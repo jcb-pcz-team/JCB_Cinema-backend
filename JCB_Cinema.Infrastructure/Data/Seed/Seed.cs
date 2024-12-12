@@ -610,7 +610,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 },
                 new Movie
                 {
-                    Title = "The Matrix",
+                    Title = "Matrix",
                     Description = "A hacker discovers the reality he lives in is a simulation.",
                     Duration = 136,
                     ReleaseDate = GetDateOnly(true),

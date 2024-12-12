@@ -15,6 +15,6 @@ namespace JCB_Cinema.Application.Interfaces
         public Task<IList<GetMovieDTO>?> GetUpcoming();
         public Task<string> AddMovie(AddMovieDTO movie);
         public Task UpdateMovie(UpdateMovieDTO movie);
-        Task DeleteMovie(int id);
+        Task DeleteMovie(string title);
     }
 }
