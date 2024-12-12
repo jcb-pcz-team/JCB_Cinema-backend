@@ -2,8 +2,6 @@
 using JCB_Cinema.Application.Requests.Create;
 using JCB_Cinema.Application.Requests.Queries;
 using JCB_Cinema.Application.Requests.Update;
-using JCB_Cinema.Application.Servicies;
-using JCB_Cinema.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -48,7 +46,7 @@ namespace JCB_Cinema.WebAPI.Controllers
             }
         }
 
-        [HttpPost("add-movie-projection")]
+        [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddMovieProjection([FromQuery] AddMovieProjectionDTO request)
         {
@@ -67,7 +65,7 @@ namespace JCB_Cinema.WebAPI.Controllers
             }
         }
 
-        [HttpPut("update-movie-projection")]
+        [HttpPut]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateMovieProjection([FromQuery] UpdateMovieProjectionDTO request)
         {
