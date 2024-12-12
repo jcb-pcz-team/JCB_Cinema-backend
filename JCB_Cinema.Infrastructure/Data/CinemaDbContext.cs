@@ -38,6 +38,10 @@ namespace JCB_Cinema.Infrastructure.Data
 
             builder.Entity<MovieProjection>()
                 .OwnsOne(a => a.Price);
+
+            builder.Entity<Movie>()
+                .HasIndex(u => u.NormalizedTitle)
+                .IsUnique();
         }
     }
 }
