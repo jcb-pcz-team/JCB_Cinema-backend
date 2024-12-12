@@ -24,7 +24,7 @@ namespace JCB_Cinema.Domain.Entities
         public Genre? Genre { get; set; }
         public string? GenreDescription => Genre?.GetDescription();
         public int? PhotoId { get; set; }
-        public Photo? Poster { get; set; }
+        public Photo? Photo { get; set; }
 
         private string _normalizedTitle = null!;
         public string NormalizedTitle
