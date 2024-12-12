@@ -103,13 +103,13 @@ namespace JCB_Cinema.WebAPI.Controllers
             }
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("delete/{title}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteMovie(int id)
+        public async Task<IActionResult> DeleteMovie(string title)
         {
             try
             {
-                await _movieService.DeleteMovie(id);
+                await _movieService.DeleteMovie(title);
                 return NoContent();
             }
             catch (UnauthorizedAccessException)

@@ -53,19 +53,25 @@ namespace JCB_Cinema.Application.Servicies
             return movie.NormalizedTitle;
         }
 
-        public async Task DeleteMovie(int id)
+        public async Task DeleteMovie(string title)
         {
-            Movie? movie = await _unitOfWork.Repository<Movie>().Queryable()
+            var delEntity = await _unitOfWork.Repository<Movie>().Queryable()
                 .Include(a => a.Poster)
-                .FirstOrDefaultAsync(m => m.MovieId == id);
+                .Where(a => a.NormalizedTitle == title)
+                .Select(a => new
+                {
+                    Id = a.MovieId,
+                    PosterId = a.Poster != null ? a.Poster.Id : 0
+                })
+                .FirstOrDefaultAsync();
 
-            if (movie == null)
-                throw new NullReferenceException();
-            if (movie.PhotoId != null)
+            if (delEntity == null)
+                throw new NullReferenceException("Movie does not exists.");
+            if (delEntity.PosterId > 0)
             {
-                await _unitOfWork.Repository<Photo>().DeleteAsync((int)movie.PhotoId);
+                await _unitOfWork.Repository<Photo>().DeleteAsync(delEntity.PosterId);
             }
-            await _unitOfWork.Repository<Movie>().DeleteAsync(movie.MovieId);
+            await _unitOfWork.Repository<Movie>().DeleteAsync(delEntity.Id);
         }
 
         public async Task<IList<GetMovieDTO>?> Get(QueryMovies request)
