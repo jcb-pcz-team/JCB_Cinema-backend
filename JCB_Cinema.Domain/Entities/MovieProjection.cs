@@ -9,7 +9,7 @@ namespace JCB_Cinema.Domain.Entities
 
         public int MovieProjectionId { get; set; }
         public int MovieId { get; set; }
-        public Movie Movie { get; set; } = null!;
+        public Movie? Movie { get; set; }
         public DateTime ScreeningTime { get; set; }
 
         private ScreenType _screenType;
@@ -24,10 +24,13 @@ namespace JCB_Cinema.Domain.Entities
         }
 
         public int CinemaHallId { get; set; }
-        public CinemaHall CinemaHall { get; set; } = null!;
+        public CinemaHall? CinemaHall { get; set; }
 
         [NotMapped]
-        public string? MovieNormalizedTitle => Movie.NormalizedTitle;
+        public string MovieNormalizedTitle
+        {
+            get { return Movie == null ? "" : Movie.NormalizedTitle; }
+        }
 
         public Price Price { get; private set; } // in cents!!!
 
@@ -37,20 +40,16 @@ namespace JCB_Cinema.Domain.Entities
             Price = new Price(_basePrice + CalculateSubchargeForTicketPrice(_screenType), "pln");
         }
 
+        [NotMapped]
         public int OccupiedSeats
         {
-            get
-            {
-                return CinemaHall.Seats.Count(s => s.BookingTickets.Any(bt => bt.MovieProjectionId == MovieProjectionId));
-            }
+            get { return CinemaHall == null ? 0 : CinemaHall.Seats.Count(s => s.BookingTickets.Any(bt => bt.MovieProjectionId == MovieProjectionId)); }
         }
 
+        [NotMapped]
         public int AvailableSeats
         {
-            get
-            {
-                return CinemaHall.TotalSeats.HasValue ? CinemaHall.TotalSeats.Value - OccupiedSeats : 0;
-            }
+            get { return CinemaHall == null ? 0 : CinemaHall.TotalSeats.HasValue ? CinemaHall.TotalSeats.Value - OccupiedSeats : 0; }
         }
 
         public override object Key => MovieProjectionId;

@@ -57,13 +57,13 @@ namespace JCB_Cinema.WebAPI.Controllers
                 await _movieProjectionService.AddMovieProjection(request);
                 return Created();
             }
-            catch (UnauthorizedAccessException)
+            catch(UnauthorizedAccessException)
             {
                 return Unauthorized();
             }
-            catch
+            catch(Exception ex)
             {
-                return BadRequest("Error occurred");
+                return BadRequest(ex);
             }
         }
 

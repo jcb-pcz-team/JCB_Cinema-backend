@@ -107,8 +107,8 @@ namespace JCB_Cinema.Application.Servicies
 
         public async Task<IList<GetMovieTitleDTO>?> GetTitles()
         {
-            var query = _unitOfWork.Repository<Movie>().Queryable();
-            return query == null ? null : _mapper.Map<IList<GetMovieTitleDTO>>(query);
+            var query = await _unitOfWork.Repository<Movie>().Queryable().ToListAsync();
+            return query == null ? null : _mapper.Map<IList<GetMovieTitleDTO>?>(query);
         }
 
         public async Task<IList<GetMovieDTO>?> GetUpcoming()

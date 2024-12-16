@@ -37,7 +37,7 @@ namespace JCB_Cinema.Infrastructure.Data
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<MovieProjection>()
-                .OwnsOne(a => a.Price);
+                .OwnsOne(a => a.Price);                
         }
     }
 }

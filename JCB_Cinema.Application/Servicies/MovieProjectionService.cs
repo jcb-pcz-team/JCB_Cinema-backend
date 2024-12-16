@@ -16,30 +16,29 @@ namespace JCB_Cinema.Application.Servicies
 {
     public class MovieProjectionService : ServiceBase, IMovieProjectionService
     {
-        public MovieProjectionService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IUserContextService userContextService) : base(unitOfWork, mapper, userManager, userContextService)
-        {
-        }
+        public MovieProjectionService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IUserContextService userContextService) : base(unitOfWork, mapper, userManager, userContextService) { }
 
         public async Task AddMovieProjection(AddMovieProjectionDTO movieProjectionDTO)
         {
-            var currentUserName = _userContextService.GetUserName();
+            movieProjectionDTO.MovieNormalizedTitle = movieProjectionDTO.MovieNormalizedTitle.NormalizeString();
+            MovieProjection movieProjection = _mapper.Map<MovieProjection>(movieProjectionDTO);
 
-            if (string.IsNullOrEmpty(currentUserName))
-                throw new UnauthorizedAccessException();
-
-            var currentUser = await _userManager.FindByNameAsync(currentUserName);
-            if (currentUser == null)
-                throw new UnauthorizedAccessException();
-
-            if (await _userManager.IsInRoleAsync(currentUser, "Admin"))
-            {
-                MovieProjection movie = _mapper.Map<MovieProjection>(movieProjectionDTO);
-                await _unitOfWork.Repository<MovieProjection>().AddAsync(movie);
+            Movie? movie = await _unitOfWork.Repository<Movie>().Queryable().FirstOrDefaultAsync(x => x.NormalizedTitle == movieProjectionDTO.MovieNormalizedTitle);
+            if (movie != null) {
+                movieProjection.MovieId = movie.MovieId;
             }
             else
             {
-                throw new UnauthorizedAccessException();
+                throw new ArgumentException("Movie Not Found");
             }
+
+            CinemaHall? cinemaHall = await _unitOfWork.Repository<CinemaHall>().Queryable().FirstOrDefaultAsync(c => c.CinemaHallId == movieProjectionDTO.CinemaHallId);
+            if (cinemaHall == null)
+            {
+                throw new ArgumentException("Cinema Hall Not Found");
+            }
+
+            await _unitOfWork.Repository<MovieProjection>().AddAsync(movieProjection);
         }
 
         public async Task<IList<GetMovieProjectionDTO>?> Get(QueryMovieProjections request)
