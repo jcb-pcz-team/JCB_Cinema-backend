@@ -125,5 +125,18 @@ namespace JCB_Cinema.WebAPI.Controllers
                 return BadRequest("Error occurred");
             }
         }
+
+        [HttpGet("titles")]
+        public async Task<IActionResult> GetMoviesTittles()
+        {
+            try
+            {
+                return Ok(await _movieService.GetTitles());
+            }
+            catch
+            {
+                return BadRequest("Error occured");
+            }
+        }
     }
 }

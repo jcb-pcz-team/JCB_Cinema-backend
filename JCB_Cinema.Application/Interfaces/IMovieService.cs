@@ -9,12 +9,13 @@ namespace JCB_Cinema.Application.Interfaces
 {
     public interface IMovieService
     {
-        public Task<IList<GetMovieDTO>?> Get(QueryMovies request);
-        public Task<GetMovieDTO?> GetDetails(string title);
-        public Task<bool> IsAny(Expression<Func<Movie, bool>> predicate);
-        public Task<IList<GetMovieDTO>?> GetUpcoming();
-        public Task<string> AddMovie(AddMovieDTO movie);
-        public Task UpdateMovie(string title, UpdateMovieDTO movie);
+        Task<IList<GetMovieDTO>?> Get(QueryMovies request);
+        Task<GetMovieDTO?> GetDetails(string title);
+        Task<bool> IsAny(Expression<Func<Movie, bool>> predicate);
+        Task<IList<GetMovieDTO>?> GetUpcoming();
+        Task<string> AddMovie(AddMovieDTO movie);
+        Task UpdateMovie(string title, UpdateMovieDTO movie);
         Task DeleteMovie(string title);
+        Task<IList<GetMovieTitleDTO>?> GetTitles();
     }
 }
