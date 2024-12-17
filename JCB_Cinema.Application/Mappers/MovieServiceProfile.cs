@@ -24,7 +24,7 @@ namespace JCB_Cinema.Application.Mappers
              .ForMember(src => src.Genre, opt => opt.MapFrom(dest => dest.Genre))
              .ForPath(src => src.ReleaseDate, opt => opt.MapFrom(dest => dest.Release));
 
-            CreateMap<AddMovieDTO, Movie>()
+            CreateMap<AddMovieRequest, Movie>()
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.Duration))

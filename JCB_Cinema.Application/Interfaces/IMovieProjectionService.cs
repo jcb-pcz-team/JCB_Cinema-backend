@@ -9,7 +9,7 @@ namespace JCB_Cinema.Application.Interfaces
     {
         public Task<IList<GetMovieProjectionDTO>?> Get(QueryMovieProjections request);
         public Task<GetMovieProjectionDTO?> GetDetails(int id);
-        public Task UpdateMovieProjection(UpdateMovieProjectionDTO movieProjectionDTO);
-        public Task AddMovieProjection(AddMovieProjectionDTO movieProjectionDTO);
+        public Task UpdateMovieProjection(int projectionId, UpdateMovieProjectionRequest movieProjectionDTO);
+        public Task AddMovieProjection(AddMovieProjectionRequest movieProjectionDTO);
     }
 }

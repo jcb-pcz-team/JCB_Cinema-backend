@@ -50,7 +50,6 @@ namespace JCB_Cinema.Application.Servicies
             return _mapper.Map<GetAppUserDTO>(user);
         }
 
-
         public async Task PutAppUserAsync(PutAppUserDetails appUserRequest)
         {
             var currentUserName = _userContextService.GetUserName();
@@ -63,6 +62,26 @@ namespace JCB_Cinema.Application.Servicies
                 throw new UnauthorizedAccessException();
 
             _mapper.Map(appUserRequest, currentUser);
+            var updateResult = await _userManager.UpdateAsync(currentUser);
+
+            if (!updateResult.Succeeded)
+            {
+                throw new InvalidOperationException();
+            }
+        }
+
+        public async Task PutAppUserEmailAsync(QueryAppUserEmail appUserEmail)
+        {
+            var currentUserName = _userContextService.GetUserName();
+
+            if (string.IsNullOrEmpty(currentUserName))
+                throw new UnauthorizedAccessException();
+
+            var currentUser = await _userManager.FindByNameAsync(currentUserName);
+            if (currentUser == null)
+                throw new UnauthorizedAccessException();
+
+            _mapper.Map(appUserEmail, currentUser);
             var updateResult = await _userManager.UpdateAsync(currentUser);
 
             if (!updateResult.Succeeded)

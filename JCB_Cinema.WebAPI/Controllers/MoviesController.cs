@@ -66,7 +66,7 @@ namespace JCB_Cinema.WebAPI.Controllers
 
         [HttpPost("add")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddMovie([FromQuery] AddMovieDTO movie)
+        public async Task<IActionResult> AddMovie([FromQuery] AddMovieRequest movie)
         {
             try
             {

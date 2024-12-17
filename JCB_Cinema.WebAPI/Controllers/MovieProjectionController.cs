@@ -48,9 +48,9 @@ namespace JCB_Cinema.WebAPI.Controllers
             }
         }
 
-        [HttpPost("add-movie-projection")]
+        [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddMovieProjection([FromQuery] AddMovieProjectionDTO request)
+        public async Task<IActionResult> AddMovieProjection([FromQuery] AddMovieProjectionRequest request)
         {
             try
             {
@@ -67,18 +67,22 @@ namespace JCB_Cinema.WebAPI.Controllers
             }
         }
 
-        [HttpPut("update-movie-projection")]
+        [HttpPut("{projectionId}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateMovieProjection([FromQuery] UpdateMovieProjectionDTO request)
+        public async Task<IActionResult> UpdateMovieProjection(int projectionId, [FromQuery] UpdateMovieProjectionRequest request)
         {
             try
             {
-                await _movieProjectionService.UpdateMovieProjection(request);
+                await _movieProjectionService.UpdateMovieProjection(projectionId, request);
                 return NoContent();
             }
             catch (UnauthorizedAccessException)
             {
                 return Unauthorized();
+            }
+            catch (NullReferenceException e)
+            {
+                return BadRequest(e.Message);
             }
             catch
             {

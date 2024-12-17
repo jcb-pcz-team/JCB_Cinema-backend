@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace JCB_Cinema.Application.Requests.Create
 {
-    public class AddMovieProjectionDTO
+    public class AddMovieProjectionRequest
     {
         public DateTime ScreeningTime { get; set; }
         public ScreenType ScreenType { get; set; }

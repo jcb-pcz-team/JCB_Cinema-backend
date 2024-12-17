@@ -24,7 +24,7 @@ namespace JCB_Cinema.Application.Servicies
             _photoService = photoService;
         }
 
-        public async Task<string> AddMovie(AddMovieDTO addMovie)
+        public async Task<string> AddMovie(AddMovieRequest addMovie)
         {
             var currentUserName = _userContextService.GetUserName();
 
@@ -166,6 +166,17 @@ namespace JCB_Cinema.Application.Servicies
             }
 
             await _unitOfWork.Repository<Movie>().UpdateAsync(movie);
+        }
+
+        public async Task<int?> GetMovieId(string normalizedTitle)
+        {
+            var movieId = await _unitOfWork.Repository<Movie>().Queryable()
+                .Where(a => a.NormalizedTitle == normalizedTitle)
+                .Select(a => a.MovieId)
+                .FirstOrDefaultAsync();
+            if (movieId == 0)
+                return null;
+            return movieId;
         }
     }
 }
