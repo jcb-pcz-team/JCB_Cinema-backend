@@ -40,7 +40,9 @@ namespace JCB_Cinema.Application.Mappers
                 .ForMember(dest => dest.CinemaHall, opt => opt.Ignore())
                 .ForMember(dest => dest.MovieNormalizedTitle, opt => opt.Ignore());
 
-            CreateMap<UpdateMovieProjectionRequest, MovieProjection>();
+            CreateMap<UpdateMovieProjectionRequest, MovieProjection>()
+                .ForMember(dest => dest.CinemaHallId, opt => opt.MapFrom(src => src.CinemaHallId))
+                .ForMember(dest => dest.MovieNormalizedTitle, opt => opt.Ignore());
         }
     }
 }

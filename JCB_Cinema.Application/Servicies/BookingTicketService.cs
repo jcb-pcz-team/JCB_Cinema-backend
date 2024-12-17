@@ -2,6 +2,7 @@
 using JCB_Cinema.Application.DTOs;
 using JCB_Cinema.Application.Interfaces;
 using JCB_Cinema.Application.Requests.Queries;
+using JCB_Cinema.Application.Requests.Update;
 using JCB_Cinema.Domain.Entities;
 using JCB_Cinema.Domain.Interface;
 using JCB_Cinema.Infrastructure.Data.Interfaces;
@@ -14,6 +15,17 @@ namespace JCB_Cinema.Application.Servicies
     {
         public BookingTicketService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IUserContextService userContextService) : base(unitOfWork, mapper, userManager, userContextService)
         {
+        }
+
+        public async Task DeleteBookingTicket(int id)
+        {
+            await _unitOfWork.Repository<BookingTicket>().DeleteAsync(id);
+        }
+
+        public Task EditBookingTicket(UpdateBookingTicketRequest request)
+        {
+            throw new NotImplementedException();
+            //To do
         }
 
         public async Task<IList<BookingTicketDTO>?> GetUserBookingHistoryAsync(QueryAppUser requestAppUser)

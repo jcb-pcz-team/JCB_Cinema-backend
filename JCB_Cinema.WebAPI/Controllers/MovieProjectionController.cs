@@ -99,7 +99,11 @@ namespace JCB_Cinema.WebAPI.Controllers
             }
             catch (UnauthorizedAccessException)
             {
-                return Unauthorized();
+                return Unauthorized("You a're unauthorized");
+            }
+            catch (NullReferenceException e)
+            {
+                return BadRequest(e.Message);
             }
             catch
             {
