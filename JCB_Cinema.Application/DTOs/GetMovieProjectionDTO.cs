@@ -2,6 +2,7 @@
 {
     public class GetMovieProjectionDTO
     {
+        public int MovieProjectionId { get; set; }
         public GetMovieDTO? Movie { get; init; }
         public DateTime? ScreeningTime { get; init; }
         public string? ScreenType { get; init; }

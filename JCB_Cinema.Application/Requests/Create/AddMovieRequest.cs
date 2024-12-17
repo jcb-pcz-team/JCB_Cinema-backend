@@ -2,7 +2,7 @@
 
 namespace JCB_Cinema.Application.Requests.Create
 {
-    public class AddMovieDTO
+    public class AddMovieRequest
     {
         public string Title { get; set; } = null!;
         public string Description { get; set; } = null!;
