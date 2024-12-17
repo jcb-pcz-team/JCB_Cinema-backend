@@ -1,5 +1,4 @@
 ﻿using JCB_Cinema.Application.Interfaces;
-using JCB_Cinema.Application.Requests;
 using JCB_Cinema.Application.Requests.Queries;
 using Microsoft.AspNetCore.Mvc;
 

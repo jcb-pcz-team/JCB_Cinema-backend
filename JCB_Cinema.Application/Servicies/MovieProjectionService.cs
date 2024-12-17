@@ -21,6 +21,7 @@ namespace JCB_Cinema.Application.Servicies
         {
             _movieService = movieService;
         }
+
         public async Task AddMovieProjection(AddMovieProjectionRequest movieProjectionDTO)
         {
             movieProjectionDTO.MovieNormalizedTitle = movieProjectionDTO.MovieNormalizedTitle.NormalizeString();
@@ -70,6 +71,7 @@ namespace JCB_Cinema.Application.Servicies
             var query = _unitOfWork.Repository<MovieProjection>().Queryable();
 
             var entity = await query.Include(a => a.Movie)
+                .Include(c => c.CinemaHall)
                 .Include(p => p.Price)
                 .FirstOrDefaultAsync(m => m.MovieProjectionId == id);
 
@@ -94,6 +96,7 @@ namespace JCB_Cinema.Application.Servicies
             {
                 throw new NullReferenceException("Movie projection does not exists.");
             }
+
             var movieId = await _movieService.GetMovieId(movieProjectionRequest.NormalizedTitle);
             if (!movieId.HasValue)
             {
@@ -102,13 +105,13 @@ namespace JCB_Cinema.Application.Servicies
 
             _mapper.Map(movieProjectionRequest, proj);
             proj.MovieId = movieId.Value;
+
             await _unitOfWork.Repository<MovieProjection>().UpdateAsync(proj);
         }
 
         public Task DeleteMovieProjection(int projectionId)
         {
             throw new NotImplementedException();
-            //
         }
     }
 }
