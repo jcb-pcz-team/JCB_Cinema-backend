@@ -7,10 +7,10 @@ namespace JCB_Cinema.Application.Interfaces
 {
     public interface IMovieProjectionService
     {
-        public Task<IList<GetMovieProjectionDTO>?> Get(QueryMovieProjections request);
-        public Task<GetMovieProjectionDTO?> GetDetails(int id);
-        public Task UpdateMovieProjection(int projectionId, UpdateMovieProjectionRequest movieProjectionDTO);
-        public Task AddMovieProjection(AddMovieProjectionRequest movieProjectionDTO);
-        public Task DeleteMovieProjection(int projectionId);
+        Task<IList<GetMovieProjectionDTO>?> Get(QueryMovieProjections request);
+        Task<GetMovieProjectionDTO?> GetDetails(int id);
+        Task UpdateMovieProjection(int projectionId, UpdateMovieProjectionRequest movieProjectionDTO);
+        Task AddMovieProjection(AddMovieProjectionRequest movieProjectionDTO);
+        Task DeleteMovieProjection(int projectionId);
     }
 }

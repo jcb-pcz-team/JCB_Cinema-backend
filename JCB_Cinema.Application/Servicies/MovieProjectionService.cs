@@ -109,9 +109,9 @@ namespace JCB_Cinema.Application.Servicies
             await _unitOfWork.Repository<MovieProjection>().UpdateAsync(proj);
         }
 
-        public Task DeleteMovieProjection(int projectionId)
+        public async Task DeleteMovieProjection(int projectionId)
         {
-            throw new NotImplementedException();
+            await _unitOfWork.Repository<MovieProjection>().DeleteAsync(projectionId);
         }
     }
 }
