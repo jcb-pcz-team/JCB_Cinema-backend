@@ -108,6 +108,7 @@ namespace JCB_Cinema.Application.Servicies
         public Task DeleteMovieProjection(int projectionId)
         {
             throw new NotImplementedException();
+            //
         }
     }
 }
