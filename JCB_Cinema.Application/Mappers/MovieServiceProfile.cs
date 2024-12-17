@@ -3,6 +3,7 @@ using JCB_Cinema.Application.DTOs;
 using JCB_Cinema.Application.Requests.Create;
 using JCB_Cinema.Application.Requests.Update;
 using JCB_Cinema.Domain.Entities;
+using JCB_Cinema.Tools;
 
 namespace JCB_Cinema.Application.Mappers
 {
@@ -31,6 +32,8 @@ namespace JCB_Cinema.Application.Mappers
                 .ForMember(dest => dest.Photo, opt => opt.Ignore());
 
             CreateMap<UpdateMovieDTO, Movie>();
+
+            CreateMap<Movie, GetMovieTitleDTO>();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using JCB_Cinema.Application.Interfaces;
 using JCB_Cinema.Application.Requests.Queries;
 using JCB_Cinema.Application.Requests.Update;
+using JCB_Cinema.Application.Servicies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -47,6 +48,28 @@ namespace JCB_Cinema.WebAPI.Controllers
             catch (InvalidOperationException)
             {
                 return BadRequest();
+            }
+            catch
+            {
+                return BadRequest("Error occurred");
+            }
+        }
+
+        [HttpPut("change-email")]
+        public async Task<IActionResult> Put([FromQuery] QueryAppUserEmail reqUserEmail)
+        {
+            try
+            {
+                await _appUserService.PutAppUserEmailAsync(reqUserEmail);
+                return NoContent();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized("You are not authorized");
+            }
+            catch (InvalidOperationException)
+            {
+                return BadRequest("Invalid operation");
             }
             catch
             {

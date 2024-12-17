@@ -8,5 +8,6 @@ namespace JCB_Cinema.Application.Interfaces
     {
         public Task<GetAppUserDTO?> GetAppUserAsync(QueryAppUser request);
         public Task PutAppUserAsync(PutAppUserDetails appUserDTO);
+        public Task PutAppUserEmailAsync(QueryAppUserEmail appUserEmail);
     }
 }

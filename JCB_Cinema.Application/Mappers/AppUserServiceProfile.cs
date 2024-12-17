@@ -17,6 +17,10 @@ namespace JCB_Cinema.Application.Mappers
             CreateMap<PutAppUserDetails, AppUser>().ReverseMap();
             CreateMap<ChangeUserPassword, AppUser>()
                 .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => src.NewPassword));
+            CreateMap<AppUser, GetAppUserEmailDTO>()
+                .ForMember(dest => dest.CurrentEmail, opt => opt.MapFrom(src => src.Email));
+            CreateMap<QueryAppUserEmail, AppUser>()
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.NewEmail));
         }
     }
 }
