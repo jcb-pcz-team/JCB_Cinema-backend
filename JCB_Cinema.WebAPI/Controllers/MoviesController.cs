@@ -31,6 +31,19 @@ namespace JCB_Cinema.WebAPI.Controllers
             }
         }
 
+        [HttpGet("titles")]
+        public async Task<IActionResult> GetMoviesTittles()
+        {
+            try
+            {
+                return Ok(await _movieService.GetTitles());
+            }
+            catch
+            {
+                return BadRequest("Error occured");
+            }
+        }
+
         [HttpGet("{title}")]
         public async Task<IActionResult> GetDetails(string title)
         {
@@ -64,7 +77,7 @@ namespace JCB_Cinema.WebAPI.Controllers
             }
         }
 
-        [HttpPost("add")]
+        [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddMovie([FromQuery] AddMovieRequest movie)
         {
@@ -123,19 +136,6 @@ namespace JCB_Cinema.WebAPI.Controllers
             catch
             {
                 return BadRequest("Error occurred");
-            }
-        }
-
-        [HttpGet("titles")]
-        public async Task<IActionResult> GetMoviesTittles()
-        {
-            try
-            {
-                return Ok(await _movieService.GetTitles());
-            }
-            catch
-            {
-                return BadRequest("Error occured");
             }
         }
     }
