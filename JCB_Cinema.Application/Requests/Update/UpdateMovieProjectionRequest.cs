@@ -1,10 +1,10 @@
 ﻿using JCB_Cinema.Domain.ValueObjects;
 
-namespace JCB_Cinema.Application.Requests.Create
+namespace JCB_Cinema.Application.Requests.Update
 {
-    public class AddMovieProjectionDTO
+    public class UpdateMovieProjectionRequest
     {
-        public int MovieId { get; set; }
+        public string NormalizedTitle { get; set; } = null!;
         public DateTime ScreeningTime { get; set; }
         public ScreenType ScreenType { get; set; }
         public int CinemaHallId { get; set; }

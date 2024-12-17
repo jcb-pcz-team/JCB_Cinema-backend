@@ -13,6 +13,7 @@ namespace JCB_Cinema.Application.Mappers
         public MovieProjectionServiceProfile()
         {
             CreateMap<MovieProjection, GetMovieProjectionDTO>()
+                .ForMember(dest => dest.MovieProjectionId, opt => opt.MapFrom(src => src.MovieProjectionId))
                 .ForMember(dest => dest.Movie, opt => opt.MapFrom(src => src.Movie))
                 .ForMember(dest => dest.ScreeningTime, opt => opt.MapFrom(src => src.ScreeningTime))
                 .ForMember(dest => dest.ScreenType, opt => opt.MapFrom(src => src.ScreenType.GetDescription()))
@@ -33,8 +34,11 @@ namespace JCB_Cinema.Application.Mappers
                 .ForMember(dest => dest.OccupiedSeats, opt => opt.Ignore())
                 .ForMember(dest => dest.AvailableSeats, opt => opt.Ignore());
 
-            CreateMap<AddMovieProjectionDTO, MovieProjection>();
-            CreateMap<UpdateMovieProjectionDTO, MovieProjection>();
+            CreateMap<AddMovieProjectionRequest, MovieProjection>();
+
+            CreateMap<UpdateMovieProjectionRequest, MovieProjection>()
+                .ForMember(dest => dest.CinemaHallId, opt => opt.MapFrom(src => src.CinemaHallId))
+                .ForMember(dest => dest.MovieNormalizedTitle, opt => opt.Ignore());
         }
     }
 }

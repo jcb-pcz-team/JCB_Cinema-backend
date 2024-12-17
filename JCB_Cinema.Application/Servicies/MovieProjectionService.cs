@@ -16,11 +16,13 @@ namespace JCB_Cinema.Application.Servicies
 {
     public class MovieProjectionService : ServiceBase, IMovieProjectionService
     {
-        public MovieProjectionService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IUserContextService userContextService) : base(unitOfWork, mapper, userManager, userContextService)
+        private readonly IMovieService _movieService;
+        public MovieProjectionService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IUserContextService userContextService, IMovieService movieService) : base(unitOfWork, mapper, userManager, userContextService)
         {
+            _movieService = movieService;
         }
 
-        public async Task AddMovieProjection(AddMovieProjectionDTO movieProjectionDTO)
+        public async Task AddMovieProjection(AddMovieProjectionRequest movieProjectionDTO)
         {
             var currentUserName = _userContextService.GetUserName();
 
@@ -66,18 +68,15 @@ namespace JCB_Cinema.Application.Servicies
         public async Task<GetMovieProjectionDTO?> GetDetails(int id)
         {
             var query = _unitOfWork.Repository<MovieProjection>().Queryable();
-            var entity = await query.FirstOrDefaultAsync(m => m.MovieProjectionId == id);
-
-            query.Include(a => a.Movie)
-                .Include(g => g.Movie.Genre)
-                .Include(s => s.ScreenType)
+            var entity = await query.Include(a => a.Movie)
                 .Include(c => c.CinemaHall)
-                .Include(p => p.Price);
+                .Include(p => p.Price)
+                .FirstOrDefaultAsync(m => m.MovieProjectionId == id);
 
             return entity == null ? null : _mapper.Map<GetMovieProjectionDTO>(entity);
         }
 
-        public async Task UpdateMovieProjection(UpdateMovieProjectionDTO movieProjectionDTO)
+        public async Task UpdateMovieProjection(int projectionId, UpdateMovieProjectionRequest movieProjectionRequest)
         {
             var currentUserName = _userContextService.GetUserName();
 
@@ -85,18 +84,27 @@ namespace JCB_Cinema.Application.Servicies
                 throw new UnauthorizedAccessException();
 
             var currentUser = await _userManager.FindByNameAsync(currentUserName);
-            if (currentUser == null)
+            if (currentUser == null || !await _userManager.IsInRoleAsync(currentUser, "Admin"))
                 throw new UnauthorizedAccessException();
 
-            if (await _userManager.IsInRoleAsync(currentUser, "Admin"))
+            var proj = await _unitOfWork.Repository<MovieProjection>().Queryable()
+                .Include(a => a.Price)
+                .FirstOrDefaultAsync(a => projectionId == a.MovieProjectionId);
+            if (proj == null)
             {
-                MovieProjection movie = _mapper.Map<MovieProjection>(movieProjectionDTO);
-                await _unitOfWork.Repository<MovieProjection>().UpdateAsync(movie);
+                throw new NullReferenceException("Movie projection does not exists.");
             }
-            else
+
+            var movieId = await _movieService.GetMovieId(movieProjectionRequest.NormalizedTitle);
+            if (!movieId.HasValue)
             {
-                throw new UnauthorizedAccessException();
+                throw new NullReferenceException("Movie does not exists.");
             }
+
+            _mapper.Map(movieProjectionRequest, proj);
+            proj.MovieId = movieId.Value;
+
+            await _unitOfWork.Repository<MovieProjection>().UpdateAsync(proj);
         }
     }
 }
