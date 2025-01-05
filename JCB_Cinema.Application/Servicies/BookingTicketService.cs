@@ -46,13 +46,45 @@ namespace JCB_Cinema.Application.Servicies
             }
         }
 
-        public Task EditBookingTicket(UpdateBookingTicketRequest request)
+        public async Task EditBookingTicket(UpdateBookingTicketRequest request)
         {
-            throw new NotImplementedException();
-            //To do
+            var currentUserName = _userContextService.GetUserName();
+            if (string.IsNullOrEmpty(currentUserName))
+                throw new UnauthorizedAccessException();
+
+            var currentUser = await _userManager.FindByNameAsync(currentUserName);
+            if (currentUser == null)
+                throw new UnauthorizedAccessException();
+
+            BookingTicket? bookingTicket = await _unitOfWork.Repository<BookingTicket>().Queryable().FirstOrDefaultAsync(bt => bt.BookingTicketId == request.BookingTicketId);
+            if (bookingTicket == null)
+                throw new NullReferenceException();
+
+            if(request.MovieProjectionId == 0)
+                request.MovieProjectionId = bookingTicket.MovieProjectionId;
+            if (request.SeatId == 0)
+                request.SeatId = bookingTicket.SeatId;
+
+            if (await _userManager.IsInRoleAsync(currentUser, "Admin"))
+            {
+                // Admin
+                BookingTicket updatedBookingTicket = _mapper.Map(request, bookingTicket);
+                await _unitOfWork.Repository<BookingTicket>().UpdateAsync(updatedBookingTicket);
+            }
+            else
+            {
+                // User
+                if(bookingTicket.AppUserId == currentUser.Id)
+                {
+                    BookingTicket updatedBookingTicket = _mapper.Map(request, bookingTicket);
+                    await _unitOfWork.Repository<BookingTicket>().UpdateAsync(updatedBookingTicket);
+                }
+                else 
+                    throw new UnauthorizedAccessException();
+            }
         }
 
-        public async Task<IList<BookingTicketDTO>?> GetUserBookingHistoryAsync(QueryAppUser requestAppUser)
+            public async Task<IList<BookingTicketDTO>?> GetUserBookingHistoryAsync(QueryAppUser requestAppUser)
         {
             var currentUserName = _userContextService.GetUserName();
             if (string.IsNullOrEmpty(currentUserName))

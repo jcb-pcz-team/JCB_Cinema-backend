@@ -48,6 +48,10 @@ namespace JCB_Cinema.WebAPI.Controllers
             {
                 return Unauthorized();
             }
+            catch (NullReferenceException)
+            {
+                return NotFound();
+            }
             catch
             {
                 return BadRequest("Error occurred");
@@ -65,6 +69,10 @@ namespace JCB_Cinema.WebAPI.Controllers
             catch (UnauthorizedAccessException)
             {
                 return Unauthorized();
+            }
+            catch (NullReferenceException)
+            {
+                return NotFound();
             }
             catch
             {

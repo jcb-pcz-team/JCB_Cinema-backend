@@ -22,12 +22,8 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             var users = GetUsers();
             var photos = GetPhotos();
             var movies = GetMovies(photos);
-
             var cinemaHalls = GetCinemaHalls();
-            // Dodać Seats
-
             var seats = GetSeats(cinemaHalls);
-            // Dodać bookingTickets
 
             var movieProjections = GetMovieProjections(movies, cinemaHalls);
 
@@ -49,11 +45,8 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             await AddEntitiesAsync(dbContext, movieProjections);
             await AddEntitiesAsync(dbContext, schedule);
             await AddEntitiesAsync(dbContext, bookingTickets);
-
-            // Update User.BookingTickets
+            // Tutaj można kiedyś dodać Update Booking Tickets, ponieważ bookingTickets nie mają poprawnie dodanych Seats
             await UpdateUsers(bookingTickets, users, dbContext);
-
-            //Update Seats - dodać booking Tickets
             await UpdateSeats(await dbContext.BookingTickets.ToListAsync(), await dbContext.Seats.ToListAsync(), dbContext);
         }
 
