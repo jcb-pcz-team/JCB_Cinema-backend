@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using JCB_Cinema.Application.DTOs;
+using JCB_Cinema.Application.Requests.Update;
 using JCB_Cinema.Domain.Entities;
 using JCB_Cinema.Tools;
 
@@ -16,6 +17,8 @@ namespace JCB_Cinema.Application.Mappers
                 .ForMember(dest => dest.CienemaHall, opt => opt.MapFrom(src => src.MovieProjection.CinemaHall.Name))
                 .ForMember(dest => dest.SeatNumber, opt => opt.MapFrom(src => src.Seat.Number))
                 .ForMember(dest => dest.BookingURL, opt => opt.MapFrom(src => $"bookings/{src.BookingTicketId}"));
+
+            CreateMap<UpdateBookingTicketRequest, BookingTicket>();
         }
     }
 }
