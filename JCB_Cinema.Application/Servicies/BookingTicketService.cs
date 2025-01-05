@@ -19,7 +19,31 @@ namespace JCB_Cinema.Application.Servicies
 
         public async Task DeleteBookingTicket(int id)
         {
-            await _unitOfWork.Repository<BookingTicket>().DeleteAsync(id);
+            var currentUserName = _userContextService.GetUserName();
+            if (string.IsNullOrEmpty(currentUserName))
+                throw new UnauthorizedAccessException();
+
+            var currentUser = await _userManager.FindByNameAsync(currentUserName);
+            if (currentUser == null)
+                throw new UnauthorizedAccessException();
+
+            if (await _userManager.IsInRoleAsync(currentUser, "Admin"))
+            {
+                // Admin
+                await _unitOfWork.Repository<BookingTicket>().DeleteAsync(id);
+            }
+            else
+            {
+                // User
+                BookingTicket? bt = _unitOfWork.Repository<BookingTicket>().Queryable().FirstOrDefault(b => b.BookingTicketId == id);
+                if (bt == null)
+                    throw new NullReferenceException();
+
+                if (bt.AppUserId == currentUser.Id)
+                    await _unitOfWork.Repository<BookingTicket>().DeleteAsync(id);
+                else
+                    throw new UnauthorizedAccessException();
+            }
         }
 
         public Task EditBookingTicket(UpdateBookingTicketRequest request)
