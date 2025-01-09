@@ -28,7 +28,8 @@ namespace JCB_Cinema.Application.Servicies
             MovieProjection movieProjection = _mapper.Map<MovieProjection>(movieProjectionDTO);
 
             Movie? movie = await _unitOfWork.Repository<Movie>().Queryable().FirstOrDefaultAsync(x => x.NormalizedTitle == movieProjectionDTO.MovieNormalizedTitle);
-            if (movie != null) {
+            if (movie != null)
+            {
                 movieProjection.MovieId = movie.MovieId;
             }
             else
@@ -112,6 +113,44 @@ namespace JCB_Cinema.Application.Servicies
         public async Task DeleteMovieProjection(int projectionId)
         {
             await _unitOfWork.Repository<MovieProjection>().DeleteAsync(projectionId);
+        }
+
+        public async Task<int> GetCount(QueryMovieProjectionsCount request)
+        {
+            var query = _unitOfWork.Repository<MovieProjection>().Queryable();
+
+            if (!string.IsNullOrWhiteSpace(request.ScreenTypeName))
+            {
+                var genreValue = EnumExtensions.GetValueFromDescription<ScreenType>(request.ScreenTypeName);
+                query = query.Where(m => m.ScreenType == genreValue);
+            }
+            if (request.CinemaHallId.HasValue)
+            {
+                query = query.Where(a => a.CinemaHallId == request.CinemaHallId);
+            }
+            if (!string.IsNullOrEmpty(request.MovieName))
+            {
+                query = query.Where(a => a.Movie != null && a.Movie.NormalizedTitle == request.MovieName);
+            }
+            if (request.DateFrom.HasValue)
+            {
+                query = query.Where(a => a.ScreeningTime >= request.DateFrom);
+            }
+            if (request.DateTo.HasValue)
+            {
+                query = query.Where(a => a.ScreeningTime <= request.DateTo);
+            }
+
+            // distinct
+            if (request.DistinctActiveHalls.HasValue)
+            {
+                return await query.Select(a => a.CinemaHallId).Distinct().CountAsync();
+            }
+            if (request.DistinctMovies.HasValue)
+            {
+                return await query.Where(a => !string.IsNullOrEmpty(a.Movie.NormalizedTitle)).Select(a => a.Movie.NormalizedTitle).Distinct().CountAsync();
+            }
+            return await query.CountAsync();
         }
     }
 }

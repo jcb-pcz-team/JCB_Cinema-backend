@@ -12,5 +12,6 @@ namespace JCB_Cinema.Application.Interfaces
         Task UpdateMovieProjection(int projectionId, UpdateMovieProjectionRequest movieProjectionDTO);
         Task AddMovieProjection(AddMovieProjectionRequest movieProjectionDTO);
         Task DeleteMovieProjection(int projectionId);
+        Task<int> GetCount(QueryMovieProjectionsCount request);
     }
 }

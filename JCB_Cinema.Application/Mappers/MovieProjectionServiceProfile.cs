@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using JCB_Cinema.Application.DTOs;
 using JCB_Cinema.Application.Requests.Create;
+using JCB_Cinema.Application.Requests.Queries;
 using JCB_Cinema.Application.Requests.Update;
 using JCB_Cinema.Domain.Entities;
 using JCB_Cinema.Domain.ValueObjects;
@@ -43,6 +44,8 @@ namespace JCB_Cinema.Application.Mappers
             CreateMap<UpdateMovieProjectionRequest, MovieProjection>()
                 .ForMember(dest => dest.CinemaHallId, opt => opt.MapFrom(src => src.CinemaHallId))
                 .ForMember(dest => dest.MovieNormalizedTitle, opt => opt.Ignore());
+
+            CreateMap<QueryMovieProjectionsCount, QueryMovieProjectionsCount>();
         }
     }
 }

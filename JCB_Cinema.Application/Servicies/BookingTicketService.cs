@@ -60,7 +60,7 @@ namespace JCB_Cinema.Application.Servicies
             if (bookingTicket == null)
                 throw new NullReferenceException();
 
-            if(request.MovieProjectionId == 0)
+            if (request.MovieProjectionId == 0)
                 request.MovieProjectionId = bookingTicket.MovieProjectionId;
             if (request.SeatId == 0)
                 request.SeatId = bookingTicket.SeatId;
@@ -74,17 +74,17 @@ namespace JCB_Cinema.Application.Servicies
             else
             {
                 // User
-                if(bookingTicket.AppUserId == currentUser.Id)
+                if (bookingTicket.AppUserId == currentUser.Id)
                 {
                     BookingTicket updatedBookingTicket = _mapper.Map(request, bookingTicket);
                     await _unitOfWork.Repository<BookingTicket>().UpdateAsync(updatedBookingTicket);
                 }
-                else 
+                else
                     throw new UnauthorizedAccessException();
             }
         }
 
-            public async Task<IList<BookingTicketDTO>?> GetUserBookingHistoryAsync(QueryAppUser requestAppUser)
+        public async Task<IList<BookingTicketDTO>?> GetUserBookingHistoryAsync(QueryAppUser requestAppUser)
         {
             var currentUserName = _userContextService.GetUserName();
             if (string.IsNullOrEmpty(currentUserName))
@@ -128,6 +128,21 @@ namespace JCB_Cinema.Application.Servicies
 
             currentUser = await include.FirstOrDefaultAsync(a => a.NormalizedUserName == _userManager.NormalizeName(currentUserName));
             return _mapper.Map<IList<BookingTicketDTO>?>(currentUser?.BookingTickets);
+        }
+
+        public async Task<int> GetBookingTicketsCount(QueryBookingTicket request)
+        {
+            var query = _unitOfWork.Repository<BookingTicket>().Queryable();
+            if (request.MovieProjectionDateFrom.HasValue)
+            {
+                query = query.Where(a => a.MovieProjection.ScreeningTime >= request.MovieProjectionDateFrom);
+            }
+            if (request.MovieProjectionDateTo.HasValue)
+            {
+                query = query.Where(a => a.MovieProjection.ScreeningTime <= request.MovieProjectionDateTo);
+            }
+
+            return await query.CountAsync();
         }
     }
 }

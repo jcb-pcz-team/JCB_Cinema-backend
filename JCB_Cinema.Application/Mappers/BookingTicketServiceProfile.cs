@@ -11,12 +11,13 @@ namespace JCB_Cinema.Application.Mappers
         public BookingTicketServiceProfile()
         {
             CreateMap<BookingTicket, BookingTicketDTO>()
+                .ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.BookingTicketId))
                 .ForMember(dest => dest.MovieTitle, opt => opt.MapFrom(src => src.MovieProjection.Movie.Title))
                 .ForMember(dest => dest.ScreenType, opt => opt.MapFrom(src => src.MovieProjection.ScreenType.GetDescription()))
                 .ForMember(dest => dest.ScreenignTime, opt => opt.MapFrom(src => src.MovieProjection.ScreeningTime))
                 .ForMember(dest => dest.CienemaHall, opt => opt.MapFrom(src => src.MovieProjection.CinemaHall.Name))
                 .ForMember(dest => dest.SeatNumber, opt => opt.MapFrom(src => src.Seat.Number))
-                .ForMember(dest => dest.BookingURL, opt => opt.MapFrom(src => $"bookings/{src.BookingTicketId}"));
+                .ForMember(dest => dest.MovieProjectionId, opt => opt.MapFrom(src => src.MovieProjectionId));
 
             CreateMap<UpdateBookingTicketRequest, BookingTicket>();
         }

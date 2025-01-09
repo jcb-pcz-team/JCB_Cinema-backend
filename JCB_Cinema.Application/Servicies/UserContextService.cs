@@ -33,5 +33,21 @@ namespace JCB_Cinema.Application.Servicies
             }
             return null;
         }
+
+        public async Task<AppUser> GetAppUser()
+        {
+            var userName = GetUserName();
+            if (userName == null)
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            var user = await _userManager.FindByNameAsync(userName);
+            if (user == null)
+            {
+                throw new UnauthorizedAccessException();
+            }
+            return user;
+        }
     }
 }
