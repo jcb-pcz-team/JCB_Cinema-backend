@@ -23,8 +23,9 @@ namespace JCB_Cinema.Application.Servicies
 
         public async Task<PhotoDTO?> Get(string description)
         {
+            var normalizedDesc = description.NormalizeString();
             var entity = await _unitOfWork.Repository<Photo>().Queryable()
-                .FirstOrDefaultAsync(a => a.Description == description);
+                .FirstOrDefaultAsync(a => a.Description == normalizedDesc);
             return _mapper.Map<PhotoDTO?>(entity);
         }
 

@@ -37,7 +37,7 @@ namespace JCB_Cinema.WebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> EditBookingTicket([FromQuery] UpdateBookingTicketRequest request)
+        public async Task<IActionResult> EditBookingTicket([FromBody] UpdateBookingTicketRequest request)
         {
             try
             {

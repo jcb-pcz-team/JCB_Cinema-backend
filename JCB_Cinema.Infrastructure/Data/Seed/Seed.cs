@@ -686,7 +686,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                     Duration = 142,
                     ReleaseDate = GetDateOnly(true),
                     Genre = Genre.ScienceFiction,
-                    Photo = photos.FirstOrDefault(x => x.Description == "spider-man-no-way-home")!,
+                    Photo = photos.FirstOrDefault(x => x.Description == "spiderman-no-way-home")!,
                     Created = GetDate(false),
                     Creator = "System",
                     Modified = DateTime.Now,
