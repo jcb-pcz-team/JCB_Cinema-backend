@@ -1,7 +1,6 @@
 ﻿using JCB_Cinema.Application.Interfaces;
 using JCB_Cinema.Application.Requests.Queries;
 using JCB_Cinema.Application.Requests.Update;
-using JCB_Cinema.Application.Servicies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,7 +33,7 @@ namespace JCB_Cinema.WebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put([FromQuery] PutAppUserDetails reqUser)
+        public async Task<IActionResult> Put([FromBody] PutAppUserDetails reqUser)
         {
             try
             {
@@ -56,7 +55,7 @@ namespace JCB_Cinema.WebAPI.Controllers
         }
 
         [HttpPut("change-email")]
-        public async Task<IActionResult> Put([FromQuery] QueryAppUserEmail reqUserEmail)
+        public async Task<IActionResult> Put([FromBody] QueryAppUserEmail reqUserEmail)
         {
             try
             {

@@ -40,14 +40,12 @@ namespace JCB_Cinema.Application.Servicies
 
             Movie movie = _mapper.Map<Movie>(addMovie);
 
-            Photo? photo = null;
-            if (addMovie.Poster != null)
+            var photo = await _photoService.Get(movie.Title);
+            if (photo == null)
             {
-                addMovie.Poster.Description = movie.NormalizedTitle;
-                var photoDTO = await _photoService.UploadPhoto(addMovie.Poster);
-                photo = _mapper.Map<Photo>(photoDTO);
-                movie.PhotoId = photo.Id;
+                throw new NullReferenceException("Photo does not exists.");
             }
+            movie.PhotoId = photo.Id;
 
             await _unitOfWork.Repository<Movie>().AddAsync(movie);
             return movie.NormalizedTitle;
@@ -128,7 +126,7 @@ namespace JCB_Cinema.Application.Servicies
             return entity;
         }
 
-        public async Task UpdateMovie(string title, UpdateMovieDTO updateMovie)
+        public async Task UpdateMovie(string title, UpdateMovieRequest updateMovie)
         {
             var currentUserName = _userContextService.GetUserName();
             if (string.IsNullOrEmpty(currentUserName))
@@ -143,7 +141,6 @@ namespace JCB_Cinema.Application.Servicies
 
             var existingMovie = await _unitOfWork.Repository<Movie>()
                 .Queryable()
-                .Include(a => a.Photo)
                 .FirstOrDefaultAsync(m => m.NormalizedTitle == title);
 
             if (existingMovie == null)
@@ -151,18 +148,10 @@ namespace JCB_Cinema.Application.Servicies
 
             var movie = _mapper.Map(updateMovie, existingMovie);
 
-            if (updateMovie.Poster != null)
+            if (updateMovie.SetPreviousPoster.HasValue && !updateMovie.SetPreviousPoster.Value)
             {
-                updateMovie.Poster.Description = existingMovie.NormalizedTitle;
-
-                var photoDTO = await _photoService.Update(updateMovie.Poster);
-                var photo = _mapper.Map<Photo>(photoDTO);
-
-                movie.Photo = photo;
-            }
-            else
-            {
-                movie.PhotoId = existingMovie.PhotoId;
+                var photo = await _photoService.Get(updateMovie.Title);
+                movie.PhotoId = photo?.Id;
             }
 
             await _unitOfWork.Repository<Movie>().UpdateAsync(movie);

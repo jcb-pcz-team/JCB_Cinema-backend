@@ -48,18 +48,18 @@ namespace JCB_Cinema.WebAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddMovieProjection([FromQuery] AddMovieProjectionRequest request)
+        public async Task<IActionResult> AddMovieProjection([FromBody] AddMovieProjectionRequest request)
         {
             try
             {
                 await _movieProjectionService.AddMovieProjection(request);
                 return Created();
             }
-            catch(UnauthorizedAccessException)
+            catch (UnauthorizedAccessException)
             {
                 return Unauthorized();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex);
             }
@@ -67,7 +67,7 @@ namespace JCB_Cinema.WebAPI.Controllers
 
         [HttpPut("{projectionId}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateMovieProjection(int projectionId, [FromQuery] UpdateMovieProjectionRequest request)
+        public async Task<IActionResult> UpdateMovieProjection(int projectionId, [FromBody] UpdateMovieProjectionRequest request)
         {
             try
             {

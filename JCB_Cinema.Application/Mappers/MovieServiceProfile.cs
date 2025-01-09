@@ -3,6 +3,7 @@ using JCB_Cinema.Application.DTOs;
 using JCB_Cinema.Application.Requests.Create;
 using JCB_Cinema.Application.Requests.Update;
 using JCB_Cinema.Domain.Entities;
+using JCB_Cinema.Domain.ValueObjects;
 using JCB_Cinema.Tools;
 
 namespace JCB_Cinema.Application.Mappers
@@ -28,10 +29,12 @@ namespace JCB_Cinema.Application.Mappers
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.Duration))
                 .ForMember(dest => dest.ReleaseDate, opt => opt.MapFrom(src => src.ReleaseDate))
-                .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => src.Genre))
+                .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => EnumExtensions.GetValueFromDescription<Genre>(src.Genre)))
+                .ForMember(dest => dest.NormalizedTitle, opt => opt.Ignore())
                 .ForMember(dest => dest.Photo, opt => opt.Ignore());
 
-            CreateMap<UpdateMovieDTO, Movie>();
+            CreateMap<UpdateMovieRequest, Movie>()
+                .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => EnumExtensions.GetValueFromDescription<Genre>(src.Genre)));
 
             CreateMap<Movie, GetMovieTitleDTO>();
         }

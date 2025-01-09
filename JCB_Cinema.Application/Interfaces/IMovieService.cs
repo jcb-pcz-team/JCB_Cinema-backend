@@ -14,7 +14,7 @@ namespace JCB_Cinema.Application.Interfaces
         Task<bool> IsAny(Expression<Func<Movie, bool>> predicate);
         Task<IList<GetMovieDTO>?> GetUpcoming();
         Task<string> AddMovie(AddMovieRequest movie);
-        Task UpdateMovie(string title, UpdateMovieDTO movie);
+        Task UpdateMovie(string title, UpdateMovieRequest movie);
         Task DeleteMovie(string title);
         Task<IList<GetMovieTitleDTO>?> GetTitles();
         Task<int?> GetMovieId(string normalizedTitle);
