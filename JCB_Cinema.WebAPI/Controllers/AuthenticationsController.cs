@@ -131,7 +131,7 @@ namespace JCB_Cinema.WebAPI.Controllers
         ///   * Status500 InternalServerError (no data): If an unexpected error occurs during login, the method returns a 500 Internal Server Error response with a generic error message. Consider providing more specific error details in a production environment. 
         /// </returns>
         [HttpPut("change-password")]
-        public async Task<IActionResult> ChangePassword([FromQuery] ChangeUserPassword user)
+        public async Task<IActionResult> ChangePassword([FromBody] ChangeUserPassword user)
         {
             try
             {
