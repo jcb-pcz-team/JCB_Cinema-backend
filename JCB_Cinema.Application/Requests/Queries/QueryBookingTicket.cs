@@ -2,5 +2,7 @@
 {
     public class QueryBookingTicket
     {
+        public DateTime? MovieProjectionDateFrom { get; set; }
+        public DateTime? MovieProjectionDateTo { get; set; }
     }
 }

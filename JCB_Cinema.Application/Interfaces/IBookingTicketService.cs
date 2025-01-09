@@ -9,5 +9,6 @@ namespace JCB_Cinema.Application.Interfaces
         Task<IList<BookingTicketDTO>?> GetUserBookingHistoryAsync(QueryAppUser requestAppUser);
         Task EditBookingTicket(UpdateBookingTicketRequest request);
         Task DeleteBookingTicket(int id);
+        Task<int> GetBookingTicketsCount(QueryBookingTicket request);
     }
 }

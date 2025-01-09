@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using JCB_Cinema.Application.DTOs;
+using JCB_Cinema.Application.DTOs.AdminPanel;
 using JCB_Cinema.Application.Interfaces;
 using JCB_Cinema.Application.Requests.Queries;
 using JCB_Cinema.Domain.Entities;
@@ -12,8 +13,12 @@ namespace JCB_Cinema.Application.Servicies
 {
     public class ScheduleService : ServiceBase, IScheduleService
     {
-        public ScheduleService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IUserContextService userContextService) : base(unitOfWork, mapper, userManager, userContextService)
+        private readonly IMovieProjectionService _movieProjectionService;
+        private readonly IBookingTicketService _bookingTicketService;
+        public ScheduleService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IUserContextService userContextService, IMovieProjectionService movieProjectionService, IBookingTicketService bookingTicketService) : base(unitOfWork, mapper, userManager, userContextService)
         {
+            _movieProjectionService = movieProjectionService;
+            _bookingTicketService = bookingTicketService;
         }
 
         public async Task<IList<GetScheduleDTO>?> Get(QuerySchedule request)
@@ -36,6 +41,41 @@ namespace JCB_Cinema.Application.Servicies
 
             var entities = await query.ToListAsync();
             return entities == null ? null : _mapper.Map<IList<GetScheduleDTO>>(entities);
+        }
+
+        public async Task<IList<AdmScheduleDTO>> GetDetailedSchedules(QuerySchedule request)
+        {
+            var result = new List<AdmScheduleDTO>();
+            request.DateFrom = request.DateFrom ?? DateOnly.FromDateTime(DateTime.Now);
+            request.DateTo = request.DateTo ?? DateOnly.FromDateTime(DateTime.Now.AddDays(7));
+
+            // Ograniczenie liczby iteracji
+            if (request.DateTo > request.DateFrom.Value.AddYears(1))
+            {
+                request.DateTo = request.DateFrom.Value.AddYears(1); // Ograniczamy zakres do maksymalnie 1 roku
+            }
+
+            for (var date = request.DateFrom!.Value; date <= request.DateTo!.Value; date = date.AddDays(1))
+            {
+                var baseRequest = new QueryMovieProjectionsCount { DateFrom = date.ToDateTime(TimeOnly.MinValue), DateTo = date.ToDateTime(TimeOnly.MaxValue) };
+                var cinemaHallsRequest = _mapper.Map<QueryMovieProjectionsCount>(baseRequest);
+                cinemaHallsRequest.DistinctActiveHalls = true;
+
+                var moviesRequest = _mapper.Map<QueryMovieProjectionsCount>(baseRequest);
+                moviesRequest.DistinctMovies = true;
+
+                var tickets = new QueryBookingTicket { MovieProjectionDateFrom = date.ToDateTime(TimeOnly.MinValue), MovieProjectionDateTo = date.ToDateTime(TimeOnly.MaxValue) };
+                var dto = new AdmScheduleDTO
+                {
+                    Date = date,
+                    MovieProjectionsCount = await _movieProjectionService.GetCount(baseRequest),
+                    ActiveCinemaHalls = await _movieProjectionService.GetCount(cinemaHallsRequest),
+                    MovieCount = await _movieProjectionService.GetCount(moviesRequest),
+                    TotalBookingTickets = await _bookingTicketService.GetBookingTicketsCount(tickets),
+                };
+                result.Add(dto);
+            }
+            return result;
         }
     }
 }

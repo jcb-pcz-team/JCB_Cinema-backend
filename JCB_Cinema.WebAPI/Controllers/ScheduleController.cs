@@ -27,5 +27,26 @@ namespace JCB_Cinema.WebAPI.Controllers
                 return BadRequest("Error occurred");
             }
         }
+
+        [HttpGet("detailed")]
+        public async Task<IActionResult> GetSchedulesDetails([FromQuery] QuerySchedule query)
+        {
+            try
+            {
+                return Ok(await _scheduleService.GetDetailedSchedules(query));
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+            catch (NullReferenceException)
+            {
+                return NotFound();
+            }
+            catch
+            {
+                return BadRequest("Error occurred");
+            }
+        }
     }
 }
