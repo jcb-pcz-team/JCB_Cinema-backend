@@ -1,5 +1,6 @@
 ﻿using JCB_Cinema.Application.Interfaces;
 using JCB_Cinema.Application.Requests.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JCB_Cinema.WebAPI.Controllers
@@ -28,6 +29,7 @@ namespace JCB_Cinema.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("detailed")]
         public async Task<IActionResult> GetSchedulesDetails([FromQuery] QuerySchedule query)
         {

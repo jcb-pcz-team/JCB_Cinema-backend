@@ -65,13 +65,15 @@ namespace JCB_Cinema.Application.Servicies
                 moviesRequest.DistinctMovies = true;
 
                 var tickets = new QueryBookingTicket { MovieProjectionDateFrom = date.ToDateTime(TimeOnly.MinValue), MovieProjectionDateTo = date.ToDateTime(TimeOnly.MaxValue) };
+
+                var movieProjectionCount = await _movieProjectionService.GetCount(baseRequest);
                 var dto = new AdmScheduleDTO
                 {
                     Date = date,
-                    MovieProjectionsCount = await _movieProjectionService.GetCount(baseRequest),
-                    ActiveCinemaHalls = await _movieProjectionService.GetCount(cinemaHallsRequest),
-                    MovieCount = await _movieProjectionService.GetCount(moviesRequest),
-                    TotalBookingTickets = await _bookingTicketService.GetBookingTicketsCount(tickets),
+                    MovieProjectionsCount = movieProjectionCount,
+                    ActiveCinemaHalls = movieProjectionCount > 0 ? await _movieProjectionService.GetCount(cinemaHallsRequest) : 0,
+                    MovieCount = movieProjectionCount > 0 ? await _movieProjectionService.GetCount(moviesRequest) : 0,
+                    TotalBookingTickets = movieProjectionCount > 0 ? await _bookingTicketService.GetBookingTicketsCount(tickets) : 0,
                 };
                 result.Add(dto);
             }
