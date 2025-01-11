@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JCB_Cinema.WebAPI.Controllers
 {
+    /// <summary>
+    /// Controller for managing application user data.
+    /// Provides endpoints for retrieving, updating, and changing user information.
+    /// </summary>
     [ApiController]
     [Route("api/users")]
     [Authorize]
@@ -13,11 +17,21 @@ namespace JCB_Cinema.WebAPI.Controllers
     {
         private readonly IAppUserService _appUserService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AppUserController"/> class.
+        /// </summary>
+        /// <param name="appUserService">The service for interacting with app user data.</param>
         public AppUserController(IAppUserService appUserService)
         {
             _appUserService = appUserService;
         }
 
+        /// <summary>
+        /// Retrieves user details based on query parameters.
+        /// </summary>
+        /// <param name="request">The query request to filter user data.</param>
+        /// <returns>An <see cref="IActionResult"/> representing the result of the operation. 
+        /// If found, returns user details; otherwise, returns NotFound.</returns>
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] QueryAppUser request)
         {
@@ -32,6 +46,11 @@ namespace JCB_Cinema.WebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Updates the user details.
+        /// </summary>
+        /// <param name="reqUser">The user details to be updated.</param>
+        /// <returns>An <see cref="IActionResult"/> indicating the outcome of the update operation.</returns>
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] PutAppUserDetails reqUser)
         {
@@ -54,6 +73,11 @@ namespace JCB_Cinema.WebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Updates the user's email address.
+        /// </summary>
+        /// <param name="reqUserEmail">The request containing the new email address.</param>
+        /// <returns>An <see cref="IActionResult"/> representing the result of the email update operation.</returns>
         [HttpPut("change-email")]
         public async Task<IActionResult> Put([FromBody] QueryAppUserEmail reqUserEmail)
         {

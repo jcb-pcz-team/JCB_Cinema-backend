@@ -9,11 +9,19 @@ using System.Text;
 
 namespace JCB_Cinema.Application.Servicies
 {
+    /// <summary>
+    /// Service class for handling JWT token generation and validation. Provides methods to generate, write, and validate JWT tokens for users.
+    /// </summary>
     public class JwtService : IJwtService
     {
         private readonly IConfiguration _configuration;
         private readonly UserManager<AppUser> _userManager;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JwtService"/> class.
+        /// </summary>
+        /// <param name="configuration">Configuration instance for reading JWT settings.</param>
+        /// <param name="userManager">UserManager instance for managing user roles.</param>
         public JwtService(IConfiguration configuration, UserManager<AppUser> userManager)
         {
             _configuration = configuration;
@@ -24,7 +32,8 @@ namespace JCB_Cinema.Application.Servicies
         /// Generates a JWT token for the given user and their roles.
         /// </summary>
         /// <param name="user">AppUser object representing the user.</param>
-        /// <returns>JwtSecurityToken</returns>
+        /// <returns>A <see cref="JwtSecurityToken"/> containing the user's claims and roles.</returns>
+        /// <exception cref="Exception">Throws if the user is null or invalid.</exception>
         public async Task<JwtSecurityToken> GenerateJwtAsync(AppUser user)
         {
             if (user == null || string.IsNullOrEmpty(user.UserName))
@@ -33,10 +42,10 @@ namespace JCB_Cinema.Application.Servicies
             }
 
             var authClaims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, user.UserName),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-        };
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            };
 
             // Fetch user roles and add them as claims
             var userRoles = await _userManager.GetRolesAsync(user);
@@ -61,20 +70,20 @@ namespace JCB_Cinema.Application.Servicies
         }
 
         /// <summary>
-        /// Writes the JWT as a string.
+        /// Converts the generated JWT token into a string representation.
         /// </summary>
         /// <param name="token">JwtSecurityToken object.</param>
-        /// <returns>JWT string</returns>
+        /// <returns>A string representation of the JWT token.</returns>
         public string WriteToken(JwtSecurityToken token)
         {
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         /// <summary>
-        /// Validates the JWT token.
+        /// Validates the JWT token and returns the ClaimsPrincipal if valid.
         /// </summary>
-        /// <param name="token">JWT string.</param>
-        /// <returns>ClaimsPrincipal if the token is valid, null otherwise</returns>
+        /// <param name="token">JWT token string.</param>
+        /// <returns>A <see cref="ClaimsPrincipal"/> object if the token is valid, otherwise null.</returns>
         public ClaimsPrincipal? ValidateJwt(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

@@ -13,17 +13,23 @@ using System.Text;
 
 namespace JCB_Cinema.WebAPI
 {
+    /// <summary>
+    /// The entry point for the web application. Configures services, middleware, and initializes the application.
+    /// </summary>
     public class Program
     {
+        /// <summary>
+        /// Main method to configure the application and run the web server.
+        /// </summary>
+        /// <param name="args">Command line arguments passed to the application at startup.</param>
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers();
 
-            //DbContext configuration
+            // DbContext configuration
             builder.Services.AddDbContextPool<CinemaDbContext>(options =>
                             options.UseSqlServer(builder.Configuration.GetConnectionString("JCB_CinemaDb")));
 
@@ -34,7 +40,7 @@ namespace JCB_Cinema.WebAPI
                 List<string> xmlFiles = Directory.GetFiles(AppContext.BaseDirectory, "*.xml", SearchOption.TopDirectoryOnly).ToList();
                 xmlFiles.ForEach(xmlFile => options.IncludeXmlComments(xmlFile));
 
-                //Swagger JWT
+                // Swagger JWT
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "Please enter only '[jwt]'",
@@ -51,8 +57,8 @@ namespace JCB_Cinema.WebAPI
                         {
                             Reference = new OpenApiReference
                             {
-                                Type=ReferenceType.SecurityScheme,
-                                Id=JwtBearerDefaults.AuthenticationScheme
+                                Type = ReferenceType.SecurityScheme,
+                                Id = JwtBearerDefaults.AuthenticationScheme
                             }
                         },
                         Array.Empty<string>()
@@ -61,17 +67,16 @@ namespace JCB_Cinema.WebAPI
                 options.SchemaFilter<EnumDescriptionSchemaFilter>();
             });
 
-            //DI
+            // Dependency Injection configuration
             Application.Configurations.Dependencies.Register(builder.Services);
 
-            //JWT
-
+            // JWT Authentication configuration
             builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
             {
                 options.User.RequireUniqueEmail = true;
             })
-               .AddEntityFrameworkStores<CinemaDbContext>()
-               .AddDefaultTokenProviders();
+            .AddEntityFrameworkStores<CinemaDbContext>()
+            .AddDefaultTokenProviders();
 
             var secret = builder.Configuration["JWT:Secret"] ?? throw new InvalidOperationException("Secret not configured");
             builder.Services.AddAuthentication(options =>
@@ -114,7 +119,7 @@ namespace JCB_Cinema.WebAPI
 
             app.UseCors("AllowAllOrigins");
 
-            // Seed Data
+            // Seed Data configuration
             using (var scope = app.Services.CreateScope())
             {
                 var serviceProvider = scope.ServiceProvider;
@@ -137,10 +142,15 @@ namespace JCB_Cinema.WebAPI
 
             app.Run();
 
-            //Methods
+            /// <summary>
+            /// Logs an attempt based on event type and authorization header.
+            /// </summary>
+            /// <param name="headers">The request headers to check for JWT authorization.</param>
+            /// <param name="eventType">The event type to log (e.g., OnChallenge, OnTokenValidated).</param>
+            /// <returns>A task representing the asynchronous operation.</returns>
             Task LogAttempt(IHeaderDictionary headers, string eventType)
             {
-                //var logger = loggerFactory.CreateLogger<Program>();
+                // var logger = loggerFactory.CreateLogger<Program>();
 
                 var authorizationHeader = headers["Authorization"].FirstOrDefault();
 
@@ -154,22 +164,10 @@ namespace JCB_Cinema.WebAPI
 
                     var jwt = new JwtSecurityToken(jwtString);
 
-                    //logger.LogInformation($"{eventType}. Expiration: {jwt.ValidTo.ToLongTimeString()}. System time: {DateTime.UtcNow.ToLongTimeString()}");
+                    // logger.LogInformation($"{eventType}. Expiration: {jwt.ValidTo.ToLongTimeString()}. System time: {DateTime.UtcNow.ToLongTimeString()}");
                 }
                 return Task.CompletedTask;
             }
-
-            //static async Task EnsureRolesAsync(RoleManager<IdentityRole> roleManager)
-            //{
-            //    string[] roleNames = { "Admin", "User", "Manager" };
-            //    foreach (var roleName in roleNames)
-            //    {
-            //        if (!await roleManager.RoleExistsAsync(roleName))
-            //        {
-            //            await roleManager.CreateAsync(new IdentityRole(roleName));
-            //        }
-            //    }
-            //}
         }
     }
 }
