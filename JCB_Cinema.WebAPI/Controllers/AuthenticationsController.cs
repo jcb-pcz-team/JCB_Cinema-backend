@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JCB_Cinema.WebAPI.Controllers
 {
+    /// <summary>
+    /// Controller for handling authentication actions such as registration, login, and password management.
+    /// </summary>
     [ApiController]
     [Route("api/auth")]
     public class AuthenticationsController : Controller
@@ -17,6 +20,14 @@ namespace JCB_Cinema.WebAPI.Controllers
         private readonly IUserService _userService;
         private readonly IUserRoleService _userRoleService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthenticationsController"/> class.
+        /// </summary>
+        /// <param name="configuration">The application's configuration settings.</param>
+        /// <param name="logger">The logger for capturing logs related to authentication activities.</param>
+        /// <param name="userManager">The UserManager for managing application users.</param>
+        /// <param name="userRoleService">Service to handle user role assignments.</param>
+        /// <param name="userService">Service to handle user authentication and registration.</param>
         public AuthenticationsController(IConfiguration configuration, ILogger<AuthenticationsController> logger, UserManager<AppUser> userManager, IUserRoleService userRoleService, IUserService userService)
         {
             _configuration = configuration;
@@ -29,7 +40,7 @@ namespace JCB_Cinema.WebAPI.Controllers
         /// <summary>
         /// Registers a new user in the system.
         /// </summary>
-        /// <param name="model">A RegistrationModel object containing the user's registration details.</param>
+        /// <param name="model">A <see cref="RegistrationModel"/> object containing the user's registration details.</param>
         /// <remarks>
         /// Sample request with admin claim:
         /// <code>
@@ -60,16 +71,16 @@ namespace JCB_Cinema.WebAPI.Controllers
                 return CreatedAtAction(nameof(Register), new { userName = model.UserName }, model);
             }
 
-            // Zwracanie błędów jako 400 Bad Request
+            // Return errors as 400 Bad Request
             return BadRequest(result.Errors.Select(e => e.Description));
         }
 
         /// <summary>
         /// Logs in a user and generates a JWT token and refresh token for authentication.
         /// </summary>
-        /// <param name="model">A LoginModel object containing the user's login credentials (username and password).</param>
+        /// <param name="model">A <see cref="LoginModel"/> object containing the user's login credentials (username and password).</param>
         /// <returns>
-        ///   * Status200OK (with data): If the login is successful, the method returns a 200 OK response with a LoginResponse object containing the JWT token, its expiration date, and the refresh token.
+        ///   * Status200OK (with data): If the login is successful, the method returns a 200 OK response with a <see cref="LoginResponse"/> object containing the JWT token, its expiration date, and the refresh token.
         ///   * Status401Unauthorized (no data): If the username or password is incorrect, the method returns a 401 Unauthorized response.
         ///   * Status500InternalServerError (no data): If an unexpected error occurs during login, the method returns a 500 Internal Server Error response with a generic error message. Consider providing more specific error details in a production environment. 
         /// </returns>
@@ -102,6 +113,15 @@ namespace JCB_Cinema.WebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Assigns a user to a specified role.
+        /// </summary>
+        /// <param name="roleRequest">A <see cref="AssignUserToRoleRequest"/> object containing the user and role to be assigned.</param>
+        /// <returns>
+        ///   * Status200OK (with data): If the role is successfully assigned, the method returns a 200 OK response with the assigned role details.
+        ///   * Status400BadRequest (with message): If there is an error while assigning the role, the method returns a 400 Bad Request response.
+        ///   * Status500InternalServerError (no data): If an unexpected error occurs, the method returns a 500 Internal Server Error response.
+        /// </returns>
         [HttpPost("assign-user-to-role")]
         public async Task<IActionResult> AssignUserToRole([FromQuery] AssignUserToRoleRequest roleRequest)
         {
@@ -122,13 +142,13 @@ namespace JCB_Cinema.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Changing user password.
+        /// Changes the user's password.
         /// </summary>
-        /// <param name="user">A ChangePasswordModel object containing the user's login credentials (username and password).</param>
+        /// <param name="user">A <see cref="ChangeUserPassword"/> object containing the user's current and new passwords.</param>
         /// <returns>
-        ///   * Status200 If the changing is successful, the method returns a 200 response
-        ///   * Status401 Unauthorized (no data): If the username or password is incorrect, the method returns a 401 Unauthorized response.
-        ///   * Status500 InternalServerError (no data): If an unexpected error occurs during login, the method returns a 500 Internal Server Error response with a generic error message. Consider providing more specific error details in a production environment. 
+        ///   * Status200OK: If the password change is successful, the method returns a 200 OK response.
+        ///   * Status401Unauthorized: If the username or password is incorrect, the method returns a 401 Unauthorized response.
+        ///   * Status500InternalServerError: If an unexpected error occurs during password change, the method returns a 500 Internal Server Error response.
         /// </returns>
         [HttpPut("change-password")]
         public async Task<IActionResult> ChangePassword([FromQuery] ChangeUserPassword user)

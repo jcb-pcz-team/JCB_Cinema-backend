@@ -7,10 +7,17 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JCB_Cinema.Infrastructure.Data.Seed
 {
+    /// <summary>
+    /// Provides methods for initializing and seeding the database with test data.
+    /// </summary>
     public static class Seed
     {
         private static readonly Random random = new Random();
 
+        /// <summary>
+        /// Initializes and seeds the database with test data.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider used to resolve dependencies.</param>
         public static async Task Init(IServiceProvider serviceProvider)
         {
             var dbContext = serviceProvider.GetRequiredService<CinemaDbContext>();
@@ -28,7 +35,6 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             var movieProjections = GetMovieProjections(movies, cinemaHalls);
 
             var schedule = GetSchedules(movieProjections);
-            // Dodać listę movie projections => obecne roziwązanie jest tymczasowe
 
             var bookingTickets = GetBookingTickets(users, movieProjections, seats);
 
@@ -39,18 +45,23 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             await AddEntitiesAsync(dbContext, cinemaHalls);
             await AddEntitiesAsync(dbContext, seats);
 
-            //Update cinemaHalls - dodać seats
             await UpdateCinemaHalls(await dbContext.Seats.ToListAsync(), await dbContext.CinemaHalls.ToListAsync(), dbContext);
 
             await AddEntitiesAsync(dbContext, movieProjections);
             await AddEntitiesAsync(dbContext, schedule);
             await AddEntitiesAsync(dbContext, bookingTickets);
-            // Tutaj można kiedyś dodać Update Booking Tickets, ponieważ bookingTickets nie mają poprawnie dodanych Seats
+
             await UpdateUsers(bookingTickets, users, dbContext);
             await UpdateSeats(await dbContext.BookingTickets.ToListAsync(), await dbContext.Seats.ToListAsync(), dbContext);
         }
 
-        // Booking Ticket
+        /// <summary>
+        /// Generates a list of booking tickets.
+        /// </summary>
+        /// <param name="users">The list of users.</param>
+        /// <param name="moviesProjection">The list of movie projections.</param>
+        /// <param name="seats">The list of seats.</param>
+        /// <returns>A list of <see cref="BookingTicket"/> objects.</returns>
         private static List<BookingTicket> GetBookingTickets(List<AppUser> users, List<MovieProjection> moviesProjection, List<Seat> seats)
         {
             return new List<BookingTicket>
@@ -130,7 +141,12 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             };
         }
 
-        // Movie Projections
+        /// <summary>
+        /// Generates a list of movie projections.
+        /// </summary>
+        /// <param name="movies">The list of movies.</param>
+        /// <param name="cinemaHalls">The list of cinema halls.</param>
+        /// <returns>A list of <see cref="MovieProjection"/> objects.</returns>
         private static List<MovieProjection> GetMovieProjections(List<Movie> movies, List<CinemaHall> cinemaHalls)
         {
             return new List<MovieProjection>
@@ -190,7 +206,11 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             };
         }
 
-        // Seat
+        /// <summary>
+        /// Generates a list of seats for the cinema halls.
+        /// </summary>
+        /// <param name="cinemaHalls">The list of cinema halls.</param>
+        /// <returns>A list of <see cref="Seat"/> objects.</returns>
         private static List<Seat> GetSeats(List<CinemaHall> cinemaHalls)
         {
             var seats = new List<Seat>
@@ -254,6 +274,13 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
 
             return seats;
         }
+
+        /// <summary>
+        /// Updates seats with associated booking tickets.
+        /// </summary>
+        /// <param name="bookingTickets">The list of booking tickets.</param>
+        /// <param name="seats">The list of seats.</param>
+        /// <param name="dbContext">The database context.</param>
         private static async Task UpdateSeats(List<BookingTicket> bookingTickets, List<Seat> seats, CinemaDbContext dbContext)
         {
             foreach (var seat in seats)
@@ -264,7 +291,11 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             await dbContext.SaveChangesAsync();
         }
 
-        // Schedule
+        /// <summary>
+        /// Generates a list of schedules for movie projections.
+        /// </summary>
+        /// <param name="movieProjections">The list of movie projections.</param>
+        /// <returns>A list of <see cref="Schedule"/> objects.</returns>
         private static List<Schedule> GetSchedules(List<MovieProjection> movieProjections)
         {
             var schedules = new List<Schedule>
@@ -272,7 +303,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 new Schedule
                 {
                     Date = DateOnly.FromDateTime(GetDate(true)),
-                    Screenings = new List<MovieProjection> {movieProjections[0], movieProjections[1] },
+                    Screenings = new List<MovieProjection> { movieProjections[0], movieProjections[1] },
                     Created = GetDate(false),
                     Creator = "System",
                     Modified = DateTime.Now,
@@ -282,7 +313,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 new Schedule
                 {
                     Date = DateOnly.FromDateTime(GetDate(true)),
-                    Screenings = new List<MovieProjection> {movieProjections[1], movieProjections[2] },
+                    Screenings = new List<MovieProjection> { movieProjections[1], movieProjections[2] },
                     Created = GetDate(false),
                     Creator = "System",
                     Modified = DateTime.Now,
@@ -292,7 +323,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 new Schedule
                 {
                     Date = DateOnly.FromDateTime(GetDate(true)),
-                    Screenings = new List<MovieProjection> {movieProjections[2], movieProjections[3] },
+                    Screenings = new List<MovieProjection> { movieProjections[2], movieProjections[3] },
                     Created = GetDate(false),
                     Creator = "System",
                     Modified = DateTime.Now,
@@ -301,8 +332,8 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 },
                 new Schedule
                 {
-                    Date =  DateOnly.FromDateTime(GetDate(true)),
-                    Screenings = new List<MovieProjection> {movieProjections[3], movieProjections[0] },
+                    Date = DateOnly.FromDateTime(GetDate(true)),
+                    Screenings = new List<MovieProjection> { movieProjections[3], movieProjections[0] },
                     Created = GetDate(false),
                     Creator = "System",
                     Modified = DateTime.Now,
@@ -310,57 +341,67 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                     IsDeleted = false
                 }
             };
+
             return schedules;
         }
 
-        // Cinema Hall
+        /// <summary>
+        /// Generates a list of cinema halls.
+        /// </summary>
+        /// <returns>A list of <see cref="CinemaHall"/> objects.</returns>
         private static List<CinemaHall> GetCinemaHalls()
         {
             var cinemaHalls = new List<CinemaHall>
             {
                 new CinemaHall
                 {
-                    Name = "Hall A",
-                    Created = GetDate(false),
-                    Creator = "System",
-                    Modified = DateTime.Now,
-                    Modifier = "System",
-                    IsDeleted = false,
+                        Name = "Hall A",
+                        Created = GetDate(false),
+                        Creator = "System",
+                        Modified = DateTime.Now,
+                        Modifier = "System",
+                        IsDeleted = false,
                 },
                 new CinemaHall
                 {
-                    Name = "Hall B",
-                    Created = GetDate(false),
-                    Creator = "System",
-                    Modified = DateTime.Now,
-                    Modifier = "System",
-                    IsDeleted = false,
+                        Name = "Hall B",
+                        Created = GetDate(false),
+                        Creator = "System",
+                        Modified = DateTime.Now,
+                        Modifier = "System",
+                        IsDeleted = false,
                 },
                 new CinemaHall
                 {
-                    Name = "Hall C",
-                    Created = GetDate(false),
-                    Creator = "System",
-                    Modified = DateTime.Now,
-                    Modifier = "System",
-                    IsDeleted = false,
+                        Name = "Hall C",
+                        Created = GetDate(false),
+                        Creator = "System",
+                        Modified = DateTime.Now,
+                        Modifier = "System",
+                        IsDeleted = false,
                 },
                 new CinemaHall
                 {
-                    Name = "Hall D",
-                    Created = GetDate(false),
-                    Creator = "System",
-                    Modified = DateTime.Now,
-                    Modifier = "System",
-                    IsDeleted = false,
+                        Name = "Hall D",
+                        Created = GetDate(false),
+                        Creator = "System",
+                        Modified = DateTime.Now,
+                        Modifier = "System",
+                        IsDeleted = false,
                 }
             };
 
             return cinemaHalls;
         }
+
+        /// <summary>
+        /// Updates cinema halls with their associated seats.
+        /// </summary>
+        /// <param name="cinemaSeats">The list of seats in the cinema.</param>
+        /// <param name="cinemaHalls">The list of cinema halls.</param>
+        /// <param name="dbContext">The database context.</param>
         private static async Task UpdateCinemaHalls(List<Seat> cinemaSeats, List<CinemaHall> cinemaHalls, CinemaDbContext dbContext)
         {
-
             foreach (var cinHal in cinemaHalls)
             {
                 cinHal.Seats = cinemaSeats;
@@ -370,7 +411,10 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
         }
 
 
-        // DB Methods
+        /// <summary>
+        /// Clears all data from the database.
+        /// </summary>
+        /// <param name="dbContext">The database context.</param>
         private static async Task ClearDatabaseAsync(CinemaDbContext dbContext)
         {
             dbContext.RemoveRange(dbContext.Set<AppUser>());
@@ -383,23 +427,32 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             dbContext.RemoveRange(dbContext.Set<Schedule>());
 
             await dbContext.SaveChangesAsync();
-
             Console.WriteLine("Wszystkie dane zostały usunięte z bazy danych.");
         }
 
+        /// <summary>
+        /// Adds a list of entities to the database.
+        /// </summary>
+        /// <typeparam name="T">The type of the entities.</typeparam>
+        /// <param name="dbContext">The database context.</param>
+        /// <param name="entities">The list of entities to add.</param>
         private static async Task AddEntitiesAsync<T>(CinemaDbContext dbContext, List<T> entities) where T : EntityBase
         {
             await dbContext.Set<T>().AddRangeAsync(entities);
             await dbContext.SaveChangesAsync();
         }
 
-
-        // User Methods
+        /// <summary>
+        /// Adds users to the database and assigns roles based on their email address.
+        /// </summary>
+        /// <param name="userManager">The user manager instance.</param>
+        /// <param name="roleManager">The role manager instance.</param>
+        /// <param name="users">The list of users to add.</param>
         private static async Task AddUsersWithRolesAsync(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, List<AppUser> users)
         {
             foreach (var user in users)
             {
-                var existingUser = await userManager.FindByEmailAsync(user.Email == null ? "" : user.Email);
+                var existingUser = await userManager.FindByEmailAsync(user.Email ?? "");
                 if (existingUser == null)
                 {
                     var result = await userManager.CreateAsync(user, "Haslo123!");
@@ -414,6 +467,10 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             }
         }
 
+        /// <summary>
+        /// Ensures that predefined roles exist in the system.
+        /// </summary>
+        /// <param name="roleManager">The role manager instance.</param>
         private static async Task EnsureRolesAsync(RoleManager<IdentityRole> roleManager)
         {
             string[] roleNames = { "Admin", "User", "Manager" };
@@ -426,6 +483,10 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             }
         }
 
+        /// <summary>
+        /// Generates a random 9-digit phone number.
+        /// </summary>
+        /// <returns>A randomly generated phone number as a string.</returns>
         public static string GeneratePhoneNumber()
         {
             string phoneNumber = string.Empty;
@@ -434,6 +495,11 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
 
             return phoneNumber;
         }
+
+        /// <summary>
+        /// Retrieves a list of predefined users.
+        /// </summary>
+        /// <returns>A list of <see cref="AppUser"/> objects.</returns>
         private static List<AppUser> GetUsers()
         {
             var users = new List<AppUser>
@@ -508,6 +574,12 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             return users;
         }
 
+        /// <summary>
+        /// Updates users with associated booking tickets.
+        /// </summary>
+        /// <param name="bookingTickets">The list of booking tickets.</param>
+        /// <param name="users">The list of users to update.</param>
+        /// <param name="dbContext">The database context.</param>
         private static async Task UpdateUsers(List<BookingTicket> bookingTickets, List<AppUser> users, CinemaDbContext dbContext)
         {
             // Uwaga liczba userów musi być większa niż liczba booking tickets
@@ -519,8 +591,10 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             await dbContext.SaveChangesAsync();
         }
 
-
-        // Photo Methods
+        /// <summary>
+        /// Retrieves a list of photos from predefined image paths.
+        /// </summary>
+        /// <returns>A list of <see cref="Photo"/> objects.</returns>
         private static List<Photo> GetPhotos()
         {
             var photos = new List<Photo>();
@@ -528,7 +602,6 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
 
             foreach (var filePath in paths)
             {
-
                 var photo = new Photo
                 {
                     Created = GetDate(false),
@@ -538,10 +611,9 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                     IsDeleted = false,
                     Description = Path.GetFileNameWithoutExtension(filePath).NormalizeString(),
                     FileExtension = Path.GetExtension(filePath),
-                    Size = (new FileInfo(filePath).Length) / 1024.0, // Rozmiar w KB
+                    Size = (new FileInfo(filePath).Length) / 1024.0, // Size in KB
                     Bytes = File.ReadAllBytes(filePath)
                 };
-                //Console.WriteLine(filePath);
 
                 photos.Add(photo);
             }
@@ -549,32 +621,47 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             return photos;
         }
 
-        private static IEnumerable<string> GetImagesPaths()
-        {
-            //string folderPath = Directory.GetCurrentDirectory();
-            //Console.WriteLine("Aktualny katalog: " + folderPath);
+        #pragma warning disable CS1584 // Komentarz XML zawiera składniowo niepoprawny atrybut cref
 
+        #pragma warning disable CS1658 // Ostrzeżenie przesłania błąd
+        /// <summary>
+        /// Retrieves the file paths of images in a predefined folder.
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{string}"/> containing the file paths of images in the folder.</returns>
+        /// <exception cref="ArgumentException">Thrown if the folder does not exist.</exception>
+        private static IEnumerable<string> GetImagesPaths()
+        #pragma warning restore CS1658 // Ostrzeżenie przesłania błąd
+        #pragma warning restore CS1584 // Komentarz XML zawiera składniowo niepoprawny atrybut cref
+        {
+            // Set the folder path for image files.
             string folderPath = "../JCB_Cinema.Infrastructure/Data/Seed/InitialPhotos";
 
+            // Check if the folder exists.
             if (!Directory.Exists(folderPath))
             {
                 throw new ArgumentException("Folder not found at path: " + folderPath);
             }
-            //Console.WriteLine("Aktualny katalog: " + folderPath);
 
+            // Define allowed image extensions.
             HashSet<string> allowedExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
             {
                 ".jpg", ".jpeg", ".png", ".bmp", ".gif"
             };
 
+            // Return file paths of images with the allowed extensions.
             return Directory.GetFiles(folderPath, "*.*").Where(file => allowedExtensions.Contains(Path.GetExtension(file)));
         }
 
 
-        // Movie Methods
+        /// <summary>
+        /// Retrieves a list of predefined movies with associated photos.
+        /// </summary>
+        /// <param name="photos">A list of <see cref="Photo"/> objects to associate with movies.</param>
+        /// <returns>A list of <see cref="Movie"/> objects.</returns>
         private static List<Movie> GetMovies(List<Photo> photos)
         {
-            return new List<Movie> {
+            return new List<Movie>
+            {
                 new Movie
                 {
                     Title = "1917",
@@ -664,7 +751,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                     Created = GetDate(false),
                     Creator = "System",
                     Modified = DateTime.Now,
-                    Modifier = "System"
+                     Modifier = "System"
                 },
                 new Movie
                 {
@@ -708,7 +795,11 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             };
         }
 
-        // Date Methods
+        /// <summary>
+        /// Generates a random date and time offset by a random number of days and hours.
+        /// </summary>
+        /// <param name="isFuture">Determines whether to generate a future or past date.</param>
+        /// <returns>A <see cref="DateTime"/> object with a random date and time.</returns>
         private static DateTime GetDate(bool isFuture)
         {
             DateTime today = DateTime.Now;
@@ -717,6 +808,11 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             return isFuture ? today.AddDays(+daysOffset).AddHours(+hourOffset) : today.AddDays(-daysOffset).AddHours(-hourOffset);
         }
 
+        /// <summary>
+        /// Generates a random date (without time) offset by a random number of days.
+        /// </summary>
+        /// <param name="isFuture">Determines whether to generate a future or past date.</param>
+        /// <returns>A <see cref="DateOnly"/> object with a random date.</returns>
         private static DateOnly GetDateOnly(bool isFuture)
         {
             DateTime today = DateTime.Now;
