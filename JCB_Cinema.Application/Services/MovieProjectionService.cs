@@ -199,5 +199,14 @@ namespace JCB_Cinema.Application.Servicies
             }
             return await query.CountAsync();
         }
+
+        public async Task<bool> IsSeatReserved(int movieProjectionId, int seatId)
+        {
+            return await _unitOfWork.Repository<BookingTicket>()
+                .Queryable()
+                .AnyAsync(a => a.MovieProjectionId == movieProjectionId && a.SeatId == seatId
+                    && ((a.ExpiresAt.HasValue && a.ExpiresAt > DateTime.Now)
+                    || a.IsConfirmed));
+        }
     }
 }

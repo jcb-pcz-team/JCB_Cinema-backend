@@ -69,5 +69,12 @@
         /// This overrides the <see cref="EntityBase.Key"/> property.
         /// </summary>
         public override object Key => BookingTicketId;
+
+        public void ConfirmBooking()
+        {
+            IsConfirmed = true;
+            ReservationTime = DateTime.Now;
+            ExpiresAt = null;
+        }
     }
 }
