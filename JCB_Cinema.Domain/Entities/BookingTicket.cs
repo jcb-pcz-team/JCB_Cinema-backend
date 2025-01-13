@@ -70,6 +70,10 @@
         /// </summary>
         public override object Key => BookingTicketId;
 
+        /// <summary>
+        /// Confirms the booking, setting the confirmation status to true and updating the reservation time.
+        /// Also resets the expiration time.
+        /// </summary>
         public void ConfirmBooking()
         {
             IsConfirmed = true;

@@ -200,6 +200,12 @@ namespace JCB_Cinema.Application.Servicies
             return await query.CountAsync();
         }
 
+        /// <summary>
+        /// Checks if a seat is reserved for a specific movie projection.
+        /// </summary>
+        /// <param name="movieProjectionId">ID of the movie projection.</param>
+        /// <param name="seatId">ID of the seat to check for reservation.</param>
+        /// <returns>True if the seat is reserved, otherwise false.</returns>
         public async Task<bool> IsSeatReserved(int movieProjectionId, int seatId)
         {
             return await _unitOfWork.Repository<BookingTicket>()

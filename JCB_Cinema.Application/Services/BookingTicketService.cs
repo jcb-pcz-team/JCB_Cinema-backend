@@ -20,6 +20,7 @@ namespace JCB_Cinema.Application.Servicies
     public class BookingTicketService : ServiceBase, IBookingTicketService
     {
         private readonly IMovieProjectionService _movieProjectionService;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BookingTicketService"/> class.
         /// </summary>
@@ -27,6 +28,7 @@ namespace JCB_Cinema.Application.Servicies
         /// <param name="mapper">The AutoMapper instance for mapping data objects.</param>
         /// <param name="userManager">The user manager for managing user-related operations.</param>
         /// <param name="userContextService">The service that provides the current user's context.</param>
+        /// <param name="movieProjectionService">The movie projection service for handling seat reservations.</param>
         public BookingTicketService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IUserContextService userContextService, IMovieProjectionService movieProjectionService)
             : base(unitOfWork, mapper, userManager, userContextService)
         {
@@ -184,6 +186,14 @@ namespace JCB_Cinema.Application.Servicies
             return await query.CountAsync();
         }
 
+        /// <summary>
+        /// Adds a new booking ticket. Verifies if the seat is available, the movie projection exists, and is able to reserve the seat.
+        /// </summary>
+        /// <param name="userName">The username for the user making the booking (optional, for admin).</param>
+        /// <param name="request">The request containing the booking ticket details.</param>
+        /// <returns>The ID of the newly created booking ticket.</returns>
+        /// <exception cref="NullReferenceException">Thrown if the user cannot be found or the price is not defined.</exception>
+        /// <exception cref="Exception">Thrown if the seat is already reserved or the movie projection is invalid.</exception>
         public async Task<string> AddBookingTicket(string? userName, AddBookingTicketRequest request)
         {
             var user = await _userContextService.GetAppUser();
@@ -232,6 +242,12 @@ namespace JCB_Cinema.Application.Servicies
             return booking.BookingTicketId.ToString();
         }
 
+        /// <summary>
+        /// Retrieves the details of a specific booking ticket.
+        /// </summary>
+        /// <param name="bookingId">The ID of the booking ticket.</param>
+        /// <param name="userName">The username (optional, for admin).</param>
+        /// <returns>The details of the booking ticket, or null if not found.</returns>
         public async Task<BookingTicketDTO?> GetBookingDetails(int bookingId, string? userName)
         {
             var user = await _userContextService.GetAppUser();
@@ -258,6 +274,11 @@ namespace JCB_Cinema.Application.Servicies
             return _mapper.Map<BookingTicketDTO?>(query);
         }
 
+        /// <summary>
+        /// Confirms a booking ticket. Only admin or the ticket owner can confirm a booking.
+        /// </summary>
+        /// <param name="bookingId">The ID of the booking ticket to confirm.</param>
+        /// <exception cref="NullReferenceException">Thrown if the booking is expired or does not exist.</exception>
         public async Task ConfirmBooking(int bookingId)
         {
             var user = await _userContextService.GetAppUser();
