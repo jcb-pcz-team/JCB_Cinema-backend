@@ -6,7 +6,7 @@ Run the console and go to the project folder: "./JCB_Cinema-backend"
 
 First you have to create a database. To do this, enter the command below :
 ```
-update-database
+dotnet ef database update --project JCB_Cinema.Infrastructure --startup-project JCB_Cinema.WebAPI
 ```
 
 Now you can run the project by typing this command :
