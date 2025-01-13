@@ -1,4 +1,5 @@
 ﻿using JCB_Cinema.Application.Interfaces;
+using JCB_Cinema.Application.Requests.Create;
 using JCB_Cinema.Application.Requests.Queries;
 using JCB_Cinema.Application.Requests.Update;
 using Microsoft.AspNetCore.Authorization;
@@ -113,6 +114,87 @@ namespace JCB_Cinema.WebAPI.Controllers
             catch
             {
                 return BadRequest("Error occurred");
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> AddBookingTicket(string? userName, [FromBody] AddBookingTicketRequest request)
+        {
+            try
+            {
+                var id = await _bookingTicketService.AddBookingTicket(userName, request);
+                return CreatedAtAction(nameof(GetBookingDetails), new { bookingId = id, userName = userName ?? "" }, id);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+            catch (NullReferenceException)
+            {
+                return NotFound();
+            }
+            catch (TimeoutException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("{bookingId}")]
+        [Authorize]
+        public async Task<IActionResult> GetBookingDetails(int bookingId, string? userName)
+        {
+            try
+            {
+                var result = await _bookingTicketService.GetBookingDetails(bookingId, userName);
+                return Ok(result);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+            catch (NullReferenceException)
+            {
+                return NotFound();
+            }
+            catch (TimeoutException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("confirm/{bookingId}")]
+        [Authorize]
+        public async Task<IActionResult> ConfirmBooking(int bookingId)
+        {
+            try
+            {
+                await _bookingTicketService.ConfirmBooking(bookingId);
+                return NoContent();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+            catch (NullReferenceException)
+            {
+                return NotFound();
+            }
+            catch (TimeoutException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

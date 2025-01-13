@@ -1,4 +1,5 @@
 ﻿using JCB_Cinema.Application.DTOs;
+using JCB_Cinema.Application.Requests.Create;
 using JCB_Cinema.Application.Requests.Queries;
 using JCB_Cinema.Application.Requests.Update;
 
@@ -63,6 +64,9 @@ namespace JCB_Cinema.Application.Interfaces
         /// A <see cref="Task{int}"/> representing the asynchronous operation. The result contains the number of booking tickets matching the criteria.
         /// </returns>
         Task<int> GetBookingTicketsCount(QueryBookingTicket request);
+        Task<string> AddBookingTicket(string? userName, AddBookingTicketRequest request);
+        Task<BookingTicketDTO?> GetBookingDetails(int bookingId, string? userName);
+        Task ConfirmBooking(int bookingId);
 #pragma warning restore CS1658 // Ostrzeżenie przesłania błąd
 #pragma warning restore CS1584 // Komentarz XML zawiera składniowo niepoprawny atrybut cref
     }

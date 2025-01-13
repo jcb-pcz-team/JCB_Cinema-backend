@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using JCB_Cinema.Application.DTOs;
+using JCB_Cinema.Application.Requests.Create;
 using JCB_Cinema.Application.Requests.Update;
 using JCB_Cinema.Domain.Entities;
 using JCB_Cinema.Tools;
@@ -29,6 +30,11 @@ namespace JCB_Cinema.Application.Mappers
 
             // Map from UpdateBookingTicketRequest to BookingTicket
             CreateMap<UpdateBookingTicketRequest, BookingTicket>();
+
+            CreateMap<AddBookingTicketRequest, BookingTicket>()
+                .ForMember(dest => dest.ExpiresAt, opt => opt.MapFrom(src => DateTime.Now.AddMinutes(2)))
+                .ForMember(dest => dest.IsConfirmed, opt => opt.MapFrom(src => false))
+                .ForMember(dest => dest.ReservationTime, opt => opt.MapFrom(src => DateTime.Now));
         }
     }
 }

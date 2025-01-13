@@ -60,5 +60,6 @@
         /// An <see cref="int"/> representing the movie projection ID.
         /// </value>
         public int MovieProjectionId { get; set; }
+        public bool IsConfirmed { get; set; }
     }
 }

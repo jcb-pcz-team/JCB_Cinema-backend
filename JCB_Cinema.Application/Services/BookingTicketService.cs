@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using JCB_Cinema.Application.DTOs;
 using JCB_Cinema.Application.Interfaces;
+using JCB_Cinema.Application.Requests.Create;
 using JCB_Cinema.Application.Requests.Queries;
 using JCB_Cinema.Application.Requests.Update;
 using JCB_Cinema.Application.Services;
@@ -18,6 +19,7 @@ namespace JCB_Cinema.Application.Servicies
     /// </summary>
     public class BookingTicketService : ServiceBase, IBookingTicketService
     {
+        private readonly IMovieProjectionService _movieProjectionService;
         /// <summary>
         /// Initializes a new instance of the <see cref="BookingTicketService"/> class.
         /// </summary>
@@ -25,8 +27,11 @@ namespace JCB_Cinema.Application.Servicies
         /// <param name="mapper">The AutoMapper instance for mapping data objects.</param>
         /// <param name="userManager">The user manager for managing user-related operations.</param>
         /// <param name="userContextService">The service that provides the current user's context.</param>
-        public BookingTicketService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IUserContextService userContextService)
-            : base(unitOfWork, mapper, userManager, userContextService) { }
+        public BookingTicketService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IUserContextService userContextService, IMovieProjectionService movieProjectionService)
+            : base(unitOfWork, mapper, userManager, userContextService)
+        {
+            _movieProjectionService = movieProjectionService;
+        }
 
         /// <summary>
         /// Deletes a booking ticket. If the user is an admin, the ticket can be deleted by anyone.
@@ -177,6 +182,101 @@ namespace JCB_Cinema.Application.Servicies
             }
 
             return await query.CountAsync();
+        }
+
+        public async Task<string> AddBookingTicket(string? userName, AddBookingTicketRequest request)
+        {
+            var user = await _userContextService.GetAppUser();
+            if (await _userManager.IsInRoleAsync(user, "Admin") && !string.IsNullOrEmpty(userName))
+            {
+                user = await _userManager.FindByNameAsync(userName);
+            }
+            if (user == null)
+            {
+                throw new NullReferenceException("Could not find user.");
+            }
+
+            bool isProjectionExistsAndAbleToReserve = await _unitOfWork.Repository<MovieProjection>().Queryable()
+                .AnyAsync(a => a.MovieProjectionId == request.MovieProjectionId
+                    && a.ScreeningTime >= DateTime.Now.AddMinutes(-30));
+            if (!isProjectionExistsAndAbleToReserve)
+            {
+                throw new TimeoutException("Unable to book a ticket. Projection does not exists or is not able to reserve.");
+            }
+
+            bool isSeatReserved = await _movieProjectionService.IsSeatReserved(request.MovieProjectionId, request.SeatId);
+            if (isSeatReserved)
+            {
+                throw new Exception("Seat is not available.");
+            }
+
+            var booking = _mapper.Map<BookingTicket>(request);
+
+            var price = await _unitOfWork.Repository<MovieProjection>().Queryable()
+                .Where(a => a.MovieProjectionId == request.MovieProjectionId)
+                .AsNoTracking()
+                .Include(a => a.Price)
+                .Select(a => a.Price)
+                .FirstOrDefaultAsync();
+
+            if (price == null)
+            {
+                throw new NullReferenceException("Price is not defined.");
+            }
+
+            booking.Price = price.AmountInCents;
+            booking.AppUserId = user.Id;
+
+            await _unitOfWork.Repository<BookingTicket>().AddAsync(booking);
+
+            return booking.BookingTicketId.ToString();
+        }
+
+        public async Task<BookingTicketDTO?> GetBookingDetails(int bookingId, string? userName)
+        {
+            var user = await _userContextService.GetAppUser();
+            bool clientIsAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+
+            if (clientIsAdmin && !string.IsNullOrEmpty(userName))
+            {
+                user = await _userManager.FindByNameAsync(userName);
+            }
+            if (user == null)
+            {
+                throw new NullReferenceException("Could not find user.");
+            }
+
+            var query = await _unitOfWork.Repository<BookingTicket>()
+                .Queryable()
+                    .Include(a => a.Seat)
+                    .Include(a => a.MovieProjection)
+                        .ThenInclude(a => a.Movie)
+                    .Include(a => a.MovieProjection)
+                        .ThenInclude(a => a.CinemaHall)
+                .FirstOrDefaultAsync(a => a.BookingTicketId == bookingId && a.AppUserId == user.Id);
+
+            return _mapper.Map<BookingTicketDTO?>(query);
+        }
+
+        public async Task ConfirmBooking(int bookingId)
+        {
+            var user = await _userContextService.GetAppUser();
+            var query = _unitOfWork.Repository<BookingTicket>().Queryable()
+                .Where(a => !a.IsConfirmed && a.ExpiresAt >= DateTime.Now);
+            if (!await _userManager.IsInRoleAsync(user, "Admin"))
+            {
+                query = query.Where(a => a.AppUserId == user.Id);
+            }
+
+            var entity = await query.FirstOrDefaultAsync(a => a.BookingTicketId == bookingId);
+            if (entity == null)
+            {
+                throw new NullReferenceException("Booking is expired or does not exists.");
+            }
+
+            entity.ConfirmBooking();
+
+            await _unitOfWork.Repository<BookingTicket>().UpdateAsync(entity);
         }
     }
 }
