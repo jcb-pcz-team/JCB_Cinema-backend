@@ -64,10 +64,61 @@ namespace JCB_Cinema.Application.Interfaces
         /// A <see cref="Task{int}"/> representing the asynchronous operation. The result contains the number of booking tickets matching the criteria.
         /// </returns>
         Task<int> GetBookingTicketsCount(QueryBookingTicket request);
-        Task<string> AddBookingTicket(string? userName, AddBookingTicketRequest request);
-        Task<BookingTicketDTO?> GetBookingDetails(int bookingId, string? userName);
-        Task ConfirmBooking(int bookingId);
 #pragma warning restore CS1658 // Ostrzeżenie przesłania błąd
 #pragma warning restore CS1584 // Komentarz XML zawiera składniowo niepoprawny atrybut cref
+
+
+#pragma warning disable CS1584 // Komentarz XML zawiera składniowo niepoprawny atrybut cref
+
+#pragma warning disable CS1658 // Ostrzeżenie przesłania błąd
+        /// <summary>
+        /// Asynchronously adds a new booking ticket for a user based on the provided request.
+        /// </summary>
+        /// <param name="userName">
+        /// An optional <see cref="string"/> representing the username of the user making the booking.
+        /// If null, the current user's context is used.
+        /// </param>
+        /// <param name="request">
+        /// A <see cref="AddBookingTicketRequest"/> containing the details of the booking ticket to be added.
+        /// </param>
+        /// <returns>
+        /// A <see cref="Task{string}"/> representing the asynchronous operation. The result contains the ID of the newly created booking ticket.
+        /// </returns>
+        Task<string> AddBookingTicket(string? userName, AddBookingTicketRequest request);
+#pragma warning restore CS1658 // Ostrzeżenie przesłania błąd
+#pragma warning restore CS1584 // Komentarz XML zawiera składniowo niepoprawny atrybut cref
+
+
+#pragma warning disable CS1584 // Komentarz XML zawiera składniowo niepoprawny atrybut cref
+
+#pragma warning disable CS1658 // Ostrzeżenie przesłania błąd
+        /// <summary>
+        /// Asynchronously retrieves the details of a specific booking ticket based on the booking ID and optional username.
+        /// </summary>
+        /// <param name="bookingId">
+        /// An <see cref="int"/> representing the unique identifier of the booking ticket whose details are to be retrieved.
+        /// </param>
+        /// <param name="userName">
+        /// An optional <see cref="string"/> representing the username of the user making the request. 
+        /// If null, the current user's context is used.
+        /// </param>
+        /// <returns>
+        /// A <see cref="Task{BookingTicketDTO?}"/> representing the asynchronous operation. The result contains a <see cref="BookingTicketDTO"/>
+        /// representing the details of the booking ticket or null if no such booking ticket is found.
+        /// </returns>
+        Task<BookingTicketDTO?> GetBookingDetails(int bookingId, string? userName);
+#pragma warning restore CS1658 // Ostrzeżenie przesłania błąd
+#pragma warning restore CS1584 // Komentarz XML zawiera składniowo niepoprawny atrybut cref
+
+        /// <summary>
+        /// Asynchronously confirms a booking ticket based on the provided booking ID.
+        /// </summary>
+        /// <param name="bookingId">
+        /// An <see cref="int"/> representing the unique identifier of the booking ticket to be confirmed.
+        /// </param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the asynchronous confirmation operation.
+        /// </returns>
+        Task ConfirmBooking(int bookingId);
     }
 }
