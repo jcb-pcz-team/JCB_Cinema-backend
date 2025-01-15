@@ -6,119 +6,67 @@ using JCB_Cinema.Application.Requests.Update;
 namespace JCB_Cinema.Application.Interfaces
 {
     /// <summary>
-    /// Interface for managing operations related to movie projections.
+    /// Interface for the movie projection service.
+    /// Provides methods for retrieving, adding, updating, and deleting movie projections.
     /// </summary>
     public interface IMovieProjectionService
     {
-
-#pragma warning disable CS1584 // Komentarz XML zawiera składniowo niepoprawny atrybut cref
-
-#pragma warning disable CS1658 // Ostrzeżenie przesłania błąd
         /// <summary>
-        /// Asynchronously retrieves a list of movie projections based on the provided query parameters.
+        /// Retrieves a list of movie projections based on the provided query parameters.
         /// </summary>
-        /// <param name="request">
-        /// A <see cref="QueryMovieProjections"/> containing the search criteria for movie projections.
-        /// </param>
-        /// <returns>
-        /// A <see cref="Task{IList{GetMovieProjectionDTO}?}"/> representing the asynchronous operation.
-        /// The result contains a list of <see cref="GetMovieProjectionDTO"/> representing the movie projections.
-        /// </returns>
+        /// <param name="request">The request containing query parameters for retrieving movie projections.</param>
+        /// <returns>A list of <see cref="GetMovieProjectionDTO"/> containing the details of the movie projections.</returns>
         Task<IList<GetMovieProjectionDTO>?> Get(QueryMovieProjections request);
-#pragma warning restore CS1658 // Ostrzeżenie przesłania błąd
-#pragma warning restore CS1584 // Komentarz XML zawiera składniowo niepoprawny atrybut cref
 
-
-#pragma warning disable CS1584 // Komentarz XML zawiera składniowo niepoprawny atrybut cref
-
-#pragma warning disable CS1658 // Ostrzeżenie przesłania błąd
         /// <summary>
-        /// Asynchronously retrieves detailed information about a specific movie projection.
+        /// Retrieves the details of a specific movie projection.
         /// </summary>
-        /// <param name="id">
-        /// An <see cref="int"/> representing the unique identifier of the movie projection.
-        /// </param>
-        /// <returns>
-        /// A <see cref="Task{GetMovieProjectionDTO?}"/> representing the asynchronous operation.
-        /// The result contains a <see cref="GetMovieProjectionDTO"/> with detailed information about the projection.
-        /// </returns>
+        /// <param name="id">The ID of the movie projection to retrieve.</param>
+        /// <returns>The details of the movie projection as a <see cref="GetMovieProjectionDTO"/>.</returns>
         Task<GetMovieProjectionDTO?> GetDetails(int id);
-#pragma warning restore CS1658 // Ostrzeżenie przesłania błąd
-#pragma warning restore CS1584 // Komentarz XML zawiera składniowo niepoprawny atrybut cref
 
         /// <summary>
-        /// Asynchronously updates the details of an existing movie projection.
+        /// Updates an existing movie projection.
         /// </summary>
-        /// <param name="projectionId">
-        /// An <see cref="int"/> representing the unique identifier of the movie projection to be updated.
-        /// </param>
-        /// <param name="movieProjectionDTO">
-        /// A <see cref="UpdateMovieProjectionRequest"/> containing the updated details for the movie projection.
-        /// </param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the asynchronous update operation.
-        /// </returns>
+        /// <param name="projectionId">The ID of the movie projection to update.</param>
+        /// <param name="movieProjectionDTO">The request containing the updated movie projection data.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         Task UpdateMovieProjection(int projectionId, UpdateMovieProjectionRequest movieProjectionDTO);
 
         /// <summary>
-        /// Asynchronously adds a new movie projection.
+        /// Adds a new movie projection.
         /// </summary>
-        /// <param name="movieProjectionDTO">
-        /// A <see cref="AddMovieProjectionRequest"/> containing the details of the new movie projection.
-        /// </param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the asynchronous add operation.
-        /// </returns>
+        /// <param name="movieProjectionDTO">The request containing the data for the new movie projection.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         Task AddMovieProjection(AddMovieProjectionRequest movieProjectionDTO);
 
         /// <summary>
-        /// Asynchronously deletes a movie projection based on its unique identifier.
+        /// Deletes a specific movie projection.
         /// </summary>
-        /// <param name="projectionId">
-        /// An <see cref="int"/> representing the unique identifier of the movie projection to be deleted.
-        /// </param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the asynchronous delete operation.
-        /// </returns>
+        /// <param name="projectionId">The ID of the movie projection to delete.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         Task DeleteMovieProjection(int projectionId);
 
-
-#pragma warning disable CS1584 // Komentarz XML zawiera składniowo niepoprawny atrybut cref
-
-#pragma warning disable CS1658 // Ostrzeżenie przesłania błąd
         /// <summary>
-        /// Asynchronously retrieves the total count of movie projections that match the provided query criteria.
+        /// Retrieves the count of movie projections based on the provided query parameters.
         /// </summary>
-        /// <param name="request">
-        /// A <see cref="QueryMovieProjectionsCount"/> containing the search criteria for counting the movie projections.
-        /// </param>
-        /// <returns>
-        /// A <see cref="Task{int}"/> representing the asynchronous operation.
-        /// The result contains the total count of movie projections that match the criteria.
-        /// </returns>
+        /// <param name="request">The request containing the query parameters for counting movie projections.</param>
+        /// <returns>The count of movie projections matching the query parameters.</returns>
         Task<int> GetCount(QueryMovieProjectionsCount request);
-#pragma warning restore CS1658 // Ostrzeżenie przesłania błąd
-#pragma warning restore CS1584 // Komentarz XML zawiera składniowo niepoprawny atrybut cref
 
-
-#pragma warning disable CS1584 // Komentarz XML zawiera składniowo niepoprawny atrybut cref
-
-#pragma warning disable CS1658 // Ostrzeżenie przesłania błąd
         /// <summary>
-        /// Asynchronously checks if a specific seat is reserved for a movie projection.
+        /// Checks if a specific seat is reserved for a given movie projection.
         /// </summary>
-        /// <param name="movieProjectionId">
-        /// An <see cref="int"/> representing the unique identifier of the movie projection.
-        /// </param>
-        /// <param name="seatId">
-        /// An <see cref="int"/> representing the unique identifier of the seat to check.
-        /// </param>
-        /// <returns>
-        /// A <see cref="Task{bool}"/> representing the asynchronous operation.
-        /// The result indicates whether the seat is reserved (<c>true</c>) or not (<c>false</c>).
-        /// </returns>
+        /// <param name="movieProjectionId">The ID of the movie projection to check for seat reservation.</param>
+        /// <param name="seatId">The ID of the seat to check for reservation status.</param>
+        /// <returns>True if the seat is reserved, otherwise false.</returns>
         Task<bool> IsSeatReserved(int movieProjectionId, int seatId);
-#pragma warning restore CS1658 // Ostrzeżenie przesłania błąd
-#pragma warning restore CS1584 // Komentarz XML zawiera składniowo niepoprawny atrybut cref
+
+        /// <summary>
+        /// Retrieves the status of seats for a given movie projection.
+        /// </summary>
+        /// <param name="movieProjectionId">The ID of the movie projection to retrieve seat statuses for.</param>
+        /// <returns>A list of <see cref="SeatDTO"/> containing the status of the seats.</returns>
+        Task<IList<SeatDTO>> SeatsStatus(int movieProjectionId);
     }
 }

@@ -161,5 +161,27 @@ namespace JCB_Cinema.WebAPI.Controllers
                 return BadRequest("Error occurred");
             }
         }
+
+        [HttpGet("{movieProjectionId}/GetSeatsStatus")]
+        [Authorize]
+        public async Task<IActionResult> GetSeatsStatus(int movieProjectionId)
+        {
+            try
+            {
+                return Ok(await _movieProjectionService.SeatsStatus(movieProjectionId));
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized("You're unauthorized");
+            }
+            catch (NullReferenceException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch
+            {
+                return BadRequest("Error occurred");
+            }
+        }
     }
 }

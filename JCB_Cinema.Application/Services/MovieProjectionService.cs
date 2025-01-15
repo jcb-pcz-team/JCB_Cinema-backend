@@ -201,10 +201,10 @@ namespace JCB_Cinema.Application.Servicies
         }
 
         /// <summary>
-        /// Checks if a seat is reserved for a specific movie projection.
+        /// Checks if a specific seat is reserved in a movie projection.
         /// </summary>
         /// <param name="movieProjectionId">ID of the movie projection.</param>
-        /// <param name="seatId">ID of the seat to check for reservation.</param>
+        /// <param name="seatId">ID of the seat to check.</param>
         /// <returns>True if the seat is reserved, otherwise false.</returns>
         public async Task<bool> IsSeatReserved(int movieProjectionId, int seatId)
         {
@@ -213,6 +213,38 @@ namespace JCB_Cinema.Application.Servicies
                 .AnyAsync(a => a.MovieProjectionId == movieProjectionId && a.SeatId == seatId
                     && ((a.ExpiresAt.HasValue && a.ExpiresAt > DateTime.Now)
                     || a.IsConfirmed));
+        }
+
+        /// <summary>
+        /// Retrieves the status of seats in a specific movie projection.
+        /// </summary>
+        /// <param name="movieProjectionId">ID of the movie projection.</param>
+        /// <returns>List of <see cref="SeatDTO"/> containing the status of each seat.</returns>
+        public async Task<IList<SeatDTO>> SeatsStatus(int movieProjectionId)
+        {
+            var movie = await _unitOfWork.Repository<MovieProjection>().Queryable().FirstOrDefaultAsync(m => m.MovieProjectionId == movieProjectionId);
+            if (movie == null)
+                throw new NullReferenceException("Movie does not exist");
+
+            IList<BookingTicket>? BT = await _unitOfWork.Repository<BookingTicket>().Queryable().Where(b => b.MovieProjectionId == movieProjectionId).ToListAsync();
+
+            var Seats = new List<SeatDTO>();
+            foreach (var b in BT)
+            {
+                var status = SeatStatus.Available;
+                if (b.ExpiresAt.HasValue && b.ExpiresAt > DateTime.Now)
+                    status = SeatStatus.Reservation;
+                if (b.IsConfirmed)
+                    status = SeatStatus.Occupied;
+
+                Seats.Add(new SeatDTO
+                {
+                    SeatId = b.SeatId,
+                    Status = status
+                });
+            }
+
+            return Seats;
         }
     }
 }

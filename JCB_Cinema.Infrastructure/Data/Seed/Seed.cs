@@ -30,7 +30,12 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             var photos = GetPhotos();
             var movies = GetMovies(photos);
             var cinemaHalls = GetCinemaHalls();
+
+            await AddEntitiesAsync(dbContext, cinemaHalls);
+            cinemaHalls = await dbContext.CinemaHalls.ToListAsync();
+
             var seats = GetSeats(cinemaHalls);
+            await AddEntitiesAsync(dbContext, seats);
 
             var movieProjections = GetMovieProjections(movies, cinemaHalls);
 
@@ -42,10 +47,8 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             await AddUsersWithRolesAsync(userManager, roleManager, users);
             await AddEntitiesAsync(dbContext, photos);
             await AddEntitiesAsync(dbContext, movies);
-            await AddEntitiesAsync(dbContext, cinemaHalls);
-            await AddEntitiesAsync(dbContext, seats);
 
-            await UpdateCinemaHalls(await dbContext.Seats.ToListAsync(), await dbContext.CinemaHalls.ToListAsync(), dbContext);
+            //await UpdateCinemaHalls(await dbContext.Seats.ToListAsync(), await dbContext.CinemaHalls.ToListAsync(), dbContext);
 
             await AddEntitiesAsync(dbContext, movieProjections);
             await AddEntitiesAsync(dbContext, schedule);
@@ -59,86 +62,42 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
         /// Generates a list of booking tickets.
         /// </summary>
         /// <param name="users">The list of users.</param>
-        /// <param name="moviesProjection">The list of movie projections.</param>
+        /// <param name="movieProjections">The list of movie projections.</param>
         /// <param name="seats">The list of seats.</param>
         /// <returns>A list of <see cref="BookingTicket"/> objects.</returns>
-        private static List<BookingTicket> GetBookingTickets(List<AppUser> users, List<MovieProjection> moviesProjection, List<Seat> seats)
+        private static List<BookingTicket> GetBookingTickets(List<AppUser> users, List<MovieProjection> movieProjections, List<Seat> seats)
         {
-            return new List<BookingTicket>
+            var bookingTickets = new List<BookingTicket>();
+
+            foreach (var seat in seats)
             {
-                new BookingTicket
+                foreach (var user in users)
                 {
-                    AppUserId = users[0].Id,
-                    AppUser = users[0],
-                    MovieProjectionId = moviesProjection[0].MovieProjectionId,
-                    MovieProjection = moviesProjection[0],
-                    SeatId = seats[0].SeatId,
-                    Seat = seats[0],
-                    ReservationTime = GetDate(false),
-                    ExpiresAt = GetDate(true).AddHours(2),
-                    IsConfirmed = true,
-                    Price = 150,
-                    Created = GetDate(false),
-                    Creator = "System",
-                    Modified = DateTime.Now,
-                    Modifier = "System",
-                    IsDeleted = false
-                },
-                new BookingTicket
-                {
-                    AppUserId = users[1].Id,
-                    AppUser = users[1],
-                    MovieProjectionId = moviesProjection[1].MovieProjectionId,
-                    MovieProjection = moviesProjection[1],
-                    SeatId = seats[1].SeatId,
-                    Seat = seats[1],
-                    ReservationTime = GetDate(false),
-                    ExpiresAt = GetDate(true).AddHours(3),
-                    IsConfirmed = false,
-                    Price = 1800,
-                    Created = GetDate(false),
-                    Creator = "System",
-                    Modified = DateTime.Now,
-                    Modifier = "System",
-                    IsDeleted = false
-                },
-                new BookingTicket
-                {
-                    AppUserId = users[2].Id,
-                    AppUser = users[2],
-                    MovieProjectionId = moviesProjection[2].MovieProjectionId,
-                    MovieProjection = moviesProjection[2],
-                    SeatId = seats[2].SeatId,
-                    Seat = seats[2],
-                    ReservationTime = GetDate(false),
-                    ExpiresAt = GetDate(true).AddHours(4),
-                    IsConfirmed = true,
-                    Price = 200,
-                    Created = GetDate(false),
-                    Creator = "System",
-                    Modified = DateTime.Now,
-                    Modifier = "System",
-                    IsDeleted = false
-                },
-                new BookingTicket
-                {
-                    AppUserId = users[3].Id,
-                    AppUser = users[3],
-                    MovieProjectionId = moviesProjection[3].MovieProjectionId,
-                    MovieProjection = moviesProjection[3],
-                    SeatId = seats[3].SeatId,
-                    Seat = seats[3],
-                    ReservationTime = GetDate(false),
-                    ExpiresAt = GetDate(true).AddHours(5),
-                    IsConfirmed = false,
-                    Price = 220,
-                    Created = GetDate(false),
-                    Creator = "System",
-                    Modified = DateTime.Now,
-                    Modifier = "System",
-                    IsDeleted = false
+                    foreach (var projection in movieProjections)
+                    {
+                        bookingTickets.Add(new BookingTicket
+                        {
+                            AppUserId = user.Id,
+                            AppUser = user,
+                            MovieProjectionId = projection.MovieProjectionId,
+                            MovieProjection = projection,
+                            SeatId = seat.SeatId,
+                            Seat = seat,
+                            ReservationTime = GetDate(false),
+                            ExpiresAt = GetDate(false).AddHours(2),
+                            IsConfirmed = true,
+                            Price = random.Next(80, 190),
+                            Created = GetDate(false),
+                            Creator = "System",
+                            Modified = DateTime.Now,
+                            Modifier = "System",
+                            IsDeleted = false
+                        });
+                    }
                 }
-            };
+            }
+
+            return bookingTickets;
         }
 
         /// <summary>
@@ -149,61 +108,26 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
         /// <returns>A list of <see cref="MovieProjection"/> objects.</returns>
         private static List<MovieProjection> GetMovieProjections(List<Movie> movies, List<CinemaHall> cinemaHalls)
         {
-            return new List<MovieProjection>
+            var projections = new List<MovieProjection>();
+
+            for (int i = 0; i < Math.Min(movies.Count, cinemaHalls.Count); i++)
             {
-                new MovieProjection
+                projections.Add(new MovieProjection
                 {
-                    MovieId = movies[0].MovieId,
-                    Movie = movies[0],
+                    MovieId = movies[i].MovieId,
+                    Movie = movies[i],
                     ScreeningTime = GetDate(true),
-                    ScreenType = ScreenType.IMAX,
-                    CinemaHall = cinemaHalls[0],
-                    CinemaHallId = cinemaHalls[0].CinemaHallId,
+                    ScreenType = (ScreenType)(i % Enum.GetValues(typeof(ScreenType)).Length),
+                    CinemaHallId = cinemaHalls[i].CinemaHallId,
+                    CinemaHall = cinemaHalls[i],
                     Created = GetDate(false),
                     Creator = "System",
                     Modified = DateTime.Now,
                     Modifier = "System"
-                },
-                new MovieProjection
-                {
-                    MovieId = movies[1].MovieId,
-                    Movie = movies[1],
-                    ScreeningTime = GetDate(true),
-                    ScreenType = ScreenType.ThreeD,
-                    CinemaHall = cinemaHalls[1],
-                    CinemaHallId = cinemaHalls[1].CinemaHallId,
-                    Created = GetDate(false),
-                    Creator = "System",
-                    Modified = DateTime.Now,
-                    Modifier = "System"
-                },
-                new MovieProjection
-                {
-                    MovieId = movies[2].MovieId,
-                    Movie = movies[2],
-                    ScreeningTime = GetDate(true),
-                    ScreenType = ScreenType.ThreeD,
-                    CinemaHall = cinemaHalls[2],
-                    CinemaHallId = cinemaHalls[2].CinemaHallId,
-                    Created = DateTime.Now,
-                    Creator = "System",
-                    Modified = DateTime.Now,
-                    Modifier = "System"
-                },
-                new MovieProjection
-                {
-                    MovieId = movies[3].MovieId,
-                    Movie = movies[3],
-                    ScreeningTime = GetDate(true),
-                    ScreenType = ScreenType.TwoD,
-                    CinemaHall = cinemaHalls[3],
-                    CinemaHallId = cinemaHalls[3].CinemaHallId,
-                    Created = GetDate(false),
-                    Creator = "System",
-                    Modified = DateTime.Now,
-                    Modifier = "System"
-                }
-            };
+                });
+            }
+
+            return projections;
         }
 
         /// <summary>
@@ -213,64 +137,25 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
         /// <returns>A list of <see cref="Seat"/> objects.</returns>
         private static List<Seat> GetSeats(List<CinemaHall> cinemaHalls)
         {
-            var seats = new List<Seat>
+            var seats = new List<Seat>();
+
+            foreach (var hall in cinemaHalls)
             {
-                new Seat
+                for (int seatNumber = 1; seatNumber <= 25; seatNumber++)
                 {
-                    Number = 1,
-                    CinemaHallId = cinemaHalls[0].CinemaHallId,
-                    CinemaHall = cinemaHalls[0],
-                    Created = GetDate(false),
-                    Creator = "System",
-                    Modified = DateTime.Now,
-                    Modifier = "System",
-                    IsDeleted = false
-                },
-                new Seat
-                {
-                    Number = 2,
-                    CinemaHallId = cinemaHalls[0].CinemaHallId,
-                    CinemaHall = cinemaHalls[0],
-                    Created = GetDate(false),
-                    Creator = "System",
-                    Modified = DateTime.Now,
-                    Modifier = "System",
-                    IsDeleted = false
-                },
-                new Seat
-                {
-                    Number = 3,
-                    CinemaHallId = cinemaHalls[1].CinemaHallId,
-                    CinemaHall = cinemaHalls[1],
-                    Created = GetDate(false),
-                    Creator = "System",
-                    Modified = DateTime.Now,
-                    Modifier = "System",
-                    IsDeleted = false
-                },
-                new Seat
-                {
-                    Number = 1,
-                    CinemaHallId = cinemaHalls[1].CinemaHallId,
-                    CinemaHall = cinemaHalls[1],
-                    Created = GetDate(false),
-                    Creator = "System",
-                    Modified = DateTime.Now,
-                    Modifier = "System",
-                    IsDeleted = false
-                },
-                new Seat
-                {
-                    Number = 2,
-                    CinemaHallId = cinemaHalls[2].CinemaHallId,
-                    CinemaHall = cinemaHalls[2],
-                    Created = GetDate(false),
-                    Creator = "System",
-                    Modified = DateTime.Now,
-                    Modifier = "System",
-                    IsDeleted = false
+                    seats.Add(new Seat
+                    {
+                        Number = seatNumber,
+                        CinemaHallId = hall.CinemaHallId,
+                        CinemaHall = hall,
+                        Created = GetDate(false),
+                        Creator = "System",
+                        Modified = DateTime.Now,
+                        Modifier = "System",
+                        IsDeleted = false
+                    });
                 }
-            };
+            }
 
             return seats;
         }
@@ -283,12 +168,34 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
         /// <param name="dbContext">The database context.</param>
         private static async Task UpdateSeats(List<BookingTicket> bookingTickets, List<Seat> seats, CinemaDbContext dbContext)
         {
-            foreach (var seat in seats)
+            var groupedTickets = bookingTickets.GroupBy(bt => bt.SeatId).ToList();
+
+            foreach (var group in groupedTickets)
             {
-                seat.BookingTickets = bookingTickets;
-                dbContext.Update(seat);
+                var seat = await dbContext.Seats.FindAsync(group.Key);
+                if (seat != null)
+                {
+                    seat.BookingTickets = group.ToList();
+                    dbContext.Update(seat);
+                }
             }
+
             await dbContext.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Generates a list of cinema halls.
+        /// </summary>
+        /// <returns>A list of <see cref="CinemaHall"/> objects.</returns>
+        private static List<CinemaHall> GetCinemaHalls()
+        {
+            return new List<CinemaHall>
+        {
+            new CinemaHall { Name = "Hall A", Created = GetDate(false), Creator = "System", Modified = DateTime.Now, Modifier = "System", IsDeleted = false },
+            new CinemaHall { Name = "Hall B", Created = GetDate(false), Creator = "System", Modified = DateTime.Now, Modifier = "System", IsDeleted = false },
+            new CinemaHall { Name = "Hall C", Created = GetDate(false), Creator = "System", Modified = DateTime.Now, Modifier = "System", IsDeleted = false },
+            new CinemaHall { Name = "Hall D", Created = GetDate(false), Creator = "System", Modified = DateTime.Now, Modifier = "System", IsDeleted = false }
+        };
         }
 
         /// <summary>
@@ -343,55 +250,6 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
             };
 
             return schedules;
-        }
-
-        /// <summary>
-        /// Generates a list of cinema halls.
-        /// </summary>
-        /// <returns>A list of <see cref="CinemaHall"/> objects.</returns>
-        private static List<CinemaHall> GetCinemaHalls()
-        {
-            var cinemaHalls = new List<CinemaHall>
-            {
-                new CinemaHall
-                {
-                        Name = "Hall A",
-                        Created = GetDate(false),
-                        Creator = "System",
-                        Modified = DateTime.Now,
-                        Modifier = "System",
-                        IsDeleted = false,
-                },
-                new CinemaHall
-                {
-                        Name = "Hall B",
-                        Created = GetDate(false),
-                        Creator = "System",
-                        Modified = DateTime.Now,
-                        Modifier = "System",
-                        IsDeleted = false,
-                },
-                new CinemaHall
-                {
-                        Name = "Hall C",
-                        Created = GetDate(false),
-                        Creator = "System",
-                        Modified = DateTime.Now,
-                        Modifier = "System",
-                        IsDeleted = false,
-                },
-                new CinemaHall
-                {
-                        Name = "Hall D",
-                        Created = GetDate(false),
-                        Creator = "System",
-                        Modified = DateTime.Now,
-                        Modifier = "System",
-                        IsDeleted = false,
-                }
-            };
-
-            return cinemaHalls;
         }
 
         /// <summary>
@@ -583,9 +441,9 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
         private static async Task UpdateUsers(List<BookingTicket> bookingTickets, List<AppUser> users, CinemaDbContext dbContext)
         {
             // Uwaga liczba userów musi być większa niż liczba booking tickets
-            for (int i = 0; i < bookingTickets.Count; i++)
+            for (int i = 0; i < users.Count; i++)
             {
-                users[i].BookingTickets = new List<BookingTicket>() { bookingTickets[i] };
+                users[i].BookingTickets = dbContext.BookingTickets.Where(bt => bt.AppUserId == users[i].Id).ToList();
                 dbContext.Update(users[i]);
             }
             await dbContext.SaveChangesAsync();
