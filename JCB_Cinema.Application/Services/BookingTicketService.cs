@@ -20,6 +20,7 @@ namespace JCB_Cinema.Application.Servicies
     public class BookingTicketService : ServiceBase, IBookingTicketService
     {
         private readonly IMovieProjectionService _movieProjectionService;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BookingTicketService"/> class.
         /// </summary>
@@ -184,6 +185,12 @@ namespace JCB_Cinema.Application.Servicies
             return await query.CountAsync();
         }
 
+        /// <summary>
+        /// Adds a booking ticket for a specific user.
+        /// </summary>
+        /// <param name="userName">The username of the user for whom the ticket is being booked (optional).</param>
+        /// <param name="request">The request containing the data for the new booking ticket.</param>
+        /// <returns>The ID of the newly created booking ticket.</returns>
         public async Task<string> AddBookingTicket(string? userName, AddBookingTicketRequest request)
         {
             var user = await _userContextService.GetAppUser();
@@ -232,6 +239,12 @@ namespace JCB_Cinema.Application.Servicies
             return booking.BookingTicketId.ToString();
         }
 
+        /// <summary>
+        /// Retrieves the details of a specific booking ticket.
+        /// </summary>
+        /// <param name="bookingId">The ID of the booking ticket to retrieve.</param>
+        /// <param name="userName">The username of the user requesting the booking details (optional).</param>
+        /// <returns>The details of the booking ticket, or null if not found.</returns>
         public async Task<BookingTicketDTO?> GetBookingDetails(int bookingId, string? userName)
         {
             var user = await _userContextService.GetAppUser();
@@ -258,6 +271,11 @@ namespace JCB_Cinema.Application.Servicies
             return _mapper.Map<BookingTicketDTO?>(query);
         }
 
+        /// <summary>
+        /// Confirms a booking ticket, indicating that the ticket has been confirmed for the user.
+        /// </summary>
+        /// <param name="bookingId">The ID of the booking ticket to confirm.</param>
+        /// <exception cref="NullReferenceException">Thrown if the booking ticket is expired or does not exist.</exception>
         public async Task ConfirmBooking(int bookingId)
         {
             var user = await _userContextService.GetAppUser();

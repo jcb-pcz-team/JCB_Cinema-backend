@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace JCB_Cinema.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class BaseMig : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -33,8 +33,12 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     Discriminator = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Street = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HouseNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Town = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: true),
+                    DialCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -255,6 +259,7 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     ReleaseDate = table.Column<DateOnly>(type: "date", nullable: true),
                     Genre = table.Column<int>(type: "int", nullable: true),
                     PhotoId = table.Column<int>(type: "int", nullable: true),
+                    NormalizedTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Creator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -281,6 +286,8 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                     ScreeningTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ScreenType = table.Column<int>(type: "int", nullable: false),
                     CinemaHallId = table.Column<int>(type: "int", nullable: false),
+                    Price_AmountInCents = table.Column<int>(type: "int", nullable: false),
+                    Price_Currency = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ScheduleId = table.Column<int>(type: "int", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Creator = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -336,8 +343,7 @@ namespace JCB_Cinema.Infrastructure.Data.Migrations
                         name: "FK_BookingTickets_AspNetUsers_AppUserId",
                         column: x => x.AppUserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_BookingTickets_MoviesProjection_MovieProjectionId",
                         column: x => x.MovieProjectionId,
