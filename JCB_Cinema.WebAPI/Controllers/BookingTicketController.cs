@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace JCB_Cinema.WebAPI.Controllers
 {
     /// <summary>
-    /// Controller for managing booking tickets, including getting booking history, editing, and deleting tickets.
+    /// Controller for managing booking tickets, including getting booking history, adding, editing, deleting tickets, and confirming bookings.
     /// </summary>
     [ApiController]
     [Route("api/bookings")]
@@ -20,7 +20,7 @@ namespace JCB_Cinema.WebAPI.Controllers
         /// <summary>
         /// Initializes a new instance of the <see cref="BookingTicketController"/> class.
         /// </summary>
-        /// <param name="bookingTicketService">Service to handle booking ticket operations such as history retrieval, editing, and deletion.</param>
+        /// <param name="bookingTicketService">Service to handle booking ticket operations.</param>
         public BookingTicketController(IBookingTicketService bookingTicketService)
         {
             _bookingTicketService = bookingTicketService;
@@ -29,18 +29,17 @@ namespace JCB_Cinema.WebAPI.Controllers
         /// <summary>
         /// Gets the booking history for the current user.
         /// </summary>
-        /// <param name="reqAppUser">A <see cref="QueryAppUser"/> object containing the user's details.</param>
+        /// <param name="reqAppUser">The query object containing user details.</param>
         /// <returns>
-        ///   * Status200OK (with data): If the user's booking history is successfully retrieved, the method returns a 200 OK response with booking history data.
-        ///   * Status401Unauthorized (no data): If the user is not authorized to access the booking history.
-        ///   * Status400BadRequest (no data): If there is an error during the process of retrieving the booking history.
+        /// * 200 OK: Returns the booking history of the user.
+        /// * 401 Unauthorized: If the user is not authorized to access the booking history.
+        /// * 400 Bad Request: If an error occurs during the operation.
         /// </returns>
         [HttpGet]
         public async Task<IActionResult> GetUserReservationHistory([FromQuery] QueryAppUser reqAppUser)
         {
             try
             {
-                // If null, return empty data
                 return Ok(await _bookingTicketService.GetUserBookingHistoryAsync(reqAppUser));
             }
             catch (UnauthorizedAccessException)
@@ -56,12 +55,12 @@ namespace JCB_Cinema.WebAPI.Controllers
         /// <summary>
         /// Edits an existing booking ticket.
         /// </summary>
-        /// <param name="request">A <see cref="UpdateBookingTicketRequest"/> object containing the updated details for the booking ticket.</param>
+        /// <param name="request">The request object containing updated booking details.</param>
         /// <returns>
-        ///   * Status204NoContent: If the booking ticket is successfully edited, the method returns a 204 No Content response.
-        ///   * Status401Unauthorized (no data): If the user is not authorized to edit the booking ticket.
-        ///   * Status404NotFound (no data): If the booking ticket to be edited does not exist.
-        ///   * Status400BadRequest (no data): If there is an error during the process of editing the booking ticket.
+        /// * 204 No Content: If the booking ticket is successfully edited.
+        /// * 401 Unauthorized: If the user is not authorized to edit the booking ticket.
+        /// * 404 Not Found: If the booking ticket to edit does not exist.
+        /// * 400 Bad Request: If an error occurs during the operation.
         /// </returns>
         [HttpPut]
         public async Task<IActionResult> EditBookingTicket([FromBody] UpdateBookingTicketRequest request)
@@ -86,14 +85,14 @@ namespace JCB_Cinema.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Deletes a booking ticket.
+        /// Deletes a booking ticket by its ID.
         /// </summary>
-        /// <param name="id">The unique identifier of the booking ticket to delete.</param>
+        /// <param name="id">The ID of the booking ticket to delete.</param>
         /// <returns>
-        ///   * Status204NoContent: If the booking ticket is successfully deleted, the method returns a 204 No Content response.
-        ///   * Status401Unauthorized (no data): If the user is not authorized to delete the booking ticket.
-        ///   * Status404NotFound (no data): If the booking ticket to delete does not exist.
-        ///   * Status400BadRequest (no data): If there is an error during the deletion process.
+        /// * 204 No Content: If the booking ticket is successfully deleted.
+        /// * 401 Unauthorized: If the user is not authorized to delete the booking ticket.
+        /// * 404 Not Found: If the booking ticket to delete does not exist.
+        /// * 400 Bad Request: If an error occurs during the operation.
         /// </returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBookingTicket(int id)
@@ -117,6 +116,17 @@ namespace JCB_Cinema.WebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Adds a new booking ticket.
+        /// </summary>
+        /// <param name="userName">The name of the user adding the booking ticket.</param>
+        /// <param name="request">The request object containing booking details.</param>
+        /// <returns>
+        /// * 201 Created: Returns the ID of the created booking ticket.
+        /// * 401 Unauthorized: If the user is not authorized to add a booking ticket.
+        /// * 404 Not Found: If any related entity (e.g., user or cinema hall) is not found.
+        /// * 400 Bad Request: If an error occurs during the operation.
+        /// </returns>
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> AddBookingTicket(string? userName, [FromBody] AddBookingTicketRequest request)
@@ -144,6 +154,17 @@ namespace JCB_Cinema.WebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets the details of a specific booking ticket.
+        /// </summary>
+        /// <param name="bookingId">The ID of the booking ticket.</param>
+        /// <param name="userName">The name of the user requesting the booking details.</param>
+        /// <returns>
+        /// * 200 OK: Returns the booking details.
+        /// * 401 Unauthorized: If the user is not authorized to view the booking details.
+        /// * 404 Not Found: If the booking ticket does not exist.
+        /// * 400 Bad Request: If an error occurs during the operation.
+        /// </returns>
         [HttpGet("{bookingId}")]
         [Authorize]
         public async Task<IActionResult> GetBookingDetails(int bookingId, string? userName)
@@ -171,6 +192,16 @@ namespace JCB_Cinema.WebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Confirms a booking ticket by its ID.
+        /// </summary>
+        /// <param name="bookingId">The ID of the booking ticket to confirm.</param>
+        /// <returns>
+        /// * 204 No Content: If the booking ticket is successfully confirmed.
+        /// * 401 Unauthorized: If the user is not authorized to confirm the booking ticket.
+        /// * 404 Not Found: If the booking ticket does not exist.
+        /// * 400 Bad Request: If an error occurs during the operation.
+        /// </returns>
         [HttpPost("confirm/{bookingId}")]
         [Authorize]
         public async Task<IActionResult> ConfirmBooking(int bookingId)

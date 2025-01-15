@@ -60,6 +60,13 @@
         /// An <see cref="int"/> representing the movie projection ID.
         /// </value>
         public int MovieProjectionId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the status indicating if the booking has been confirmed.
+        /// </summary>
+        /// <value>
+        /// A <see cref="bool"/> indicating whether the booking is confirmed.
+        /// </value>
         public bool IsConfirmed { get; set; }
     }
 }

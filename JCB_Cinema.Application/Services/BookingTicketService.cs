@@ -28,6 +28,7 @@ namespace JCB_Cinema.Application.Servicies
         /// <param name="mapper">The AutoMapper instance for mapping data objects.</param>
         /// <param name="userManager">The user manager for managing user-related operations.</param>
         /// <param name="userContextService">The service that provides the current user's context.</param>
+        /// <param name="movieProjectionService">The movie projection service for handling seat reservations.</param>
         public BookingTicketService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IUserContextService userContextService, IMovieProjectionService movieProjectionService)
             : base(unitOfWork, mapper, userManager, userContextService)
         {

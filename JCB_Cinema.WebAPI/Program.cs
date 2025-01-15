@@ -142,12 +142,6 @@ namespace JCB_Cinema.WebAPI
 
             app.Run();
 
-            /// <summary>
-            /// Logs an attempt based on event type and authorization header.
-            /// </summary>
-            /// <param name="headers">The request headers to check for JWT authorization.</param>
-            /// <param name="eventType">The event type to log (e.g., OnChallenge, OnTokenValidated).</param>
-            /// <returns>A task representing the asynchronous operation.</returns>
             Task LogAttempt(IHeaderDictionary headers, string eventType)
             {
                 // var logger = loggerFactory.CreateLogger<Program>();
