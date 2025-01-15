@@ -1,5 +1,4 @@
-﻿using JCB_Cinema.Domain.ValueObjects;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace JCB_Cinema.Application.Requests.Create
 {
@@ -18,7 +17,7 @@ namespace JCB_Cinema.Application.Requests.Create
         /// Gets or sets the screen type for the movie projection (e.g., 2D, 3D, IMAX).
         /// </summary>
         [Required]
-        public ScreenType ScreenType { get; set; }
+        public string ScreenType { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets the ID of the cinema hall where the movie will be projected.

@@ -206,7 +206,8 @@ namespace JCB_Cinema.Application.Servicies
 
             bool isProjectionExistsAndAbleToReserve = await _unitOfWork.Repository<MovieProjection>().Queryable()
                 .AnyAsync(a => a.MovieProjectionId == request.MovieProjectionId
-                    && a.ScreeningTime >= DateTime.Now.AddMinutes(-30));
+                    && a.ScreeningTime.AddMinutes(30) <= DateTime.Now || a.ScreeningTime >= DateTime.Now);
+
             if (!isProjectionExistsAndAbleToReserve)
             {
                 throw new TimeoutException("Unable to book a ticket. Projection does not exists or is not able to reserve.");

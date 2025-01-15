@@ -75,5 +75,19 @@ namespace JCB_Cinema.Application.Servicies
                 .AnyAsync(predicate);
             return entity;
         }
+
+        public async Task<IList<Seat>> GetSeats(int cinemaHallId, bool noInclude = true)
+        {
+            if (!await IsAny(a => a.CinemaHallId == cinemaHallId))
+                throw new NullReferenceException("CinemaHall does not exists.");
+
+            var seats = _unitOfWork.Repository<Seat>().Queryable().Where(a => a.CinemaHallId == cinemaHallId);
+            if (!noInclude)
+            {
+                seats = seats.Include(a => a.CinemaHall).Include(a => a.BookingTickets);
+            }
+
+            return await seats.ToListAsync();
+        }
     }
 }

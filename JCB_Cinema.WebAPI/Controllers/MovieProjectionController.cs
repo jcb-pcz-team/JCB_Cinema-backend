@@ -162,7 +162,7 @@ namespace JCB_Cinema.WebAPI.Controllers
             }
         }
 
-        [HttpGet("{movieProjectionId}/GetSeatsStatus")]
+        [HttpGet("{movieProjectionId}/seats")]
         [Authorize]
         public async Task<IActionResult> GetSeatsStatus(int movieProjectionId)
         {
