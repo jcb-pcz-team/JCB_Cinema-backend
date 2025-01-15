@@ -20,6 +20,7 @@ namespace JCB_Cinema.Application.Servicies
     /// </summary>
     public class MovieProjectionService : ServiceBase, IMovieProjectionService
     {
+        private readonly ICinemaHallService _cinemaHallService;
         private readonly IMovieService _movieService;
 
         /// <summary>
@@ -30,9 +31,10 @@ namespace JCB_Cinema.Application.Servicies
         /// <param name="userManager">UserManager instance for managing user-related operations.</param>
         /// <param name="userContextService">UserContextService instance for user-specific context.</param>
         /// <param name="movieService">MovieService instance for managing movie-related operations.</param>
-        public MovieProjectionService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IUserContextService userContextService, IMovieService movieService) : base(unitOfWork, mapper, userManager, userContextService)
+        public MovieProjectionService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IUserContextService userContextService, IMovieService movieService, ICinemaHallService cinemaHallService) : base(unitOfWork, mapper, userManager, userContextService)
         {
             _movieService = movieService;
+            _cinemaHallService = cinemaHallService;
         }
 
         /// <summary>
@@ -222,29 +224,31 @@ namespace JCB_Cinema.Application.Servicies
         /// <returns>List of <see cref="SeatDTO"/> containing the status of each seat.</returns>
         public async Task<IList<SeatDTO>> SeatsStatus(int movieProjectionId)
         {
-            var movie = await _unitOfWork.Repository<MovieProjection>().Queryable().FirstOrDefaultAsync(m => m.MovieProjectionId == movieProjectionId);
-            if (movie == null)
-                throw new NullReferenceException("Movie does not exist");
+            var cinemaHallId = await _unitOfWork.Repository<MovieProjection>().Queryable()
+                .Where(m => m.MovieProjectionId == movieProjectionId)
+                .Select(a => a.CinemaHallId)
+                .FirstOrDefaultAsync();
+            if (cinemaHallId == 0)
+                throw new NullReferenceException("MovieProjection does not exists.");
 
-            IList<BookingTicket>? BT = await _unitOfWork.Repository<BookingTicket>().Queryable().Where(b => b.MovieProjectionId == movieProjectionId).ToListAsync();
+            IList<BookingTicket>? tickets = await _unitOfWork.Repository<BookingTicket>().Queryable().Where(b => b.MovieProjectionId == movieProjectionId).ToListAsync();
 
-            var Seats = new List<SeatDTO>();
-            foreach (var b in BT)
+            var seats = await _cinemaHallService.GetSeats(cinemaHallId);
+
+            var seatsDtos = _mapper.Map<IList<SeatDTO>>(seats);
+            foreach (var ticket in tickets)
             {
-                var status = SeatStatus.Available;
-                if (b.ExpiresAt.HasValue && b.ExpiresAt > DateTime.Now)
-                    status = SeatStatus.Reservation;
-                if (b.IsConfirmed)
-                    status = SeatStatus.Occupied;
+                var seatDto = seatsDtos.FirstOrDefault(a => a.SeatId == ticket.SeatId);
+                if (seatDto == null)
+                    continue;
 
-                Seats.Add(new SeatDTO
-                {
-                    SeatId = b.SeatId,
-                    Status = status
-                });
+                if (ticket.ExpiresAt.HasValue && ticket.ExpiresAt > DateTime.Now)
+                    seatDto.Status = SeatStatus.Reservation;
+                if (ticket.IsConfirmed)
+                    seatDto.Status = SeatStatus.Occupied;
             }
 
-            return Seats;
+            return seatsDtos;
         }
     }
 }

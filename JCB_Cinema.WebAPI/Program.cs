@@ -29,9 +29,13 @@ namespace JCB_Cinema.WebAPI
             // Add services to the container.
             builder.Services.AddControllers();
 
+            // Add secrets handler
+            builder.Configuration.AddUserSecrets<Program>();
+
             // DbContext configuration
             builder.Services.AddDbContextPool<CinemaDbContext>(options =>
-                            options.UseSqlServer(builder.Configuration.GetConnectionString("JCB_CinemaDb")));
+                            options.UseSqlServer(builder.Configuration["ConnectionStrings:JCB_CinemaDb"]
+                         ?? throw new InvalidOperationException("Database connection string not configured.")));
 
             // Swagger configuration
             builder.Services.AddEndpointsApiExplorer();

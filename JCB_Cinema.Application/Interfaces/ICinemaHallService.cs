@@ -60,6 +60,7 @@ namespace JCB_Cinema.Application.Interfaces
         /// if the cinema hall is found, or null if no cinema hall matches the given ID.
         /// </returns>
         Task<GetCinemaHallDTO?> Get(int id);
+        Task<IList<Seat>> GetSeats(int cinemaHallId, bool noInclude = true);
 #pragma warning restore CS1658 // Ostrzeżenie przesłania błąd
 #pragma warning restore CS1584 // Komentarz XML zawiera składniowo niepoprawny atrybut cref
     }

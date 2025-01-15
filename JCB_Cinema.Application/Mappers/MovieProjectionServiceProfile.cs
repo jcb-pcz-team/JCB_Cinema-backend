@@ -49,7 +49,7 @@ namespace JCB_Cinema.Application.Mappers
             // Mapping from AddMovieProjectionRequest to MovieProjection
             CreateMap<AddMovieProjectionRequest, MovieProjection>()
                 .ForMember(dest => dest.ScreeningTime, opt => opt.MapFrom(src => src.ScreeningTime)) // ScreeningTime mapping
-                .ForMember(dest => dest.ScreenType, opt => opt.MapFrom(src => src.ScreenType)) // ScreenType mapping
+                .ForMember(dest => dest.ScreenType, opt => opt.MapFrom(src => EnumExtensions.GetValueFromDescription<ScreenType>(src.ScreenType ?? ScreenType.TwoD.GetDescription()))) // ScreenType mapping using enum description
                 .ForMember(dest => dest.CinemaHall, opt => opt.Ignore()) // Ignore CinemaHall mapping
                 .ForMember(dest => dest.MovieNormalizedTitle, opt => opt.Ignore()); // Ignore MovieNormalizedTitle mapping
 
@@ -60,6 +60,11 @@ namespace JCB_Cinema.Application.Mappers
 
             // Mapping for QueryMovieProjectionsCount request
             CreateMap<QueryMovieProjectionsCount, QueryMovieProjectionsCount>();
+
+
+            // Mapping for Seat
+            CreateMap<Seat, SeatDTO>()
+                .ForMember(a => a.Status, opt => opt.MapFrom(src => SeatStatus.Available));
         }
     }
 }
