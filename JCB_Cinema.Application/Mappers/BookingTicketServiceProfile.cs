@@ -33,7 +33,7 @@ namespace JCB_Cinema.Application.Mappers
 
             // Map from AddBookingTicketRequest to BookingTicket
             CreateMap<AddBookingTicketRequest, BookingTicket>()
-                .ForMember(dest => dest.ExpiresAt, opt => opt.MapFrom(src => DateTime.Now.AddMinutes(2)))
+                .ForMember(dest => dest.ExpiresAt, opt => opt.MapFrom(src => DateTime.Now.AddMinutes(5)))
                 .ForMember(dest => dest.IsConfirmed, opt => opt.MapFrom(src => false))
                 .ForMember(dest => dest.ReservationTime, opt => opt.MapFrom(src => DateTime.Now));
         }
