@@ -202,7 +202,7 @@ namespace JCB_Cinema.WebAPI.Controllers
         /// * 404 Not Found: If the booking ticket does not exist.
         /// * 400 Bad Request: If an error occurs during the operation.
         /// </returns>
-        [HttpPost("confirm/{bookingId}")]
+        [HttpPut("confirm/{bookingId}")]
         [Authorize]
         public async Task<IActionResult> ConfirmBooking(int bookingId)
         {
