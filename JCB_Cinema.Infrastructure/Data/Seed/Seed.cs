@@ -69,11 +69,13 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
         {
             var bookingTickets = new List<BookingTicket>();
 
-            foreach (var seat in seats)
+            var limitedSeats = seats.Take(seats.Count / 2).ToList();
+
+            foreach (var seat in limitedSeats)
             {
-                foreach (var user in users)
+                foreach (var user in users.Take(users.Count / 2)) // Ograniczenie liczby użytkowników
                 {
-                    foreach (var projection in movieProjections)
+                    foreach (var projection in movieProjections.Take(movieProjections.Count / 2)) // Ograniczenie liczby projekcji
                     {
                         bookingTickets.Add(new BookingTicket
                         {
@@ -85,7 +87,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                             Seat = seat,
                             ReservationTime = GetDate(false),
                             ExpiresAt = GetDate(false).AddHours(2),
-                            IsConfirmed = true,
+                            IsConfirmed = false,
                             Price = random.Next(80, 190),
                             Created = GetDate(false),
                             Creator = "System",
@@ -110,16 +112,18 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
         {
             var projections = new List<MovieProjection>();
 
-            for (int i = 0; i < Math.Min(movies.Count, cinemaHalls.Count); i++)
+            for (int i = 0; i < movies.Count; i++)
             {
+                var CinemaHallId = random.Next(0, cinemaHalls.Count);
+
                 projections.Add(new MovieProjection
                 {
                     MovieId = movies[i].MovieId,
                     Movie = movies[i],
                     ScreeningTime = GetDate(true),
                     ScreenType = (ScreenType)(i % Enum.GetValues(typeof(ScreenType)).Length),
-                    CinemaHallId = cinemaHalls[i].CinemaHallId,
-                    CinemaHall = cinemaHalls[i],
+                    CinemaHallId = cinemaHalls[CinemaHallId].CinemaHallId,
+                    CinemaHall = cinemaHalls[CinemaHallId],
                     Created = GetDate(false),
                     Creator = "System",
                     Modified = DateTime.Now,
