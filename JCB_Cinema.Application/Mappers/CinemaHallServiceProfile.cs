@@ -49,8 +49,8 @@ namespace JCB_Cinema.Application.Mappers
                 .ForMember(dest => dest.CinemaHall, opt => opt.MapFrom(src => src.CinemaHall)) // Map CinemaHall
                 .ForMember(dest => dest.NormalizedMovieTitle, opt => opt.MapFrom(src => src.MovieNormalizedTitle)) // Map MovieNormalizedTitle
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price)) // Map Price
-                .ForMember(dest => dest.OccupiedSeats, opt => opt.MapFrom(src => src.OccupiedSeats)) // Map OccupiedSeats
-                .ForMember(dest => dest.AvailableSeats, opt => opt.MapFrom(src => src.AvailableSeats)); // Map AvailableSeats
+                .ForMember(dest => dest.OccupiedSeats, opt => opt.Ignore()) // Map OccupiedSeats
+                .ForMember(dest => dest.AvailableSeats, opt => opt.Ignore()); // Map AvailableSeats
 
             // Mapping from GetMovieProjectionDTO to MovieProjection
             // Ignoring Movie mapping as the GetMovieDTO details are not provided in the DTO
@@ -61,9 +61,7 @@ namespace JCB_Cinema.Application.Mappers
                 .ForMember(dest => dest.CinemaHall, opt => opt.MapFrom(src => src.CinemaHall)) // Map CinemaHall
                 .ForMember(dest => dest.MovieNormalizedTitle, opt => opt.MapFrom(src => src.NormalizedMovieTitle)) // Map NormalizedMovieTitle
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price)) // Map Price
-                .ForMember(dest => dest.MovieProjectionId, opt => opt.Ignore()) // Ignore MovieProjectionId
-                .ForMember(dest => dest.OccupiedSeats, opt => opt.Ignore()) // Ignore OccupiedSeats
-                .ForMember(dest => dest.AvailableSeats, opt => opt.Ignore()); // Ignore AvailableSeats
+                .ForMember(dest => dest.MovieProjectionId, opt => opt.Ignore()); // Ignore MovieProjectionId
         }
     }
 }

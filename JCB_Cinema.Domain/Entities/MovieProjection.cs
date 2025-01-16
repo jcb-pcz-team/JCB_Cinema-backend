@@ -79,20 +79,6 @@ namespace JCB_Cinema.Domain.Entities
         }
 
         /// <summary>
-        /// Gets the count of occupied seats for the movie projection.
-        /// Returns 0 if the cinema hall is null.
-        /// </summary>
-        [NotMapped]
-        public int OccupiedSeats => CinemaHall == null ? 0 : CinemaHall.Seats.Count(s => s.BookingTickets.Any(bt => bt.MovieProjectionId == MovieProjectionId));
-
-        /// <summary>
-        /// Gets the count of available seats for the movie projection.
-        /// Returns 0 if the cinema hall or total seats are null.
-        /// </summary>
-        [NotMapped]
-        public int AvailableSeats => CinemaHall == null ? 0 : CinemaHall.TotalSeats.HasValue ? CinemaHall.TotalSeats.Value - OccupiedSeats : 0;
-
-        /// <summary>
         /// Gets the unique key for the movie projection entity.
         /// </summary>
         public override object Key => MovieProjectionId;

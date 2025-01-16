@@ -31,8 +31,8 @@ namespace JCB_Cinema.Application.Mappers
                 .ForMember(dest => dest.CinemaHall, opt => opt.MapFrom(src => src.CinemaHall)) // CinemaHall mapping
                 .ForMember(dest => dest.NormalizedMovieTitle, opt => opt.MapFrom(src => src.MovieNormalizedTitle)) // NormalizedMovieTitle mapping
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price)) // Price mapping
-                .ForMember(dest => dest.OccupiedSeats, opt => opt.MapFrom(src => src.OccupiedSeats)) // OccupiedSeats mapping
-                .ForMember(dest => dest.AvailableSeats, opt => opt.MapFrom(src => src.AvailableSeats)); // AvailableSeats mapping
+                .ForMember(dest => dest.OccupiedSeats, opt => opt.Ignore()) // OccupiedSeats mapping
+                .ForMember(dest => dest.AvailableSeats, opt => opt.Ignore()); // AvailableSeats mapping
 
             // Mapping from GetMovieProjectionDTO to MovieProjection
             CreateMap<GetMovieProjectionDTO, MovieProjection>()
@@ -42,9 +42,7 @@ namespace JCB_Cinema.Application.Mappers
                 .ForMember(dest => dest.CinemaHall, opt => opt.MapFrom(src => src.CinemaHall)) // CinemaHall mapping
                 .ForMember(dest => dest.MovieNormalizedTitle, opt => opt.MapFrom(src => src.NormalizedMovieTitle)) // NormalizedMovieTitle mapping
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price)) // Price mapping
-                .ForMember(dest => dest.MovieProjectionId, opt => opt.Ignore()) // Ignore MovieProjectionId
-                .ForMember(dest => dest.OccupiedSeats, opt => opt.Ignore()) // OccupiedSeats mapping handled internally
-                .ForMember(dest => dest.AvailableSeats, opt => opt.Ignore()); // AvailableSeats mapping handled internally
+                .ForMember(dest => dest.MovieProjectionId, opt => opt.Ignore()); // Ignore MovieProjectionId
 
             // Mapping from AddMovieProjectionRequest to MovieProjection
             CreateMap<AddMovieProjectionRequest, MovieProjection>()

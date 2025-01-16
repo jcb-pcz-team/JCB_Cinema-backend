@@ -89,8 +89,29 @@ namespace JCB_Cinema.Application.Servicies
             {
                 query = query.Where(a => a.CinemaHallId == request.CinemaHallId);
             }
-            var entities = await query.ToListAsync();
-            return entities == null ? null : _mapper.Map<IList<GetMovieProjectionDTO>>(entities);
+
+            var entities = _mapper.Map<IList<GetMovieProjectionDTO>>(await query.ToListAsync());
+            foreach (var entity in entities)
+            {
+                await fillSeatsForGetMovieProjDTO(entity);
+            }
+            return entities;
+        }
+
+        /// <summary>
+        /// Fills the seat information (occupied and available) for the given movie projection.
+        /// </summary>
+        /// <param name="entity">The <see cref="GetMovieProjectionDTO"/> containing the details of the movie projection.</param>
+        /// <remarks>
+        /// This method retrieves the status of the seats for the specified movie projection and calculates:
+        /// - The number of occupied seats by counting seats with the status <see cref="SeatStatus.Occupied"/>.
+        /// - The number of available seats by subtracting the occupied seats from the total seat count.
+        /// </remarks>
+        private async Task fillSeatsForGetMovieProjDTO(GetMovieProjectionDTO entity)
+        {
+            var seats = await SeatsStatus(entity.MovieProjectionId);
+            entity.OccupiedSeats = seats.Where(a => a.Status == SeatStatus.Occupied).Count();
+            entity.AvailableSeats = seats.Count() - entity.OccupiedSeats;
         }
 
         /// <summary>
@@ -107,7 +128,10 @@ namespace JCB_Cinema.Application.Servicies
                 .Include(p => p.Price)
                 .FirstOrDefaultAsync(m => m.MovieProjectionId == id);
 
-            return entity == null ? null : _mapper.Map<GetMovieProjectionDTO>(entity);
+            var entityDto = _mapper.Map<GetMovieProjectionDTO>(entity);
+            await fillSeatsForGetMovieProjDTO(entityDto);
+
+            return entityDto;
         }
 
         /// <summary>

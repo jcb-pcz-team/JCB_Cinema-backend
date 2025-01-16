@@ -70,17 +70,15 @@
         /// </summary>
         /// <value>
         /// A nullable <see cref="int"/> representing the count of occupied seats.
-        /// This property is initialized as read-only.
         /// </value>
-        public int? OccupiedSeats { get; init; }
+        public int? OccupiedSeats { get; set; }
 
         /// <summary>
         /// Gets or sets the number of available seats for the movie projection.
         /// </summary>
         /// <value>
         /// A nullable <see cref="int"/> representing the count of available seats for the projection.
-        /// This property is initialized as read-only.
         /// </value>
-        public int? AvailableSeats { get; init; }
+        public int? AvailableSeats { get; set; }
     }
 }
