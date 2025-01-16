@@ -77,6 +77,11 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                 {
                     foreach (var projection in movieProjections.Take(movieProjections.Count / 2)) // Ograniczenie liczby projekcji
                     {
+                        var isConfirmed = false;
+                        var val = random.Next(0, 2);
+                        if (val == 1)
+                            isConfirmed = true;
+
                         bookingTickets.Add(new BookingTicket
                         {
                             AppUserId = user.Id,
@@ -87,7 +92,7 @@ namespace JCB_Cinema.Infrastructure.Data.Seed
                             Seat = seat,
                             ReservationTime = GetDate(false),
                             ExpiresAt = GetDate(false).AddHours(2),
-                            IsConfirmed = false,
+                            IsConfirmed = isConfirmed,
                             Price = random.Next(80, 190),
                             Created = GetDate(false),
                             Creator = "System",
